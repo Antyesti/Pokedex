@@ -1,0 +1,602 @@
+html[data-theme="light"]{
+  --bg:#F0F0F0;
+  --panel:#F0F0F0;
+  --panel-border:transparent;
+  --panel-hi:#F0F0F0;
+  --text:#222224;
+  --text-dim:#5B5B5E;
+  --text-faint:#8A8A8D;
+  --accent:#EE1515;
+  --accent-2:#C97A12;
+  --accent-grad-1:#FF3B3B;
+  --accent-grad-2:#f00000;
+  --btn-primary-text:#fff;
+  --danger:#D60000;
+  --radius:18px;
+  /* Shadow tokens for the neumorphic theme */
+  --nm-shadow-out: -7px -7px 14px rgba(255,255,255,0.85), 7px 7px 16px rgba(0,0,0,0.16);
+  --nm-shadow-out-sm: -4px -4px 8px rgba(255,255,255,0.85), 4px 4px 10px rgba(0,0,0,0.15);
+  --nm-shadow-in: inset -5px -5px 10px rgba(255,255,255,0.7), inset 5px 5px 12px rgba(0,0,0,0.18);
+  --nm-shadow-hover: -9px -9px 18px rgba(255,255,255,0.9), 9px 9px 20px rgba(0,0,0,0.18);
+  --nm-highlight-rgb: 255,255,255;
+  --nm-shadow-rgb: 0,0,0;
+  --nm-highlight-a: 0.85;
+  --nm-shadow-a: 0.16;
+  --nm-highlight-a-hover: 0.9;
+  --hairline: rgba(0,0,0,0.08);
+  --select-option-bg: #ffffff;
+  --select-option-text: #222224;
+}
+
+html[data-theme="light"] body,
+html[data-style="neumorphic"] body{
+  background: var(--bg);
+  animation: none;
+}
+
+html[data-theme="light"] body::before,
+html[data-style="neumorphic"] body::before{ content:none; }
+
+html[data-theme="light"] .brand-mark,
+html[data-style="neumorphic"] .brand-mark{ box-shadow: var(--nm-shadow-out-sm); animation:none; }
+
+html[data-theme="light"] .trainer-edit-btn:hover,
+html[data-style="neumorphic"] .trainer-edit-btn:hover{ color:var(--accent); background:color-mix(in srgb, var(--accent) 10%, transparent); border-color:color-mix(in srgb, var(--accent) 25%, transparent); }
+
+html[data-theme="light"] .btn,
+html[data-style="neumorphic"] .btn{
+  background: var(--bg); border:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+  box-shadow: var(--nm-shadow-out-sm); color:var(--text);
+}
+
+html[data-theme="light"] .btn:hover,
+html[data-style="neumorphic"] .btn:hover{
+  background-color: var(--bg); transform:none; box-shadow: var(--nm-shadow-hover);
+}
+
+html[data-theme="light"] .btn:active,
+html[data-style="neumorphic"] .btn:active{
+  box-shadow: var(--nm-shadow-in); transform:none;
+}
+
+html[data-theme="light"] .btn.ghost,
+html[data-style="neumorphic"] .btn.ghost{ background: var(--bg); }
+
+html[data-theme="light"] .btn.primary,
+html[data-style="neumorphic"] .btn.primary{
+  background: linear-gradient(155deg, var(--accent-grad-1), var(--accent-grad-2));
+  color:#fff; font-weight:700; border:none;
+  box-shadow: -6px -6px 14px rgba(var(--nm-highlight-rgb),0.5), 6px 6px 16px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+html[data-theme="light"] .btn.primary:hover,
+html[data-style="neumorphic"] .btn.primary:hover{
+  box-shadow: -7px -7px 16px rgba(var(--nm-highlight-rgb),0.55), 7px 7px 20px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+html[data-theme="light"] .btn.primary:active,
+html[data-style="neumorphic"] .btn.primary:active{
+  box-shadow: inset 3px 3px 8px rgba(var(--nm-shadow-rgb),0.25), inset -2px -2px 6px rgba(var(--nm-highlight-rgb),0.2);
+}
+
+html[data-theme="light"] .btn.danger,
+html[data-style="neumorphic"] .btn.danger{ color:var(--danger); }
+
+html[data-theme="light"] .btn.danger:hover,
+html[data-style="neumorphic"] .btn.danger:hover{ background-color: var(--bg); box-shadow: var(--nm-shadow-hover), inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent); }
+
+html[data-theme="light"] .filter-toggle.active,
+html[data-style="neumorphic"] .filter-toggle.active{
+  background: var(--bg); border:none; color:#A8650E;
+  box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] #megaFilterBtn.filter-toggle.active,
+html[data-style="neumorphic"] #megaFilterBtn.filter-toggle.active{
+  background: var(--bg); border:none; color:#7B3FC4;
+  box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] #gigantamaxFilterBtn.filter-toggle.active,
+html[data-style="neumorphic"] #gigantamaxFilterBtn.filter-toggle.active{
+  background: var(--bg); border:none; color:#C4406A;
+  box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] .last-file-chip,
+html[data-style="neumorphic"] .last-file-chip{
+  border:none; background:var(--bg); color:var(--accent); box-shadow: var(--nm-shadow-out-sm);
+}
+
+html[data-theme="light"] .last-file-chip:hover,
+html[data-style="neumorphic"] .last-file-chip:hover{ background-color:var(--bg); box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .chip-dismiss:hover,
+html[data-style="neumorphic"] .chip-dismiss:hover{ color:var(--text); background:color-mix(in srgb, var(--text) 8%, transparent); }
+
+html[data-theme="light"] .stat-chip,
+html[data-style="neumorphic"] .stat-chip{
+  background: var(--bg); border:none; backdrop-filter:none;
+  box-shadow: var(--nm-shadow-out-sm);
+}
+
+html[data-theme="light"] .stat-chip::before,
+html[data-style="neumorphic"] .stat-chip::before{ background: linear-gradient(180deg, var(--accent), transparent); }
+
+html[data-theme="light"] .stats-toggle-btn,
+html[data-style="neumorphic"] .stats-toggle-btn{ border:none; background:var(--bg); box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .stats-toggle-btn:hover,
+html[data-style="neumorphic"] .stats-toggle-btn:hover{ box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .stats-toggle-btn.open,
+html[data-style="neumorphic"] .stats-toggle-btn.open{ box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .stats-dashboard,
+html[data-style="neumorphic"] .stats-dashboard{
+  background: var(--bg); border:none; backdrop-filter:none;
+  box-shadow: var(--nm-shadow-out);
+}
+
+html[data-theme="light"] .dash-cell,
+html[data-style="neumorphic"] .dash-cell{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .type-bar-track,
+html[data-style="neumorphic"] .type-bar-track{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .dash-list-row,
+html[data-style="neumorphic"] .dash-list-row{ border-bottom:1px solid var(--hairline); }
+
+html[data-theme="light"] .search-wrap input,
+html[data-theme="light"] select.filter,
+html[data-style="neumorphic"] select.filter{
+  background: var(--bg); border:none; backdrop-filter:none;
+  box-shadow: var(--nm-shadow-in); color:var(--text);
+}
+
+html[data-theme="light"] .search-wrap input::placeholder,
+html[data-style="neumorphic"] .search-wrap input::placeholder{ color:var(--text-faint); }
+
+html[data-theme="light"] .search-wrap input:focus,
+html[data-theme="light"] select.filter:focus,
+html[data-style="neumorphic"] select.filter:focus{
+  box-shadow: var(--nm-shadow-in), 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+html[data-theme="light"] select.filter option,
+html[data-style="neumorphic"] select.filter option{ background:var(--select-option-bg); color:var(--select-option-text); }
+
+html[data-theme="light"] .view-toggle,
+html[data-style="neumorphic"] .view-toggle{
+  background: var(--bg); border:none; backdrop-filter:none; box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] .view-toggle-btn.active,
+html[data-style="neumorphic"] .view-toggle-btn.active{
+  background: linear-gradient(155deg, var(--accent-grad-1), var(--accent-grad-2)); border-color:transparent; color:#fff;
+  box-shadow: -2px -2px 5px rgba(var(--nm-highlight-rgb),0.4), 2px 2px 6px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+html[data-theme="light"] .empty,
+html[data-style="neumorphic"] .empty{
+  border:none; background:var(--bg); backdrop-filter:none;
+  box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] .card.is-shiny::after,
+html[data-style="neumorphic"] .card.is-shiny::after{
+  display:block;
+  mix-blend-mode: multiply;
+  opacity:0.32;
+}
+
+html[data-theme="light"] .form-badge,
+html[data-style="neumorphic"] .form-badge{
+  border:none; box-shadow: var(--nm-shadow-out-sm); background:var(--bg);
+}
+
+html[data-theme="light"] .form-badge:hover,
+html[data-style="neumorphic"] .form-badge:hover{ box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .form-badge.active,
+html[data-style="neumorphic"] .form-badge.active{ box-shadow: var(--nm-shadow-in), 0 0 0 2px rgba(255,255,255,0.4); }
+
+html[data-theme="light"] .detail-form-switch-btn,
+html[data-style="neumorphic"] .detail-form-switch-btn{
+  border:none; background:var(--bg); box-shadow: var(--nm-shadow-out-sm);
+}
+
+html[data-theme="light"] .detail-form-switch-btn:hover,
+html[data-style="neumorphic"] .detail-form-switch-btn:hover{ box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .detail-form-switch-btn.active,
+html[data-style="neumorphic"] .detail-form-switch-btn.active{
+  box-shadow: -2px -2px 5px rgba(var(--nm-highlight-rgb),0.4), 2px 2px 6px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+html[data-theme="light"] .card,
+html[data-style="neumorphic"] .card{
+  border:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+  background:
+    linear-gradient(135deg, var(--type-tint-1) 0%, var(--type-tint-2) 100%),
+    var(--bg);
+  box-shadow:
+    -7px -7px 14px rgba(var(--nm-highlight-rgb),var(--nm-highlight-a)),
+    7px 7px 16px rgba(var(--nm-shadow-rgb),var(--nm-shadow-a)),
+    7px 7px 22px -6px color-mix(in srgb, var(--glow) 35%, transparent);
+}
+
+html[data-theme="light"] .card::before,
+html[data-style="neumorphic"] .card::before{ opacity:0.10; }
+
+html[data-theme="light"] .card::after,
+html[data-style="neumorphic"] .card::after{ display:none; }
+
+html[data-theme="light"] .card:hover,
+html[data-style="neumorphic"] .card:hover{
+  transform:translateY(-3px);
+  border-color:transparent;
+  box-shadow:
+    -9px -9px 18px rgba(var(--nm-highlight-rgb),var(--nm-highlight-a-hover)),
+    9px 9px 20px rgba(var(--nm-shadow-rgb),var(--nm-shadow-a)),
+    8px 8px 26px -4px color-mix(in srgb, var(--glow) 45%, transparent);
+}
+
+html[data-theme="light"] .card:hover::before,
+html[data-style="neumorphic"] .card:hover::before{ opacity:0.16; }
+
+html[data-theme="light"] .card.is-shiny,
+html[data-style="neumorphic"] .card.is-shiny{ border-color:transparent; }
+
+html[data-theme="light"] .card-sprite,
+html[data-style="neumorphic"] .card-sprite{
+  background: var(--bg); border:none;
+  box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] .card-meta span,
+html[data-style="neumorphic"] .card-meta span{
+  background:var(--bg); border:none; box-shadow: var(--nm-shadow-out-sm);
+}
+
+html[data-theme="light"] .card-foot,
+html[data-style="neumorphic"] .card-foot{ border-top:1px solid var(--hairline); }
+
+html[data-theme="light"] .icon-btn,
+html[data-style="neumorphic"] .icon-btn{
+  border:none; background:var(--bg); box-shadow: var(--nm-shadow-out-sm); color:var(--text-dim);
+}
+
+html[data-theme="light"] .icon-btn:hover,
+html[data-style="neumorphic"] .icon-btn:hover{ background:var(--bg); box-shadow: var(--nm-shadow-hover); color:var(--text); }
+
+html[data-theme="light"] .icon-btn:active,
+html[data-style="neumorphic"] .icon-btn:active{ box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .icon-btn.danger:hover,
+html[data-style="neumorphic"] .icon-btn.danger:hover{ color:var(--danger); }
+
+html[data-theme="light"] .overlay,
+html[data-style="neumorphic"] .overlay{ background:rgba(34,34,36,0.45); }
+
+html[data-theme="light"] .modal,
+html[data-style="neumorphic"] .modal{
+  background: var(--bg); border:none; backdrop-filter:none;
+  box-shadow: -10px -10px 24px rgba(var(--nm-highlight-rgb),0.7), 10px 10px 30px rgba(var(--nm-shadow-rgb),0.22);
+}
+
+html[data-theme="light"] .modal::before,
+html[data-style="neumorphic"] .modal::before{ display:none; }
+
+html[data-theme="light"] .modal-head,
+html[data-style="neumorphic"] .modal-head{ border-bottom:1px solid var(--hairline); }
+
+html[data-theme="light"] .modal-close,
+html[data-style="neumorphic"] .modal-close{
+  border:none; background:var(--bg); color:var(--text-dim); box-shadow: var(--nm-shadow-out-sm);
+}
+
+html[data-theme="light"] .modal-close:hover,
+html[data-style="neumorphic"] .modal-close:hover{ box-shadow: var(--nm-shadow-hover); color:var(--text); }
+
+html[data-theme="light"] .section-label::after,
+html[data-style="neumorphic"] .section-label::after{ background:var(--hairline); }
+
+html[data-theme="light"] .info-grid,
+html[data-style="neumorphic"] .info-grid{
+  background:transparent; border:none; box-shadow:none; overflow:visible;
+  grid-template-columns:repeat(2, 1fr); gap:12px;
+}
+
+html[data-theme="light"] .info-cell,
+html[data-style="neumorphic"] .info-cell{
+  background:var(--bg); border-radius:14px; box-shadow: var(--nm-shadow-out-sm);
+  padding:14px 16px;
+}
+
+html[data-theme="light"] .info-cell:hover,
+html[data-style="neumorphic"] .info-cell:hover{ box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .notes-box,
+html[data-style="neumorphic"] .notes-box{
+  background:var(--bg); border:none; box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] .age-display,
+html[data-style="neumorphic"] .age-display{
+  background:var(--bg); border:none; box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] table.movetable th,
+html[data-style="neumorphic"] table.movetable th{ border-bottom:1px solid var(--hairline); }
+
+html[data-theme="light"] table.movetable td,
+html[data-style="neumorphic"] table.movetable td{ border-bottom:1px solid var(--hairline); }
+
+html[data-theme="light"] table.movetable tr:hover td,
+html[data-style="neumorphic"] table.movetable tr:hover td{ background:color-mix(in srgb, var(--text) 4%, transparent); }
+
+html[data-theme="light"] .game-tag,
+html[data-style="neumorphic"] .game-tag{ background:color-mix(in srgb, var(--accent) 12%, transparent); color:var(--accent); }
+
+html[data-theme="light"] .ability-tag,
+html[data-style="neumorphic"] .ability-tag{ color:var(--accent-2); }
+
+html[data-theme="light"] .field input,
+html[data-theme="light"] .field select,
+html[data-theme="light"] .field textarea,
+html[data-style="neumorphic"] .field textarea{
+  background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); color:var(--text);
+}
+
+html[data-theme="light"] .field input:focus,
+html[data-theme="light"] .field select:focus,
+html[data-theme="light"] .field textarea:focus,
+html[data-style="neumorphic"] .field textarea:focus{
+  box-shadow: var(--nm-shadow-in), 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+html[data-theme="light"] .field select option,
+html[data-style="neumorphic"] .field select option{ background:var(--select-option-bg); color:var(--select-option-text); }
+
+html[data-theme="light"] .date-trigger,
+html[data-style="neumorphic"] .date-trigger{
+  background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); color:var(--text);
+}
+
+html[data-theme="light"] .date-trigger:hover, html[data-theme="light"] .date-trigger:focus,
+html[data-style="neumorphic"] .date-trigger:hover, html[data-style="neumorphic"] .date-trigger:focus{
+  box-shadow: var(--nm-shadow-in), 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+html[data-theme="light"] .date-trigger.open,
+html[data-style="neumorphic"] .date-trigger.open{
+  box-shadow: var(--nm-shadow-in), 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+html[data-theme="light"] .date-panel,
+html[data-style="neumorphic"] .date-panel{
+  background:var(--bg); border:none;
+  box-shadow: -6px -6px 16px rgba(var(--nm-highlight-rgb),0.85), 6px 6px 20px rgba(var(--nm-shadow-rgb),0.2);
+}
+
+html[data-theme="light"] .date-nav-btn,
+html[data-style="neumorphic"] .date-nav-btn{ border:none; background:var(--bg); box-shadow: var(--nm-shadow-out-sm); color:var(--text-dim); }
+
+html[data-theme="light"] .date-nav-btn:hover,
+html[data-style="neumorphic"] .date-nav-btn:hover{ box-shadow: var(--nm-shadow-hover); color:var(--text); }
+
+html[data-theme="light"] .date-panel-head .date-month-label:hover,
+html[data-style="neumorphic"] .date-panel-head .date-month-label:hover{ background:var(--bg); box-shadow: var(--nm-shadow-out-sm); color:var(--accent); }
+
+html[data-theme="light"] .date-today-btn,
+html[data-style="neumorphic"] .date-today-btn{
+  border:none; box-shadow: var(--nm-shadow-out-sm);
+  background:color-mix(in srgb, var(--accent) 10%, var(--bg));
+}
+
+html[data-theme="light"] .date-today-btn:hover,
+html[data-style="neumorphic"] .date-today-btn:hover{
+  box-shadow: var(--nm-shadow-hover);
+  background:color-mix(in srgb, var(--accent) 18%, var(--bg));
+}
+
+html[data-theme="light"] .date-day-cell:hover:not(:disabled),
+html[data-style="neumorphic"] .date-day-cell:hover:not(:disabled){ background:color-mix(in srgb, var(--accent) 14%, transparent); color:var(--text); }
+
+html[data-theme="light"] .date-year-cell,
+html[data-style="neumorphic"] .date-year-cell{ background:var(--bg); box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .date-year-cell:hover:not(:disabled),
+html[data-style="neumorphic"] .date-year-cell:hover:not(:disabled){ background:var(--bg); box-shadow: var(--nm-shadow-hover); color:var(--accent); }
+
+html[data-theme="light"] .date-year-cell.selected,
+html[data-style="neumorphic"] .date-year-cell.selected{ box-shadow: -2px -2px 5px rgba(var(--nm-highlight-rgb),0.4), 2px 2px 6px color-mix(in srgb, var(--accent) 40%, transparent); }
+
+html[data-theme="light"] .switch .track,
+html[data-style="neumorphic"] .switch .track{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .switch .thumb,
+html[data-style="neumorphic"] .switch .thumb{ background:#fff; box-shadow: 0 1px 4px rgba(var(--nm-shadow-rgb),0.3), -1px -1px 2px rgba(var(--nm-highlight-rgb),0.6); }
+
+html[data-theme="light"] .switch input:checked ~ .track,
+html[data-style="neumorphic"] .switch input:checked ~ .track{ background:linear-gradient(135deg, var(--accent-grad-1), var(--accent-grad-2)); box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .nature-tooltip-trigger,
+html[data-style="neumorphic"] .nature-tooltip-trigger{
+  border:none; background:var(--bg); box-shadow: var(--nm-shadow-out-sm); color:var(--text-faint);
+}
+
+html[data-theme="light"] .nature-tooltip-trigger:hover, html[data-theme="light"] .nature-tooltip-trigger:focus,
+html[data-style="neumorphic"] .nature-tooltip-trigger:hover, html[data-style="neumorphic"] .nature-tooltip-trigger:focus{
+  color:var(--accent); box-shadow: var(--nm-shadow-hover);
+}
+
+html[data-theme="light"] .nature-tooltip,
+html[data-style="neumorphic"] .nature-tooltip{
+  background:var(--bg); border:none; box-shadow: -6px -6px 14px rgba(255,255,255,0.85), 6px 6px 16px rgba(0,0,0,0.18);
+}
+
+html[data-theme="light"] .nature-tip-arrow.up,
+html[data-style="neumorphic"] .nature-tip-arrow.up{ color:#1C9A52; }
+
+html[data-theme="light"] .nature-tip-arrow.down,
+html[data-style="neumorphic"] .nature-tip-arrow.down{ color:var(--danger); }
+
+html[data-theme="light"] .info-tooltip-trigger,
+html[data-style="neumorphic"] .info-tooltip-trigger{
+  border:none; background:var(--bg); box-shadow: var(--nm-shadow-out-sm); color:var(--text-faint);
+}
+
+html[data-theme="light"] .info-tooltip-trigger:hover, html[data-theme="light"] .info-tooltip-trigger:focus,
+html[data-style="neumorphic"] .info-tooltip-trigger:hover, html[data-style="neumorphic"] .info-tooltip-trigger:focus{
+  color:var(--accent); box-shadow: var(--nm-shadow-hover);
+}
+
+html[data-theme="light"] .info-tooltip,
+html[data-style="neumorphic"] .info-tooltip{
+  background:var(--bg); border:none; box-shadow: -6px -6px 14px rgba(255,255,255,0.85), 6px 6px 16px rgba(0,0,0,0.18);
+}
+
+html[data-theme="light"] .ball-dropdown-trigger,
+html[data-style="neumorphic"] .ball-dropdown-trigger{
+  background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); color:var(--text);
+}
+
+html[data-theme="light"] .ball-dropdown-trigger:hover, html[data-theme="light"] .ball-dropdown-trigger:focus,
+html[data-style="neumorphic"] .ball-dropdown-trigger:hover, html[data-style="neumorphic"] .ball-dropdown-trigger:focus{
+  box-shadow: var(--nm-shadow-in), 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+html[data-theme="light"] .ball-dropdown-panel,
+html[data-style="neumorphic"] .ball-dropdown-panel{
+  background:var(--bg); border:none;
+  box-shadow: -6px -6px 16px rgba(255,255,255,0.85), 6px 6px 20px rgba(0,0,0,0.2);
+}
+
+html[data-theme="light"] .ball-option:hover,
+html[data-style="neumorphic"] .ball-option:hover{ background:color-mix(in srgb, var(--text) 6%, transparent); color:var(--text); }
+
+html[data-theme="light"] .ball-option.active,
+html[data-style="neumorphic"] .ball-option.active{ background:color-mix(in srgb, var(--accent) 10%, transparent); color:var(--accent); }
+
+html[data-theme="light"] .move-row,
+html[data-style="neumorphic"] .move-row{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .move-row input,
+html[data-style="neumorphic"] .move-row input{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .move-row input:focus,
+html[data-style="neumorphic"] .move-row input:focus{ box-shadow: var(--nm-shadow-in), 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+
+html[data-theme="light"] .rich-btn,
+html[data-style="neumorphic"] .rich-btn{
+  border:none; background:var(--bg); color:var(--text-dim); box-shadow: var(--nm-shadow-out-sm);
+}
+
+html[data-theme="light"] .rich-btn:hover,
+html[data-style="neumorphic"] .rich-btn:hover{ background:var(--bg); color:var(--text); box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .rich-input,
+html[data-style="neumorphic"] .rich-input{
+  background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); color:var(--text);
+}
+
+html[data-theme="light"] .rich-input:focus,
+html[data-style="neumorphic"] .rich-input:focus{ box-shadow: var(--nm-shadow-in), 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+
+html[data-theme="light"] .remove-row-btn,
+html[data-style="neumorphic"] .remove-row-btn{
+  border:none; background:var(--bg); color:var(--danger); box-shadow: var(--nm-shadow-out-sm);
+}
+
+html[data-theme="light"] .remove-row-btn:hover,
+html[data-style="neumorphic"] .remove-row-btn:hover{ box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .swatch,
+html[data-style="neumorphic"] .swatch{ box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .swatch.active,
+html[data-style="neumorphic"] .swatch.active{ border-color:var(--text); box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .custom-color-field input[type="color"],
+html[data-style="neumorphic"] .custom-color-field input[type="color"]{
+  border:none; box-shadow: var(--nm-shadow-in);
+}
+
+html[data-theme="light"] .gender-toggle-btn,
+html[data-style="neumorphic"] .gender-toggle-btn{
+  background:var(--bg); border:none; box-shadow: var(--nm-shadow-out-sm); color:var(--text-faint);
+}
+
+html[data-theme="light"] .gender-toggle-btn:hover,
+html[data-style="neumorphic"] .gender-toggle-btn:hover{ box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .gender-toggle-btn.male.active,
+html[data-style="neumorphic"] .gender-toggle-btn.male.active{
+  box-shadow: var(--nm-shadow-in), inset 0 0 0 2px rgba(91,156,255,0.5); color:#3478E0;
+}
+
+html[data-theme="light"] .gender-toggle-btn.female.active,
+html[data-style="neumorphic"] .gender-toggle-btn.female.active{
+  box-shadow: var(--nm-shadow-in), inset 0 0 0 2px rgba(255,111,165,0.5); color:#E0438A;
+}
+
+html[data-theme="light"] .gender-toggle-btn.genderless.active,
+html[data-style="neumorphic"] .gender-toggle-btn.genderless.active{
+  box-shadow: var(--nm-shadow-in), inset 0 0 0 2px rgba(176,124,255,0.5); color:#9355E0;
+}
+
+html[data-theme="light"] .sprite-preview,
+html[data-style="neumorphic"] .sprite-preview{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .toast,
+html[data-style="neumorphic"] .toast{
+  background:var(--bg); border:none;
+  box-shadow: -8px -8px 18px rgba(255,255,255,0.85), 8px 8px 22px rgba(0,0,0,0.22);
+}
+
+html[data-theme="light"] .toast-action,
+html[data-style="neumorphic"] .toast-action{
+  color:#fff; background:linear-gradient(155deg, var(--accent-grad-1), var(--accent-grad-2)); border:none;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+html[data-theme="light"] .toast-action:hover,
+html[data-style="neumorphic"] .toast-action:hover{ box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 50%, transparent); }
+
+html[data-theme="light"] .changelog-divider,
+html[data-style="neumorphic"] .changelog-divider{ border-top:1px solid var(--hairline); }
+
+html[data-theme="light"] .changelog-version-head .latest-tag,
+html[data-style="neumorphic"] .changelog-version-head .latest-tag{ background:var(--bg); box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .achv-title-picker select,
+html[data-style="neumorphic"] .achv-title-picker select{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .achv-category-label,
+html[data-style="neumorphic"] .achv-category-label{ border-bottom:1px solid var(--hairline); }
+
+html[data-theme="light"] .achv-badge,
+html[data-style="neumorphic"] .achv-badge{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .achv-badge:hover:not(.disabled),
+html[data-style="neumorphic"] .achv-badge:hover:not(.disabled){ box-shadow: var(--nm-shadow-hover); }
+
+html[data-theme="light"] .achv-badge.selected,
+html[data-style="neumorphic"] .achv-badge.selected{ box-shadow: var(--nm-shadow-in), 0 0 0 2px color-mix(in srgb, var(--accent-2) 35%, transparent); }
+
+html[data-theme="light"] .achv-sub-badge,
+html[data-style="neumorphic"] .achv-sub-badge{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .achv-memory-expand,
+html[data-style="neumorphic"] .achv-memory-expand{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .achv-partner-field,
+html[data-style="neumorphic"] .achv-partner-field{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .achv-partner-field input,
+html[data-style="neumorphic"] .achv-partner-field input{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }
+
+html[data-theme="light"] .achv-category-label,
+html[data-style="neumorphic"] .achv-category-label{ border-bottom:1px solid var(--hairline); }

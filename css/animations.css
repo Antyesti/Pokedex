@@ -1,0 +1,32 @@
+@keyframes ambientDrift{
+  0%   { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+  100% { background-position: 10% 8%, 88% 12%, 45% 92%, 0 0; }
+}
+
+@keyframes markGlow{
+  0%, 100% { box-shadow:0 0 0 1px rgba(255,255,255,0.08), 0 8px 24px color-mix(in srgb, var(--accent) 25%, transparent); }
+  50% { box-shadow:0 0 0 1px rgba(255,255,255,0.12), 0 8px 28px color-mix(in srgb, var(--accent) 45%, transparent); }
+}
+
+@keyframes holoSweep{
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes holoHue{ 0%{ filter: hue-rotate(0deg) saturate(1.4); } 100%{ filter: hue-rotate(360deg) saturate(1.4); } }
+
+@keyframes sparkleTwinkle{
+  0%, 100% { opacity:0; transform:scale(0.4) rotate(0deg); }
+  50% { opacity:var(--speak, 0.9); transform:scale(1) rotate(25deg); }
+}
+
+@keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+
+@keyframes slideUp{ from{ transform:translateY(18px) scale(0.98); opacity:0;} to{transform:translateY(0) scale(1); opacity:1;} }
+
+@keyframes iridescentShift{
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pokédex</title>
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADk0lEQVR4nK2XO4idRRTHf+fu3Y1LWE2EJaigKKgB0bS2BokW0cZCEAJBLSxELAQtfCA2FqaQiARUEDGNKCioidhEFFL4wkJECOIDQjYaEzRs3NzHz+I7X+7s3fv6Vg8M892ZOef85zznwiZJbalzs66Po9iE4gBaEdHL35cBVwMLwJ8RcboGEhH9pvKbANmlHlR/VFfVNfW0+r66uwbxfyiKHK0cy+oh9aLjqa8+nvwzu2NWQIdTSU/t5NwvRidn1X3JszlLqPPqDvUKdYt6S5q7VjyOalC/q1c1BpGBhrotfXwy51MTlA5TN+enU1YzV9SI1UcaKB0G0FePTLLAWLNERN8qlQ4B+4GTNbYG9whgPi3ahG9AhSV2qB/nrbrjrj3CBe+WcjYLYiHnvSl0UgDW1M9zfzmIgw0gZkXVSeZjwA/JN63KBdADloC5Yq05gIgw5/PA57k8S5mdTxCdjIPNlWYzhdTd6nkHeT7N/MfUO5K3/V9cUEfwKeCfMfvDtxP4A/gms6lbZ9bEmxYjhvdyfiBvWVfDMiPq4KzL8tfqp+q36mvq9Sljti48AcQ7Qya/YFUpp9GKerfZ3C4pKQTvVw+oD6mLowBZdcQl9RP1N/VF9VZ1q/rmCEt08/eFXHs9ZbUB2kBERE99A7gf+AK4E9ipPgf0ImKN6qAqEfG3ei+wGBHnCoAnhjAHgxRsU8XFWnmglYFxO9WL5ghwBvgKOAscB65J4a0CRETEWkScs+qYLfUg8AJVMI4LtKBKzQGA9PNhqgg/A9wG3ANsze/lPHMpHmoQajsiOsCDwKNUOT8ts9Z1xVYWmQ+BJ4Bl4DPgbWB7mmxfXYhGUE+9HHiW2YvMxrZs1WhWi2jtF/OqenOeaxU8deDO2h86Ob+VfG2oXNCKiBXglQJTP4fAInBjKizTsv6+idGFaJoFhIzMvNlTufgwcGUe6pKNJzNlXu0PuWSBZs/7jTEQEf0cTwK7gGeAlQTYA15S90REJwOwFLLUQDlMCtIhH19nVUJLelndlvtbMhOeH/LxOKpL9nvJP7cBTdaEUOcj4hfgPuDn3O4CjwHH1buyDkjzf1frXTC8my7pqHMR8ROwBzhB5Y41YCdwVH3V6m/Z2YYAap3T34hFqt3goNlcdJCmX6of5Pe0NKxd8FHKnO0pUIC4Vv2uUDbLw3QUgKMlgKkoMv3mIuJXYC/wPZXf6ydW02fWOp3/AotqYpekFCZHAAAAAElFTkSuQmCC">
+<link rel="apple-touch-icon" sizes="192x192" href="data:image/png;base64,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">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/pokemon.css">
+<link rel="stylesheet" href="css/achievements.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/themes.css">
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <h1 id="dexTitle">Pokédex</h1>
+        <div class="sub" id="trainerRow">
+          <span id="trainerLabel">Personal Roster Records</span>
+          <button type="button" class="trainer-edit-btn" id="trainerEditBtn" title="Set Original Trainer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn ghost" id="settingsBtn" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <button class="btn ghost" id="themeToggleBtn" title="Switch to Beast Ball Theme">
+        <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg id="themeIconCustom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a9 9 0 0 1 0 18 9 9 0 0 1 0-18z"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
+      </button>
+      <button class="btn ghost last-file-chip" id="lastFileChip" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
+        <span id="lastFileLabel">Load last file</span>
+        <span id="lastFileDismiss" class="chip-dismiss" title="Forget this file">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </span>
+      </button>
+      <button class="btn ghost" id="btnImport">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Import
+      </button>
+      <button class="btn ghost" id="btnExport">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Export
+      </button>
+      <button class="btn ghost" id="btnShareRoster" title="Share your whole roster as an image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+        Share
+      </button>
+      <button class="btn primary" id="btnAdd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Pokémon
+      </button>
+    </div>
+  </header>
+
+  <div class="statsbar" id="statsBar"></div>
+  <div class="stats-dashboard" id="statsDashboard"></div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Search nickname, species, nature, ball, move, notes, achievements...">
+    </div>
+    <select class="filter" id="typeFilter">
+      <option value="">All Types</option>
+    </select>
+    <select class="filter" id="gameFilter">
+      <option value="">All Origin Games</option>
+    </select>
+    <button type="button" class="btn ghost filter-toggle" id="shinyFilterBtn" title="Show only shiny Pokémon" aria-pressed="false">
+      <span class="shiny-filter-star"><img src="data:image/png;base64,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" alt=""></span> Shiny
+    </button>
+    <button type="button" class="btn ghost filter-toggle form-filter-toggle" id="megaFilterBtn" title="Show only Pokémon with Mega Evolution" aria-pressed="false">
+      <span class="form-filter-icon"><img id="megaFilterIcon" src="" alt=""></span> Mega
+    </button>
+    <button type="button" class="btn ghost filter-toggle form-filter-toggle" id="gigantamaxFilterBtn" title="Show only Pokémon with Gigantamax" aria-pressed="false">
+      <span class="form-filter-icon"><img id="gigantamaxFilterIcon" src="" alt=""></span> Gigantamax
+    </button>
+    <div class="view-toggle" id="viewToggle" role="group" aria-label="Grid density">
+      <button type="button" class="view-toggle-btn active" data-density="cozy" title="3 per row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="5" height="14" rx="1.5"/><rect x="9.5" y="5" width="5" height="14" rx="1.5"/><rect x="16" y="5" width="5" height="14" rx="1.5"/></svg>
+      </button>
+      <button type="button" class="view-toggle-btn" data-density="dense" title="6 per row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="2.6" height="12" rx="1"/><rect x="6.6" y="6" width="2.6" height="12" rx="1"/><rect x="10.7" y="6" width="2.6" height="12" rx="1"/><rect x="14.8" y="6" width="2.6" height="12" rx="1"/><rect x="18.9" y="6" width="2.6" height="12" rx="1"/></svg>
+      </button>
+    </div>
+    <select class="filter" id="sortFilter">
+      <option value="recent">Sort: Recently Added</option>
+      <option value="oldest" selected>Sort: Oldest Added</option>
+      <option value="name">Sort: Name (A–Z)</option>
+      <option value="species">Sort: Species (A–Z)</option>
+    </select>
+  </div>
+
+  <div id="gridWrap"></div>
+
+  <footer class="bottom">
+    Made by <strong class="footer-credit-name">Antyesti</strong><br>
+    POKÉDEX · AUTOSAVED IN THIS BROWSER · USE EXPORT FOR A PORTABLE BACKUP<br>
+    <a href="https://discord.gg/TRAxc8Jn2M" target="_blank" rel="noopener noreferrer" class="footer-discord-link"><b>Discord</b></a> · <a href="https://github.com/Antyesti/Pokedex" target="_blank" rel="noopener noreferrer" class="footer-github-link"><b>Github</b></a><br><br>
+    <a href="#" class="footer-pill-btn" id="changelogLink">Changelog</a> <a href="#" class="footer-pill-btn" id="creditsLink">Credits</a><br>
+    <span class="footer-legal-note">Pokémon and related images are © Nintendo, Creatures Inc., Game Freak, and The Pokémon Company. This is an unofficial, non-commercial fan project and is not affiliated with or endorsed by Nintendo, Creatures Inc., Game Freak, or The Pokémon Company.</span>
+  </footer>
+</div>
+
+<input type="file" id="fileInput" accept=".json" style="display:none">
+<div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span><button type="button" class="toast-action" id="toastAction" style="display:none;"></button></div>
+
+<script src="icons/ui-icons.js"></script>
+<script src="icons/achievement-icons.js"></script>
+<script src="icons/game-icons.js"></script>
+<script src="data/achievements.js"></script>
+<script src="data/changelog.js"></script>
+<script src="data/pokemon.js"></script>
+<script src="js/app.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/pokemon.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/vendor/pako.min.js"></script>
+<script src="js/vendor/upng.js"></script>
+<script src="js/vendor/gifuct.js"></script>
+<script src="js/share.js"></script>
+<script>init();</script>
+</body>
+</html>
