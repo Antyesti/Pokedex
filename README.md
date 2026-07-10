@@ -5,7 +5,7 @@ species, types, natures, met info, sprites, move/ability logs per game, and
 an achievements/ribbons system. Runs entirely client-side and can be opened
 directly from disk (`index.html`) with no build step or server required.
 
-## 🔖Features
+## 🔖Features 
 
 ### 🧬Roster & Pokémon records
 - Add / edit / delete Pokémon with nickname, species, up to two types (with
