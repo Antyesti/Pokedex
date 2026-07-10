@@ -5,6 +5,8 @@ species, types, natures, met info, sprites, move/ability logs per game, and
 an achievements/ribbons system. Runs entirely client-side and can be opened
 directly from disk (`index.html`) with no build step or server required.
 
+<img width="1520" height="856" alt="noir" src="https://github.com/user-attachments/assets/ad252100-18cf-4846-a051-c81911b0754b" />
+
 ## 🔖Features 
 
 ### 🧬Roster & Pokémon records
