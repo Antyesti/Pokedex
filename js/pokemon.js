@@ -8,7 +8,7 @@ function openForm(id){
     p = state.pokemon.find(x=>x.id===id);
     formMovesDraft = p.games.map(g => ({...g, moves:[...g.moves], gameKey: g.gameKey || detectGameKeyFromTag(g.tag)}));
   } else {
-    p = { nickname:'', species:'', types:[], nature:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customAchievements:[], partnerTrainerName:'', activeTitleKey:'' };
+    p = { nickname:'', species:'', types:[], nature:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', activeTitleKey:'' };
     formMovesDraft = [];
   }
 
@@ -344,7 +344,7 @@ function gamePresetSelectHTML(target, gameKey){
   const grouped = {};
   GAME_PRESETS.forEach(g => { (grouped[g.gen] = grouped[g.gen] || []).push(g); });
   const panelHTML = Object.keys(grouped).sort((a,b)=>a-b).map(gen => `
-    <div class="game-dropdown-gen-label">${escapeHTML(GAME_PRESET_GEN_LABELS[gen])}</div>
+    <div class="game-dropdown-gen-label">${escapeHTML(gamePresetGenLabel(gen))}</div>
     ${grouped[gen].map(g => `
       <div class="ball-option game-preset-option ${gameKey===g.key?'active':''}" onclick="selectGamePreset('${target}','${g.key}')">
         <img src="${g.icon}" alt="">

@@ -1523,8 +1523,9 @@ const ACHIEVEMENT_CATALOG = {
             status: "released",
             icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAWCAYAAAA4oUfxAAABOElEQVRIx9VWwQ2DMAxkJJ4dgzE6Cs+O02fH6Cj8UhLF1vlih0ZUqkCyiA25O8cmYUopTf+y6TLk23tN2XDM/ilyBGXg9T4XwzH7kUBPmEscAb8es3nW8z0cFtBki0ACdubOglCEki/LUqwHNroCfBcOJRclOchK2fCZJ+xobjYhz2ayFgG9pZN6ITDHopIhjyHfnjcjgLMY+YSijJHHkAsZr4QARv6370gz49KbhsOOZCGRz43k+YjZNBzXOi8NTsImGfULzo7Htbc1zy9XUqyXCqkAo77ZaPYY8jXdLk3hfTajZDin4RDycAkD4N4mw4Ki0mjD4d7uKcymX0MVIrWTsRCWMRAyVrO358s7hSIhmIkXj+Zol1c+JZdAdLQeCTki1GyBywRYQCSkd2aHZzdd1/qN+rV9ANvRDqeXePv0AAAAAElFTkSuQmCC",
             isMemoryRibbon: true,
+            memoryUnlockMode: "all",
             goldName: "Leaf Crown",
-            goldIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAWCAYAAAA4oUfxAAABQ0lEQVRIx9WUwQ2DMAxFvQkrcOwYjNFROHacHjtGR+GWkiiOfn7sQMqhKpJFDOS/H8dEQgjyq5C/gW/vNcTAMeeX4CjKwut9ToFjzj2DljET7Am/HnP1rpdbOmygWS0KqdiVOxtCEwW+LEuKnthoBfiujAJXJ/EhO+XAd5axo7kxFB6jWrUa6JVORKYYKMzPvC1DTgXfnrfKAK9CAWfCWzFyKrjCuBIq6OVnv9FmxtJXDYcdyUa8nBvJylGzaTje61ganIRNMponnV2P977e8/hxhuJ+FSNZYDSvDpr9GfKabtemsH6bURjOaRgKd0voCPcOGTbkbU1pOO1Oswr5w/I3ZCO6dzpWYBoDsFltZpXjNV+TVQXLCK7Eeu7NAbgwXPCgGDVyAqghHlysE4vFULT3zoIewV0TX4Z5HcGvmDm8IvcDMH/jtJonCg0AAAAASUVORK5CYII=",
+            goldIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAWCAYAAAA4oUfxAAABOElEQVRIx9VWwQ2DMAxkJJ4dgzE6Cs+O02fH6Cj8UhLF1vlih0ZUqkCyiA25O8cmYUopTf+y6TLk23tN2XDM/ilyBGXg9T4XwzH7kUBPmEscAb8es3nW8z0cFtBki0ACdubOglCEki/LUqwHNroCfBcOJRclOchK2fCZJ+xobjYhz2ayFgG9pZN6ITDHopIhjyHfnjcjgLMY+YSijJHHkAsZr4QARv6370gz49KbhsOOZCGRz43k+YjZNBzXOi8NTsImGfULzo7Htbc1zy9XUqyXCqkAo77ZaPYY8jXdLk3hfTajZDin4RDycAkD4N4mw4Ki0mjD4d7uKcymX0MVIrWTsRCWMRAyVrO358s7hSIhmIkXj+Zol1c+JZdAdLQeCTki1GyBywRYQCSkd2aHZzdd1/qN+rV9ANvRDqeXePv0AAAAAElFTkSuQmCC",
             subRibbons: [
               {
                 key: "leaf_crown_shiny_leaf_1",

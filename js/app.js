@@ -190,16 +190,18 @@ function fontPickerFieldHTML(slot, labelText, hintText, font){
 }
 
 function openSettings(){
-  const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), shareFormat:'apng' };
+  const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), shareFormat:'apng', cardFooterInfo:'arrow', sortBallsAlpha:false };
   const custom = s.custom || defaultCustomTheme();
   const bodyFont = s.bodyFont || defaultFontSetting();
   const nicknameFont = s.nicknameFont || defaultFontSetting();
+  const cardFooterInfo = s.cardFooterInfo || 'arrow';
+  const sortBallsAlpha = !!s.sortBallsAlpha;
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
   overlay.id = 'settingsOverlay';
   overlay.onclick = (e) => { if(e.target === overlay) closeSettings(); };
   overlay.innerHTML = `
-    <div class="modal" style="max-width:460px;">
+    <div class="modal" style="max-width:560px;">
       <div class="modal-head">
         <div>
           <h2 style="font-family:var(--sans); font-size:19px; margin:0;">Settings</h2>
@@ -218,6 +220,45 @@ function openSettings(){
             <option value="name" ${s.defaultSort==='name'?'selected':''}>Sort: Name (A–Z)</option>
             <option value="species" ${s.defaultSort==='species'?'selected':''}>Sort: Species (A–Z)</option>
           </select>
+        </div>
+        <div class="field" style="margin-top:16px;">
+          <label>Card Footer Info</label>
+          <select id="settingsCardFooterInfo">
+            <option value="arrow" ${cardFooterInfo==='arrow'?'selected':''}>Origin Game → Last Game</option>
+            <option value="arrowIconsOnly" ${cardFooterInfo==='arrowIconsOnly'?'selected':''}>Origin Game → Last Game (Icons Only)</option>
+            <option value="age" ${cardFooterInfo==='age'?'selected':''}>Age</option>
+            <option value="ageWithMet" ${cardFooterInfo==='ageWithMet'?'selected':''}>Age with Met Date</option>
+            <option value="notes" ${cardFooterInfo==='notes'?'selected':''}>Trainer Notes</option>
+            <option value="origin" ${cardFooterInfo==='origin'?'selected':''}>Just Origin Game</option>
+            <option value="last" ${cardFooterInfo==='last'?'selected':''}>Just Last Game</option>
+            <option value="none" ${cardFooterInfo==='none'?'selected':''}>None</option>
+          </select>
+          <div class="hint" style="margin-top:2px;">Shown on each card, next to the Share/Edit/Delete buttons. Choosing None centers those buttons instead.</div>
+        </div>
+        <div class="field" style="margin-top:16px;">
+          <label>Poké Ball Order</label>
+          <div class="shiny-field">
+            <label class="switch">
+              <input type="checkbox" id="settingsSortBallsAlpha" ${sortBallsAlpha ? 'checked' : ''}>
+              <span class="track"></span>
+              <span class="thumb"></span>
+            </label>
+            <label for="settingsSortBallsAlpha" style="font-size:13px; color:var(--text-dim); display:inline-flex; align-items:center; gap:5px; cursor:pointer; text-transform:uppercase; letter-spacing:0.04em;">Sort Alphabetically</label>
+          </div>
+          <div class="hint" style="margin-top:2px;">Applies to the Poké Ball picker in the edit form.</div>
+        </div>
+        <div class="field" style="margin-top:16px;">
+          <label style="display:flex; align-items:center; gap:6px;">Animated Sprite Format
+            <span class="info-tooltip-trigger" tabindex="0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span class="info-tooltip"><sup>Most photo viewers, including phone galleries and Windows Photos, do not animate APNG files. Web browsers are the most reliable way to view APNG animations. GIFs, on the other hand, are supported almost everywhere, including previews in Discord and Slack.</sup></span>
+            </span>
+          </label>
+          <div class="hint" style="margin-top:2px; margin-bottom:10px;">Used when sharing a card with an animated sprite as an image.</div>
+          <div class="btn-toggle-row">
+            <button type="button" class="btn ${s.shareFormat!=='gif'?'primary':'ghost'}" id="settingsShareFormatApng" style="flex:1; width:auto; height:auto; padding:10px 10px; border-radius:10px; font-size:13px;" onclick="setSettingsShareFormatChoice('apng')">Animated PNG</button>
+            <button type="button" class="btn ${s.shareFormat==='gif'?'primary':'ghost'}" id="settingsShareFormatGif" style="flex:1; width:auto; height:auto; padding:10px 10px; border-radius:10px; font-size:13px;" onclick="setSettingsShareFormatChoice('gif')">GIF</button>
+          </div>
         </div>
         <div class="field" style="margin-top:16px;">
           <label>Default Theme</label>
@@ -279,19 +320,6 @@ function openSettings(){
             <div class="font-preview-name" id="fontPreviewName">Charizard</div>
             <div class="font-preview-species">#006 · Fire / Flying</div>
             <div class="font-preview-sample">This is how the rest of your Pokédex will read.</div>
-          </div>
-        </div>
-        <div class="field" style="margin-top:16px; padding-top:16px; border-top:1px solid var(--panel-border);">
-          <label style="display:flex; align-items:center; gap:6px;">Animated Sprite Format
-            <span class="info-tooltip-trigger" tabindex="0">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              <span class="info-tooltip"><sup>Most photo viewers, including phone galleries and Windows Photos, do not animate APNG files. Web browsers are the most reliable way to view APNG animations. GIFs, on the other hand, are supported almost everywhere, including previews in Discord and Slack.</sup></span>
-            </span>
-          </label>
-          <div class="hint" style="margin-top:2px; margin-bottom:10px;">Used when sharing a card with an animated sprite as an image.</div>
-          <div class="btn-toggle-row">
-            <button type="button" class="btn ${s.shareFormat!=='gif'?'primary':'ghost'}" id="settingsShareFormatApng" style="flex:1; width:auto; height:auto; padding:10px 10px; border-radius:10px; font-size:13px;" onclick="setSettingsShareFormatChoice('apng')">Animated PNG</button>
-            <button type="button" class="btn ${s.shareFormat==='gif'?'primary':'ghost'}" id="settingsShareFormatGif" style="flex:1; width:auto; height:auto; padding:10px 10px; border-radius:10px; font-size:13px;" onclick="setSettingsShareFormatChoice('gif')">GIF</button>
           </div>
         </div>
       </div>
@@ -458,7 +486,9 @@ function resetAllPreferencesToDefault(){
     custom: defaultCustomTheme(),
     bodyFont: defaultFontSetting(),
     nicknameFont: defaultFontSetting(),
-    shareFormat: 'apng'
+    shareFormat: 'apng',
+    cardFooterInfo: 'arrow',
+    sortBallsAlpha: false
   };
   applySettings();
   renderGrid();
@@ -538,10 +568,12 @@ function closeSettings(){
 
 function saveSettings(){
   const defaultSort = document.getElementById('settingsDefaultSort').value;
+  const cardFooterInfo = document.getElementById('settingsCardFooterInfo').value;
+  const sortBallsAlpha = document.getElementById('settingsSortBallsAlpha').checked;
   const custom = settingsThemeDraft === 'custom' ? readCustomColorsFromInputs() : (state.settings && state.settings.custom) || defaultCustomTheme();
   const bodyFont = { ...fontDrafts.body };
   const nicknameFont = { ...fontDrafts.nickname };
-  state.settings = { defaultSort, defaultTheme: settingsThemeDraft, custom, bodyFont, nicknameFont, shareFormat: settingsShareFormatDraft };
+  state.settings = { defaultSort, defaultTheme: settingsThemeDraft, custom, bodyFont, nicknameFont, shareFormat: settingsShareFormatDraft, cardFooterInfo, sortBallsAlpha };
   applySettings();
   renderGrid();
   refreshAllOpenAchievementsSections();

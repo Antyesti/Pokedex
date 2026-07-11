@@ -32,6 +32,24 @@ const CREDITS = [
 ];
 
 const CHANGELOG = [
+  { version:'v23', entries:[
+    { title:'Card footer info setting', items:[
+      'Added a Settings option for what shows in each card\'s footer, next to the Share/Edit/Delete buttons: Origin Game → Last Game (default), Origin Game → Last Game (Icons Only), Age, Age with Met Date, Trainer Notes, Just Origin Game, Just Last Game, or None.',
+      'Choosing None, or leaving the info blank for a given Pokémon, centers those buttons instead.',
+      'The 6-per-row (desktop) and 2-per-row (mobile) dense grid view no longer shows footer info by default, keeping cards uncluttered at that size.'
+    ]},
+    { title:'Poké Ball order setting', items:[
+      'Added a Settings option to sort the Poké Ball picker alphabetically.'
+    ]},
+    { title:'Settings layout', items:[
+      'Moved Animated Sprite Format above Default Theme and Fonts.',
+      'Widened the Settings modal so the Master Ball custom color pickers have room to breathe.'
+    ]},
+    { title:'Bug fixes', items:[
+      'Fixed the Settings modal clipping button labels that ran wider than their button.',
+      'Fixed the Age display running the number and unit together with no space (e.g. "21Years" instead of "21 Years").'
+    ]}
+  ]},
   { version:'v22', entries:[
     { title:'Pokéathlon medals', items:[
       'Added the five Pokéathlon medals (Speed, Power, Skill, Stamina, Jump) to Achievements, and moved Pokéathlon Achievements above Bonus Achievements in the Miscellaneous section.'

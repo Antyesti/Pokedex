@@ -649,6 +649,55 @@ function setPreferredForm(id, form){
   renderGrid();
 }
 
+function gameTagHTML(tag){
+  const preset = GAME_PRESET_INDEX[detectGameKeyFromTag(tag)];
+  return `${preset ? `<img class="game-tag-icon" src="${preset.icon}" alt="" title="${escapeAttr(preset.label)}">` : ''}${escapeHTML(tag || '-')}`;
+}
+
+// Icon-only version of gameTagHTML, for the "without the text" footer mode. Falls back to
+// the plain tag text when a game doesn't match a known preset, so a custom/free-typed game
+// name doesn't just disappear.
+function gameTagIconOnlyHTML(tag){
+  const preset = GAME_PRESET_INDEX[detectGameKeyFromTag(tag)];
+  return preset ? `<img class="game-tag-icon" src="${preset.icon}" alt="" title="${escapeAttr(preset.label)}">` : escapeHTML(tag || '-');
+}
+
+// What shows in the card footer, left of the Share/Edit/Delete buttons, is controlled by the
+// cardFooterInfo setting (a global preference, not per card). Dense grid view is cramped enough
+// that we always drop the footer text there regardless of the setting, same as choosing None.
+function cardFooterInfoHTML(p){
+  if(gridDensity === 'dense') return '';
+  const mode = (state.settings && state.settings.cardFooterInfo) || 'arrow';
+  switch(mode){
+    case 'none':
+      return '';
+    case 'age': {
+      const age = formatAge(p.metDate);
+      return age ? `<span class="origin-label">${age} old</span>` : '';
+    }
+    case 'ageWithMet': {
+      const age = formatAge(p.metDate);
+      if(!age) return '';
+      const met = formatMetDate(p.metDate);
+      return `<span class="origin-label">${age} old${met ? ` · Met ${met}` : ''}</span>`;
+    }
+    case 'notes': {
+      const notes = stripHTML(p.notes).trim();
+      return notes ? `<span class="origin-label">${escapeHTML(notes)}</span>` : '';
+    }
+    case 'origin':
+      return p.originGame ? `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.originGame)}</span>` : '';
+    case 'last':
+      return p.lastGame ? `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.lastGame)}</span>` : '';
+    case 'arrow':
+      return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.originGame)} → ${gameTagHTML(p.lastGame)}</span>`;
+    case 'arrowIconsOnly':
+      return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagIconOnlyHTML(p.originGame)} → ${gameTagIconOnlyHTML(p.lastGame)}</span>`;
+    default:
+      return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.originGame)} → ${gameTagHTML(p.lastGame)}</span>`;
+  }
+}
+
 function cardHTML(p){
   const primaryColor = TYPE_HEX[p.types[0]] || '#4FD1C5';
   const secondaryColor = TYPE_HEX[p.types[1]] || primaryColor;
@@ -662,6 +711,7 @@ function cardHTML(p){
   const borderColor = hexToRgba(primaryColor, 0.45);
   const displaySprite = resolveDisplaySprite(p);
   const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
+  const footerInfo = cardFooterInfoHTML(p);
   return `
   <div class="card ${p.shiny ? 'is-shiny' : ''}" style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; border-color:${borderColor}" onclick="openDetail('${p.id}')">
     ${formBadgeRowHTML(p)}
@@ -681,8 +731,8 @@ function cardHTML(p){
       ${p.ball ? `<span style="display:inline-flex; align-items:center; gap:4px;">${ballIconHTML(p.ball,18)}${escapeHTML(p.ball)}</span>` : ''}
       <span>${p.games.length} game${p.games.length===1?'':'s'}</span>
     </div>
-    <div class="card-foot">
-      <span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${(() => { const op = GAME_PRESET_INDEX[detectGameKeyFromTag(p.originGame)]; const lp = GAME_PRESET_INDEX[detectGameKeyFromTag(p.lastGame)]; return `${op ? `<img class="game-tag-icon" src="${op.icon}" alt="" title="${escapeAttr(op.label)}">` : ''}${escapeHTML(p.originGame||'-')} → ${lp ? `<img class="game-tag-icon" src="${lp.icon}" alt="" title="${escapeAttr(lp.label)}">` : ''}${escapeHTML(p.lastGame||'-')}`; })()}</span>
+    <div class="card-foot ${footerInfo ? '' : 'centered'}">
+      ${footerInfo}
       <div class="card-actions">
         <div class="icon-btn" title="Share as image" onclick="event.stopPropagation(); shareCardAsImage('${p.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
@@ -740,7 +790,7 @@ function calculateAge(metDateStr){
 function formatAge(metDateStr){
   const age = calculateAge(metDateStr);
   if(!age) return null;
-  const unit = (n, label) => `${n}<span class="age-unit">${label}${n!==1?'s':''}</span>`;
+  const unit = (n, label) => `${n} <span class="age-unit">${label}${n!==1?'s':''}</span>`;
   const parts = [];
   if(age.years > 0) parts.push(unit(age.years, 'Year'));
   if(age.months > 0) parts.push(unit(age.months, 'Month'));
@@ -834,8 +884,15 @@ function ballIconHTML(ballName, size){
   return `<img src="${data}" alt="" style="width:${size}px;height:${size}px;flex:none;vertical-align:middle;">`;
 }
 
+function orderedBallData(){
+  if(state.settings && state.settings.sortBallsAlpha){
+    return [...BALL_DATA].sort((a,b) => a.name.localeCompare(b.name));
+  }
+  return BALL_DATA;
+}
+
 function ballSelectHTML(id, selected){
-  const rows = BALL_DATA.map(b => `
+  const rows = orderedBallData().map(b => `
     <div class="ball-option ${selected===b.name?'active':''}" onclick="selectBall('${id}','${escapeAttr(b.name).replace(/'/g,"\\'")}')">
       <img src="${b.data}" alt="">
       <span>${escapeHTML(b.name)}</span>

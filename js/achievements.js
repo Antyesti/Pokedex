@@ -6,9 +6,18 @@ Object.values(ACHIEVEMENT_CATALOG).forEach(cat => {
     sub.items.forEach(item => { ACHIEVEMENT_INDEX[item.key] = item; });
   });
 });
-// Flat index of sub-ribbons (Contest/Battle Memory components), keyed by their own key.
+// Flat index of sub-ribbons (Contest/Battle Memory components, plus any custom
+// Memory Ribbon-style achievement's sub-ribbons), keyed by their own key. Built
+// generically from the catalog so new custom collections are covered automatically.
 const SUB_RIBBON_INDEX = {};
-[...CONTEST_MEMORY_SUB_RIBBONS, ...BATTLE_MEMORY_SUB_RIBBONS].forEach(r => { SUB_RIBBON_INDEX[r.key] = r; });
+Object.values(ACHIEVEMENT_INDEX).forEach(item => {
+  if(item.isMemoryRibbon && Array.isArray(item.subRibbons)){
+    item.subRibbons.forEach(r => { SUB_RIBBON_INDEX[r.key] = r; });
+  }
+});
+// Flat list of every Memory Ribbon-style catalog item (built-in Contest/Battle Memory
+// Ribbons plus any custom ones), used to generalize state/title/toggle logic below.
+const MEMORY_RIBBON_ITEMS = Object.values(ACHIEVEMENT_INDEX).filter(item => item.isMemoryRibbon);
 
 // Category tags available for custom achievements.
 const CUSTOM_ACHIEVEMENT_TAGS = [
@@ -22,19 +31,38 @@ const CUSTOM_ACHIEVEMENT_TAGS = [
   { value:'misc', label:'Bonus Achievements' }
 ];
 
-/* ---------- Memory Ribbon (Contest/Battle) unlock state ---------- */
-// Normal variant shows once >=1 sub-ribbon is selected; Gold replaces it once all are selected.
+/* ---------- Memory Ribbon (Contest/Battle, plus custom) unlock state ---------- */
+// Default behavior (used by the built-in Contest/Battle Memory Ribbons, and any custom
+// Memory Ribbon that doesn't set memoryUnlockMode): shows as soon as >=1 sub-ribbon is
+// selected, and swaps to its Gold variant once all are selected.
+// Opt-in behavior (catalogItem.memoryUnlockMode === 'all'): stays hidden entirely until
+// every sub-ribbon has been selected — for "you need the full set" achievements like a
+// custom Leaf Crown that requires all 5 Shiny Leaf pieces before it counts as earned.
 function memoryRibbonState(p, catalogItem, selectedSubKeys){
   const total = catalogItem.subRibbons.length;
   const have = selectedSubKeys.filter(k => catalogItem.subRibbons.some(r => r.key === k)).length;
+  const requireAll = catalogItem.memoryUnlockMode === 'all';
   return {
-    unlocked: have > 0,
+    unlocked: requireAll ? (total > 0 && have === total) : have > 0,
     gold: have === total && total > 0,
     have, total
   };
 }
 function contestMemoryState(p){ return memoryRibbonState(p, ACHIEVEMENT_CATALOG.ribbons.subcategories.contest.items.find(i=>i.key==='contest_memory_ribbon'), p.contestMemorySubKeys); }
 function battleMemoryState(p){ return memoryRibbonState(p, ACHIEVEMENT_CATALOG.ribbons.subcategories.tower.items.find(i=>i.key==='battle_memory_ribbon'), p.battleMemorySubKeys); }
+
+// Returns the mutable array of selected sub-ribbon keys for a given Memory Ribbon
+// catalog item on a given Pokémon. The two built-in items keep their own dedicated
+// arrays (existing save data stays compatible); any other Memory Ribbon item (i.e.
+// a custom one) gets a lazily-created array inside p.customMemorySubKeys, keyed by
+// the item's own key, so custom collections no longer collide with Battle Memory's.
+function getMemorySubKeyList(p, item){
+  if(item.key === 'contest_memory_ribbon') return p.contestMemorySubKeys;
+  if(item.key === 'battle_memory_ribbon') return p.battleMemorySubKeys;
+  if(!p.customMemorySubKeys || typeof p.customMemorySubKeys !== 'object') p.customMemorySubKeys = {};
+  if(!Array.isArray(p.customMemorySubKeys[item.key])) p.customMemorySubKeys[item.key] = [];
+  return p.customMemorySubKeys[item.key];
+}
 
 /* ---------- Title resolution ---------- */
 // Returns the list of achievement keys (catalog ribbons/marks + custom) that currently
@@ -53,13 +81,13 @@ function getEarnedTitleKeys(p){
     keys.push(key);
   });
   // Memory Ribbons are driven entirely by their sub-ribbon collections; the parent key is
-  // never pushed into achievementKeys, so check them independently here.
-  ['contest_memory_ribbon','battle_memory_ribbon'].forEach(key => {
-    const item = ACHIEVEMENT_INDEX[key];
-    if(!item || !item.title) return;
-    const subKeys = key === 'contest_memory_ribbon' ? p.contestMemorySubKeys : p.battleMemorySubKeys;
+  // never pushed into achievementKeys, so check them independently here. Covers the two
+  // built-in items as well as any custom Memory Ribbon-style achievement.
+  MEMORY_RIBBON_ITEMS.forEach(item => {
+    if(!item.title) return;
+    const subKeys = getMemorySubKeyList(p, item);
     const st = memoryRibbonState(p, item, subKeys);
-    if(st.unlocked) keys.push(key);
+    if(st.unlocked) keys.push(item.key);
   });
   // Contest Star Ribbon is auto-awarded (not in achievementKeys), check independently
   if(hasContestStar(p)){
@@ -141,6 +169,27 @@ function normalizePokemon(p){
   if(!Array.isArray(p.achievementKeys)) p.achievementKeys = [];
   if(!Array.isArray(p.contestMemorySubKeys)) p.contestMemorySubKeys = [];
   if(!Array.isArray(p.battleMemorySubKeys)) p.battleMemorySubKeys = [];
+  if(!p.customMemorySubKeys || typeof p.customMemorySubKeys !== 'object') p.customMemorySubKeys = {};
+  Object.keys(p.customMemorySubKeys).forEach(k => {
+    if(!Array.isArray(p.customMemorySubKeys[k])) p.customMemorySubKeys[k] = [];
+  });
+  // One-time migration: earlier versions had no generic storage for custom Memory
+  // Ribbon-style achievements, so their sub-ribbon selections were accidentally saved
+  // into battleMemorySubKeys. Move any leftover matches into the correct per-item slot.
+  MEMORY_RIBBON_ITEMS.forEach(item => {
+    if(item.key === 'contest_memory_ribbon' || item.key === 'battle_memory_ribbon') return;
+    const subRibbonKeys = (item.subRibbons || []).map(r => r.key);
+    if(!subRibbonKeys.length) return;
+    [p.contestMemorySubKeys, p.battleMemorySubKeys].forEach(list => {
+      for(let i = list.length - 1; i >= 0; i--){
+        if(subRibbonKeys.includes(list[i])){
+          const moved = list.splice(i, 1)[0];
+          if(!Array.isArray(p.customMemorySubKeys[item.key])) p.customMemorySubKeys[item.key] = [];
+          if(!p.customMemorySubKeys[item.key].includes(moved)) p.customMemorySubKeys[item.key].push(moved);
+        }
+      }
+    });
+  });
   if(!Array.isArray(p.customAchievements)) p.customAchievements = [];
   // each custom achievement: { id, name, tag, icon }
   p.customAchievements = p.customAchievements.map(c => ({
@@ -165,7 +214,8 @@ function seedData(){
 /* ============== ACHIEVEMENTS SECTION (detail view) ============== */
 // Tracks which Memory Ribbon expand panel (if any) is open per Pokémon id, so reopening
 // the detail view or re-rendering after a toggle doesn't unexpectedly collapse it.
-const achievementMemoryExpanded = {}; // { [pokemonId]: { contest: bool, battle: bool } }
+// Shape: { [pokemonId]: { [memoryRibbonItemKey]: bool } }
+const achievementMemoryExpanded = {};
 
 function findPokemonById(id){ return state.pokemon.find(x=>x.id===id); }
 
@@ -179,7 +229,7 @@ function earnedAchievementEntries(p){
     const item = ACHIEVEMENT_INDEX[key];
     if(item) entries.push({ name: item.name, icon: item.icon });
   });
-  [...(p.contestMemorySubKeys||[]), ...(p.battleMemorySubKeys||[])].forEach(key => {
+  [...(p.contestMemorySubKeys||[]), ...(p.battleMemorySubKeys||[]), ...Object.values(p.customMemorySubKeys||{}).flat()].forEach(key => {
     const sub = SUB_RIBBON_INDEX[key];
     if(sub) entries.push({ name: sub.name, icon: sub.icon });
   });
@@ -261,9 +311,9 @@ function achievementBadgeHTML(p, item, selected, readonly){
 }
 
 function memoryRibbonBadgeHTML(p, item, readonly){
-  const subKeys = item.key === 'contest_memory_ribbon' ? p.contestMemorySubKeys : p.battleMemorySubKeys;
+  const subKeys = getMemorySubKeyList(p, item);
   const st = memoryRibbonState(p, item, subKeys);
-  const expandKind = item.key === 'contest_memory_ribbon' ? 'contest' : 'battle';
+  const expandKind = item.key;
   const isOpen = !!(achievementMemoryExpanded[p.id] && achievementMemoryExpanded[p.id][expandKind]);
   const displayName = st.gold ? item.goldName : item.name;
   const displayIcon = st.gold ? item.goldIcon : item.icon;
@@ -324,7 +374,7 @@ function memoryRibbonExpandHTML(p, item, subKeys, readonly){
 
 function isAchievementEarned(p, item){
   if(item.isMemoryRibbon){
-    const subKeys = item.key === 'contest_memory_ribbon' ? p.contestMemorySubKeys : p.battleMemorySubKeys;
+    const subKeys = getMemorySubKeyList(p, item);
     return memoryRibbonState(p, item, subKeys).unlocked;
   }
   if(item.key === 'contest_star_ribbon') return hasContestStar(p);
@@ -607,8 +657,9 @@ function applyContestTierConsistency(list, subKey, selecting){
 function toggleMemorySubRibbon(id, parentKey, subKey){
   const p = findPokemonById(id);
   if(!p) return;
-  const listKey = parentKey === 'contest_memory_ribbon' ? 'contestMemorySubKeys' : 'battleMemorySubKeys';
-  const list = p[listKey];
+  const item = ACHIEVEMENT_INDEX[parentKey];
+  if(!item) return;
+  const list = getMemorySubKeyList(p, item);
   const idx = list.indexOf(subKey);
   const selecting = idx === -1;
   if(selecting) list.push(subKey);

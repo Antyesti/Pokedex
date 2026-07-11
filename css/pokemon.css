@@ -270,6 +270,8 @@
 
 .card-foot .origin-label{ line-height:1.4; padding-top:4px; }
 
+.card-foot.centered{ justify-content:center; }
+
 /* ---- Light theme: cards become flat neumorphic plastic, tinted by type via shadow glow ---- */
 
 .card-actions{ display:flex; gap:6px; flex:none; }
@@ -400,7 +402,7 @@
 
 .age-display .age-duration .age-unit{
   font-size:11px; font-weight:600; color:var(--text-faint); text-transform:uppercase;
-  letter-spacing:0.04em; margin:0 10px 0 3px; vertical-align:middle;
+  letter-spacing:0.04em; margin:0 10px 0 0; vertical-align:middle;
 }
 
 .age-display .age-met-date{ font-family:var(--mono); font-size:12px; font-weight:450; color:var(--text-faint); line-height:1.3; display:flex; align-items:center; gap:6px; }
@@ -869,7 +871,9 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 
 .gender-toggle-group{ display:flex; gap:8px; margin-top:4px; }
 
-.btn-toggle-row{ display:flex; gap:10px; margin-top:4px; }
+.btn-toggle-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+
+.btn-toggle-row .btn{ min-width:0; justify-content:center; text-align:center; white-space:normal; line-height:1.3; }
 
 .settings-unreleased-warning{
   margin-top:8px; padding:9px 11px; border-radius:9px;
