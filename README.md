@@ -144,6 +144,7 @@ data/
 icons/
   ui-icons.js            Poké Ball art, shiny/mega/gigantamax badges, placeholder icons
   achievement-icons.js   Contest/Battle Memory sub-ribbon icons and per-achievement artwork
+  game-icons.js          Icons for official games
 ```
 
 All artwork in the app is Base64 icon data stored in `icons/`; there are no
