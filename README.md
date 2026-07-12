@@ -7,6 +7,10 @@ directly from disk (`index.html`) with no build step or server required.
 
 <img width="1487" height="743" alt="image" src="https://github.com/user-attachments/assets/2f7ccb24-cfdb-46c8-a647-a51602549409" />
 
+## Latest as on v24
+https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
+
+
 ## 🔖Features
 
 ### 🧬Roster & Pokémon records
