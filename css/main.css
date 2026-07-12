@@ -52,6 +52,7 @@ body{
 
 @media (prefers-reduced-motion: reduce){
   body{ animation:none; }
+  .stats-dashboard{ transition:none; }
 }
 
 /* Background dot grid */
@@ -248,19 +249,49 @@ header.top{
 .stats-toggle-btn.open svg{ transform:rotate(180deg); }
 
 .stats-dashboard{
-  display:none; margin-bottom:26px; border-radius:var(--radius); border:1px solid var(--panel-border);
+  overflow:hidden;
+  max-height:0;
+  margin-bottom:0;
+  transition: max-height .35s cubic-bezier(.4,0,.2,1), margin-bottom .35s ease;
+}
+
+.stats-dashboard.open{ margin-bottom:26px; }
+
+.stats-dashboard-inner{
+  border-radius:var(--radius); border:1px solid var(--panel-border);
   background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01) 60%), var(--panel);
   backdrop-filter:blur(18px) saturate(150%); padding:22px 24px 24px;
 }
 
-.stats-dashboard.open{ display:block; }
-
 .stats-section-title{
   font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
-  color:var(--text-faint); margin:0 0 12px;
+  color:var(--text-faint); margin:0 0 12px; display:flex; align-items:center; gap:7px;
 }
 
 .stats-section-title:not(:first-child){ margin-top:22px; }
+
+.stats-section-title svg{ width:13px; height:13px; opacity:0.7; flex:none; }
+
+/* Headline takeaways: short auto-generated highlights pulled from the same numbers shown
+   in detail further down, surfaced as a scannable strip before anyone has to read a chart.
+   One shared card, each highlight a bulleted line, rather than a separate box per line. */
+.stats-headlines{
+  display:flex; flex-direction:column; gap:9px;
+  border:1px solid var(--panel-border); border-radius:12px; background:rgba(255,255,255,0.03);
+  padding:14px 16px;
+}
+
+.stats-headline{
+  display:flex; align-items:baseline; gap:9px;
+  font-family:var(--sans); font-size:13.5px; color:var(--text-dim); line-height:1.4;
+}
+
+.stats-headline::before{
+  content:""; flex:none; width:5px; height:5px; border-radius:50%; margin-top:7px;
+  background:var(--accent);
+}
+
+.stats-headline b{ color:var(--text); font-weight:700; }
 
 .stats-dash-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
 
@@ -268,16 +299,40 @@ header.top{
 
 @media (max-width: 560px){ .stats-dash-grid{ grid-template-columns:1fr; } }
 
+.stats-dash-grid.two-col{ grid-template-columns:repeat(2, 1fr); }
+
+@media (max-width: 560px){ .stats-dash-grid.two-col{ grid-template-columns:1fr; } }
+
 .dash-cell{
   border:1px solid var(--panel-border); border-radius:12px; padding:12px 14px;
-  background:rgba(255,255,255,0.03);
+  background:rgba(255,255,255,0.03); transition: border-color .15s ease, background .15s ease;
 }
 
-.dash-cell .k{ font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-faint); margin-bottom:6px; }
+.dash-cell:hover{ border-color:color-mix(in srgb, var(--accent) 30%, transparent); background:rgba(255,255,255,0.05); }
 
-.dash-cell .v{ font-family:var(--sans); font-size:19px; font-weight:700; color:var(--text); }
+.dash-cell.dash-cell-wide{ grid-column:span 2; }
 
-.dash-cell .v small{ font-family:var(--mono); font-size:11px; color:var(--text-dim); font-weight:450; margin-left:4px; }
+@media (max-width: 560px){ .dash-cell.dash-cell-wide{ grid-column:span 1; } }
+
+.dash-cell .k{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-faint);
+  margin-bottom:6px; display:flex; align-items:center; gap:6px;
+}
+
+.dash-cell .k img{ width:14px; height:14px; flex:none; }
+
+.dash-cell .v{ font-family:var(--sans); font-size:19px; font-weight:700; color:var(--text); display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
+
+.dash-cell .v small{ font-family:var(--mono); font-size:11px; color:var(--text-dim); font-weight:450; }
+
+.dash-cell .v .row-icon{ width:20px; height:20px; flex:none; }
+
+/* Most Awarded Ribbon is the one wide cell pairing an icon with a name instead of a plain
+   number -- a big number-sized name reads oddly next to a small icon, so it gets its own
+   smaller, centered text size and a bigger icon instead. */
+.dash-cell-wide .v{ font-size:14.5px; align-items:center; gap:10px; }
+
+.dash-cell-wide .v .row-icon{ width:30px; height:30px; }
 
 .type-bar-row{ display:grid; grid-template-columns:96px 1fr 40px; align-items:center; gap:10px; margin-bottom:7px; }
 
@@ -285,7 +340,7 @@ header.top{
 
 .type-bar-track{ height:9px; border-radius:5px; background:rgba(255,255,255,0.05); overflow:hidden; border:1px solid var(--panel-border); }
 
-.type-bar-fill{ height:100%; border-radius:5px; transition: width .4s cubic-bezier(.2,.8,.3,1); }
+.type-bar-fill{ height:100%; border-radius:5px; width:0; transition: width .6s cubic-bezier(.2,.8,.3,1); }
 
 .type-bar-row .tb-count{ font-family:var(--mono); font-size:11px; color:var(--text-faint); }
 

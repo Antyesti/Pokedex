@@ -75,9 +75,8 @@ function getEarnedTitleKeys(p){
     // Being present in p.achievementKeys already means it's selected/earned (including
     // unreleased achievements that were force-enabled), so it still grants its title.
     if(item.isMemoryRibbon) return; // handled separately below
-    if(key === 'contest_star_ribbon') return; // auto-awarded, handled separately below
-    // Twinkling Star only counts if Contest Star is also auto-awarded
-    if(key === 'twinkling_star_ribbon' && !hasContestStar(p)) return;
+    if(isAutoGrantedAchievement(item)) return; // handled separately below, not stored here
+    if(isAchievementLocked(p, item)) return; // prerequisite no longer satisfied
     keys.push(key);
   });
   // Memory Ribbons are driven entirely by their sub-ribbon collections; the parent key is
@@ -89,11 +88,12 @@ function getEarnedTitleKeys(p){
     const st = memoryRibbonState(p, item, subKeys);
     if(st.unlocked) keys.push(item.key);
   });
-  // Contest Star Ribbon is auto-awarded (not in achievementKeys), check independently
-  if(hasContestStar(p)){
-    const item = ACHIEVEMENT_INDEX['contest_star_ribbon'];
-    if(item && item.title) keys.push('contest_star_ribbon');
-  }
+  // Auto-granted achievements aren't stored in achievementKeys, so check every catalog
+  // item that declares autoGrant independently here.
+  Object.values(ACHIEVEMENT_INDEX).forEach(item => {
+    if(!item.title || !isAutoGrantedAchievement(item)) return;
+    if(isAchievementAutoGranted(p, item)) keys.push(item.key);
+  });
   // Custom achievements don't carry titles (no title field collected on creation), so they
   // never contribute to earned titles, only catalog ribbons/marks do.
   return keys;
@@ -242,25 +242,53 @@ function earnedAchievementNames(p){
 }
 
 
-// Contest Star Ribbon is auto-awarded when all 5 standalone Master Ribbons are selected
-// (Coolness/Beauty/Cuteness/Cleverness/Toughness Master Ribbon achievements).
-// Twinkling Star Ribbon requires Contest Star to be auto-awarded before it can be toggled.
-const CONTEST_STAR_MASTER_KEYS = [
-  'coolness_master_ribbon','beauty_master_ribbon',
-  'cuteness_master_ribbon','cleverness_master_ribbon','toughness_master_ribbon'
-];
-function hasContestStar(p){
-  return CONTEST_STAR_MASTER_KEYS.every(k => (p.achievementKeys||[]).includes(k));
+// Generic prerequisite / auto-grant helpers. Any achievement can declare `requires`
+// (an array of achievement keys that must ALL be earned before this one can be manually
+// toggled) and/or `autoGrant` (an array of achievement keys that, once ALL earned,
+// automatically grant this one -- it's then never manually toggled). These replace what
+// used to be logic hardcoded specifically for Contest Star Ribbon / Twinkling Star Ribbon.
+function isAutoGrantedAchievement(item){
+  return Array.isArray(item.autoGrant) && item.autoGrant.length > 0;
+}
+
+// Looks up an achievement by key and checks whether it's earned, honoring the same rules
+// as isAchievementEarned. Used when only a key is on hand (e.g. reading another
+// achievement's `requires`/`autoGrant` list).
+function isAchievementEarnedByKey(p, key){
+  const item = ACHIEVEMENT_INDEX[key];
+  if(!item) return (p.achievementKeys||[]).includes(key);
+  return isAchievementEarned(p, item);
+}
+
+function isAchievementAutoGranted(p, item){
+  if(!isAutoGrantedAchievement(item)) return false;
+  return item.autoGrant.every(key => isAchievementEarnedByKey(p, key));
+}
+
+function isAchievementLocked(p, item){
+  if(!Array.isArray(item.requires) || item.requires.length === 0) return false;
+  return !item.requires.every(key => isAchievementEarnedByKey(p, key));
+}
+
+// Removes any manually-toggled achievement whose prerequisites are no longer satisfied,
+// e.g. its `requires` achievement got toggled back off after this one was earned.
+function cleanupLockedAchievements(p){
+  Object.values(ACHIEVEMENT_INDEX).forEach(item => {
+    if(!isAchievementLocked(p, item)) return;
+    const idx = p.achievementKeys.indexOf(item.key);
+    if(idx !== -1) p.achievementKeys.splice(idx, 1);
+  });
 }
 
 function achievementBadgeHTML(p, item, selected, readonly){
   const disabled = item.status === 'unreleased';
 
-  // Contest Star Ribbon: auto-awarded, not manually togglable
-  if(item.key === 'contest_star_ribbon'){
-    const awarded = hasContestStar(p);
+  // Auto-granted achievements are never manually toggled -- show current state read-only.
+  if(isAutoGrantedAchievement(item)){
+    const awarded = isAchievementAutoGranted(p, item);
+    const reqNames = item.autoGrant.map(k => ACHIEVEMENT_INDEX[k]?.name || k).join(', ');
     return `
-      <div class="achv-badge ${awarded?'selected':''}" title="${escapeAttr(item.name)}: ${awarded ? 'Auto-awarded: all 5 Hoenn Master ribbons collected' : 'Collect all 5 Master Ribbons to unlock'}">
+      <div class="achv-badge ${awarded?'selected':''}" title="${escapeAttr(item.name)}: ${awarded ? `Auto-awarded: ${reqNames} collected` : `Collect ${reqNames} to unlock`}">
         <img src="${item.icon}" alt="">
         <span class="achv-badge-label">${escapeHTML(item.name)}</span>
         ${!awarded ? '<span class="achv-unreleased-tag">Auto</span>' : ''}
@@ -268,18 +296,16 @@ function achievementBadgeHTML(p, item, selected, readonly){
     `;
   }
 
-  // Twinkling Star Ribbon: only available once Contest Star is auto-awarded
-  if(item.key === 'twinkling_star_ribbon'){
-    const starAwarded = hasContestStar(p);
-    if(!starAwarded){
-      return `
-        <div class="achv-badge disabled" title="${escapeAttr(item.name)}: Requires Contest Star Ribbon first">
-          <img src="${item.icon}" alt="">
-          <span class="achv-badge-label">${escapeHTML(item.name)}</span>
-          <span class="achv-unreleased-tag">Locked</span>
-        </div>
-      `;
-    }
+  // Achievements with unmet prerequisites stay locked until those are earned first.
+  if(isAchievementLocked(p, item)){
+    const reqNames = item.requires.map(k => ACHIEVEMENT_INDEX[k]?.name || k).join(', ');
+    return `
+      <div class="achv-badge disabled" title="${escapeAttr(item.name)}: Requires ${reqNames} first">
+        <img src="${item.icon}" alt="">
+        <span class="achv-badge-label">${escapeHTML(item.name)}</span>
+        <span class="achv-unreleased-tag">Locked</span>
+      </div>
+    `;
   }
 
   // Once force-enabled, an unreleased achievement looks and behaves like any other
@@ -288,10 +314,13 @@ function achievementBadgeHTML(p, item, selected, readonly){
   const showAsDisabled = disabled && !selected;
   const title = showAsDisabled ? `${item.name} (Unreleased)` : item.name;
 
-  // Read-only (detail view): render as a static, non-interactive badge.
+  // Read-only (detail view): render as a static, non-interactive badge. Every badge shown
+  // here is earned (unearned ones are filtered out before this runs), so it gets a plain
+  // "readonly" look rather than the "selected" glow used for the interactive toggle grid --
+  // otherwise the whole section reads as if everything were permanently clicked.
   if(readonly){
     return `
-      <div class="achv-badge ${selected?'selected':''} ${showAsDisabled?'disabled':''}" title="${escapeAttr(title)}">
+      <div class="achv-badge readonly ${showAsDisabled?'disabled':''}" title="${escapeAttr(title)}">
         <img src="${item.icon}" alt="">
         <span class="achv-badge-label">${escapeHTML(item.name)}</span>
         ${showAsDisabled ? '<span class="achv-unreleased-tag">Unreleased</span>' : ''}
@@ -377,8 +406,33 @@ function isAchievementEarned(p, item){
     const subKeys = getMemorySubKeyList(p, item);
     return memoryRibbonState(p, item, subKeys).unlocked;
   }
-  if(item.key === 'contest_star_ribbon') return hasContestStar(p);
+  if(isAutoGrantedAchievement(item)) return isAchievementAutoGranted(p, item);
   return p.achievementKeys.includes(item.key);
+}
+
+// Tracks which achievement category/subcategory headers are collapsed, per Pokémon.
+// Kept outside the render functions (not on the Pokémon data itself) since it's pure
+// view state -- achievementsSectionHTML gets outerHTML-swapped every time an achievement
+// is toggled, so this needs to live somewhere that survives that swap.
+const achvCollapseState = {};
+
+function isAchvSectionCollapsed(pokemonId, sectionKey){
+  return !!achvCollapseState[`${pokemonId}::${sectionKey}`];
+}
+
+function toggleAchvSection(pokemonId, sectionKey){
+  const k = `${pokemonId}::${sectionKey}`;
+  achvCollapseState[k] = !achvCollapseState[k];
+  refreshAchievementsSection(pokemonId);
+}
+
+// Small circular disclosure button: right-pointing chevron rotates to point down when open.
+function achvCollapseToggleHTML(open){
+  return `
+    <span class="collapse-circle-btn${open ? ' open' : ''}" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 6 15 12 9 18"/></svg>
+    </span>
+  `;
 }
 
 function achievementGroupHTML(p, sub, readonly){
@@ -407,7 +461,7 @@ function achievementGroupHTML(p, sub, readonly){
 
 function customAchievementBadgeHTML(p, custom, readonly){
   return `
-    <div class="achv-badge selected custom" title="${escapeAttr(custom.name)}">
+    <div class="achv-badge ${readonly ? 'readonly' : 'selected'} custom" title="${escapeAttr(custom.name)}">
       <img src="${custom.icon}" alt="">
       <span class="achv-badge-label">${escapeHTML(custom.name)}</span>
       ${readonly ? '' : `<button type="button" class="achv-custom-remove" title="Remove custom achievement" onclick="event.stopPropagation(); removeCustomAchievement('${p.id}','${custom.id}')">
@@ -492,23 +546,40 @@ function achievementsSectionHTML(p, readonly){
       const groupHTML = achievementGroupHTML(p, sub, readonly);
       const hasGroupContent = !readonly || groupHTML.trim().length > 0;
       if(readonly && !hasGroupContent && customs.length === 0) return '';
+      const subContentHTML = `
+        ${groupHTML}
+        ${tag === 'ribbons-memorial' && partnerFieldHTML ? partnerFieldHTML : ''}
+        ${customs.length ? `<div class="achv-badge-grid achv-custom-grid">${customs.map(c=>customAchievementBadgeHTML(p,c,readonly)).join('')}</div>` : ''}
+      `;
+      if(subs.length <= 1){
+        // Only one subcategory under this category (e.g. Marks) -- the category header
+        // above already covers collapsing it, so skip a redundant second toggle here.
+        return `<div class="achv-subcategory">${subContentHTML}</div>`;
+      }
+      const subOpen = !isAchvSectionCollapsed(p.id, tag);
       return `
         <div class="achv-subcategory">
-          ${subs.length > 1 ? `<div class="achv-subcategory-label">${escapeHTML(subLabel)}</div>` : ''}
-          ${groupHTML}
-          ${tag === 'ribbons-memorial' && partnerFieldHTML ? partnerFieldHTML : ''}
-          ${customs.length ? `<div class="achv-badge-grid achv-custom-grid">${customs.map(c=>customAchievementBadgeHTML(p,c,readonly)).join('')}</div>` : ''}
+          <button type="button" class="achv-toggle-header achv-subcategory-label" onclick="toggleAchvSection('${p.id}','${tag}')">
+            ${achvCollapseToggleHTML(subOpen)}
+            <span>${escapeHTML(subLabel)}</span>
+          </button>
+          <div class="collapsible${subOpen ? ' open' : ''}"><div class="collapsible-inner">${subContentHTML}</div></div>
         </div>
       `;
     }).join('');
     if(readonly && !subsHTML.trim()) return '';
+    const catKey = `cat-${catLabel}`;
+    const catOpen = !isAchvSectionCollapsed(p.id, catKey);
     return `
       <div class="achv-category">
-        <div class="achv-category-label" style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-          <span>${escapeHTML(catLabel)}</span>
+        <div class="achv-category-label achv-header-row">
+          <button type="button" class="achv-toggle-header" onclick="toggleAchvSection('${p.id}','${catKey}')">
+            ${achvCollapseToggleHTML(catOpen)}
+            <span>${escapeHTML(catLabel)}</span>
+          </button>
           ${catLabel === 'Ribbons' ? addCustomBtnHTML : ''}
         </div>
-        ${subsHTML}
+        <div class="collapsible${catOpen ? ' open' : ''}"><div class="collapsible-inner">${subsHTML}</div></div>
       </div>
     `;
   }).join('');
@@ -557,12 +628,13 @@ function toggleAchievement(id, key){
   if(!p) return;
   const item = ACHIEVEMENT_INDEX[key];
   if(!item) return;
-  if(key === 'contest_star_ribbon') return; // auto-awarded only, not manually togglable
-  // Twinkling Star requires Contest Star to be auto-awarded
-  if(key === 'twinkling_star_ribbon' && !hasContestStar(p)) return;
+  if(isAutoGrantedAchievement(item)) return; // auto-awarded only, not manually togglable
+  if(isAchievementLocked(p, item)) return; // prerequisites not yet earned
   const idx = p.achievementKeys.indexOf(key);
   if(idx === -1) p.achievementKeys.push(key);
   else p.achievementKeys.splice(idx, 1);
+  // Toggling one off can leave a dependent achievement's prerequisites unmet.
+  cleanupLockedAchievements(p);
   // dropping a title's underlying achievement invalidates it as the active title
   if(p.activeTitleKey && !getEarnedTitleKeys(p).includes(p.activeTitleKey)) p.activeTitleKey = '';
   refreshAchievementsSection(id);
@@ -665,11 +737,9 @@ function toggleMemorySubRibbon(id, parentKey, subKey){
   if(selecting) list.push(subKey);
   else list.splice(idx, 1);
   if(parentKey === 'contest_memory_ribbon') applyContestTierConsistency(list, subKey, selecting);
-  // If Contest Star is no longer earned, auto-remove Twinkling Star
-  if(!hasContestStar(p)){
-    const twIdx = p.achievementKeys.indexOf('twinkling_star_ribbon');
-    if(twIdx !== -1) p.achievementKeys.splice(twIdx, 1);
-  }
+  // A sub-ribbon change can affect a Master Ribbon-style achievement's earned state, which
+  // in turn can unlock/lock things that depend on it -- recheck everything defensively.
+  cleanupLockedAchievements(p);
   if(p.activeTitleKey && !getEarnedTitleKeys(p).includes(p.activeTitleKey)) p.activeTitleKey = '';
   refreshAchievementsSection(id);
   renderGrid();

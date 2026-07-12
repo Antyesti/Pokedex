@@ -30,3 +30,52 @@
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* ---------- SHARED COLLAPSIBLE PANEL ---------- */
+/* Used anywhere content expands/collapses (stats dashboard, achievement categories and
+   subcategories) so every open/close in the app animates the same way. Animates
+   grid-template-rows between 0fr and 1fr instead of max-height, so it works cleanly for
+   content of any height without needing JS to measure it. */
+.collapsible{
+  display:grid;
+  grid-template-rows: 0fr;
+  /* Belt-and-suspenders: some browsers can leave a sliver of a blurred/backdrop-filtered
+     panel rendered even at a computed height of ~0. Delaying visibility:hidden until right
+     after the collapse finishes guarantees nothing is painted once actually closed, without
+     affecting the shrink animation itself (visibility flips immediately, with no delay, when
+     opening, so the grow animation is unaffected). */
+  visibility:hidden;
+  transition: grid-template-rows .32s cubic-bezier(.4,0,.2,1), visibility 0s linear .32s;
+}
+
+.collapsible.open{
+  grid-template-rows: 1fr;
+  visibility:visible;
+  transition: grid-template-rows .32s cubic-bezier(.4,0,.2,1), visibility 0s linear 0s;
+}
+
+.collapsible > .collapsible-inner{ overflow:hidden; min-height:0; }
+
+/* Once fully open, stop clipping. Browsers can be off by a sub-pixel when resolving the 1fr
+   track above, which otherwise shaves a sliver off the first/last row permanently -- since
+   sections often render already-open (no transition ever runs to mask it), this has to be
+   an unconditional style, not something only applied after a transition finishes. */
+.collapsible.open > .collapsible-inner{ overflow:visible; }
+
+/* Small circular disclosure button: points right while collapsed, rotates to point down
+   once opened. */
+.collapse-circle-btn{
+  flex:none; width:22px; height:22px; border-radius:50%; border:1px solid var(--panel-border);
+  background:rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.collapse-circle-btn svg{ width:11px; height:11px; transform:rotate(0deg); transition: transform .25s ease; }
+
+.collapse-circle-btn.open svg{ transform:rotate(90deg); }
+
+@media (prefers-reduced-motion: reduce){
+  .collapsible,
+  .collapsible.open{ transition:none; }
+  .collapse-circle-btn svg{ transition:none; }
+}

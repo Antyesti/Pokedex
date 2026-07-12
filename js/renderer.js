@@ -305,10 +305,84 @@ function renderStats(){
     const willOpen = !panel.classList.contains('open');
     panel.classList.toggle('open', willOpen);
     e.currentTarget.classList.toggle('open', willOpen);
-    if(willOpen) renderStatsDashboard();
+    if(willOpen){
+      renderStatsDashboard();
+      // Read scrollHeight right after the content exists, then transition max-height to it --
+      // an exact pixel value instead of trusting the browser to resolve an intrinsic/auto
+      // height mid-transition, which wasn't collapsing all the way back to 0 reliably.
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+    } else {
+      // Give the transition an explicit starting point (it may currently be unset/auto)
+      // before collapsing, then drop to 0 on the next frame so it actually animates.
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { panel.style.maxHeight = '0px'; });
+      });
+    }
   });
   // keep dashboard contents fresh if it's already open (e.g. after add/delete/import)
   if(dashOpen) renderStatsDashboard();
+}
+
+// Builds one stat tile with the exact same chrome everywhere it's used (Overview, Gender,
+// Achievements), so the dashboard doesn't mix three different-looking card styles.
+// `value` gets animated counting up from 0 if it's a plain number; pass `valueHTML` instead
+// for anything that isn't a single number (e.g. a ribbon name with an icon).
+// Resolves a free-typed game name (e.g. an Origin Game entry) to its preset icon, reusing
+// the same fuzzy name matching already used to auto-link typed game names elsewhere.
+function originGameIconHTML(name, size){
+  size = size || 16;
+  const key = detectGameKeyFromTag(name);
+  const preset = key ? GAME_PRESET_INDEX[key] : null;
+  if(!preset) return '';
+  return `<img src="${preset.icon}" alt="" style="width:${size}px;height:${size}px;flex:none;">`;
+}
+
+function dashCell({ label, value, valueHTML, small, color, wide }){
+  const valueMarkup = valueHTML !== undefined
+    ? valueHTML
+    : (typeof value === 'number' && Number.isFinite(value)
+        ? `<span class="countup" data-target="${value}">0</span>`
+        : escapeHTML(String(value)));
+  return `
+    <div class="dash-cell${wide ? ' dash-cell-wide' : ''}">
+      <div class="k">${escapeHTML(label)}</div>
+      <div class="v"${color ? ` style="color:${color}"` : ''}>${valueMarkup}${small ? `<small>${escapeHTML(small)}</small>` : ''}</div>
+    </div>
+  `;
+}
+
+// Counts a number up from 0 once its tile enters the DOM, rather than just appearing.
+// Skipped (jumps straight to the final value) if the user prefers reduced motion.
+function animateCountUp(el, target, duration){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    el.textContent = String(target);
+    return;
+  }
+  duration = duration || 900;
+  const isInt = Number.isInteger(target);
+  const start = performance.now();
+  function tick(now){
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const val = target * eased;
+    el.textContent = isInt ? String(Math.round(val)) : val.toFixed(1);
+    if(t < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// Runs the count-up and bar-fill animations for whatever's currently in the dashboard.
+// Bars are rendered at width:0 with their real width stashed in data-w, then given the
+// target width one frame later so the CSS transition actually has something to animate.
+function animateStatsDashboard(dash){
+  dash.querySelectorAll('.countup').forEach(el => animateCountUp(el, parseFloat(el.dataset.target)));
+  const bars = dash.querySelectorAll('.type-bar-fill');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      bars.forEach(el => { el.style.width = el.dataset.w + '%'; });
+    });
+  });
 }
 
 function renderStatsDashboard(){
@@ -316,7 +390,7 @@ function renderStatsDashboard(){
   const list = state.pokemon;
   const total = list.length;
   if(total === 0){
-    dash.innerHTML = `<div class="stats-section-title">Dex Stats</div><div class="hint">Add some Pokémon to see your stats.</div>`;
+    dash.innerHTML = `<div class="stats-dashboard-inner"><div class="stats-section-title">Dex Stats</div><div class="hint">Add some Pokémon to see your stats.</div></div>`;
     return;
   }
 
@@ -328,17 +402,19 @@ function renderStatsDashboard(){
   TYPES.forEach(t => typeCounts[t] = 0);
   list.forEach(p => p.types.forEach(t => { if(typeCounts[t]!=null) typeCounts[t]++; }));
   const maxTypeCount = Math.max(1, ...Object.values(typeCounts));
-  const typeRows = TYPES
+  const sortedTypeCounts = TYPES
     .map(t => ({ t, c: typeCounts[t] }))
     .filter(x => x.c > 0)
-    .sort((a,b)=>b.c-a.c)
+    .sort((a,b)=>b.c-a.c);
+  const typeRows = sortedTypeCounts
     .map(({t,c}) => `
       <div class="type-bar-row">
         <div class="tb-label">${t}</div>
-        <div class="type-bar-track"><div class="type-bar-fill" style="width:${(c/maxTypeCount*100).toFixed(0)}%; background:${TYPE_HEX[t]}"></div></div>
+        <div class="type-bar-track"><div class="type-bar-fill" data-w="${(c/maxTypeCount*100).toFixed(0)}" style="background:${TYPE_HEX[t]}"></div></div>
         <div class="tb-count">${c}</div>
       </div>
     `).join('');
+  const topType = sortedTypeCounts[0] ? [sortedTypeCounts[0].t, sortedTypeCounts[0].c] : null;
 
   // Mono vs dual type
   const monoCount = list.filter(p=>p.types.length===1).length;
@@ -355,6 +431,14 @@ function renderStatsDashboard(){
   });
   const genderSetTotal = genderCounts.Male + genderCounts.Female + genderCounts.Genderless;
   const genderPct = (n) => genderSetTotal ? ((n/genderSetTotal)*100).toFixed(0) : 0;
+  const genderCellsHTML = genderSetTotal > 0 ? `
+    <div class="stats-dash-grid">
+      ${dashCell({ label:'♂ Male', value: genderCounts.Male, small: `${genderPct(genderCounts.Male)}%`, color:'#5B9CFF' })}
+      ${dashCell({ label:'♀ Female', value: genderCounts.Female, small: `${genderPct(genderCounts.Female)}%`, color:'#FF6FA5' })}
+      ${dashCell({ label:'○ Genderless', value: genderCounts.Genderless, small: `${genderPct(genderCounts.Genderless)}%`, color:'#B07CFF' })}
+      ${dashCell({ label:'No Gender Set', value: genderCounts.Unset, color:'var(--text-faint)' })}
+    </div>
+  ` : `<div class="hint">No gender data yet.</div>`;
 
   // Games: moveset row Tags are the source of truth for "games represented",
   // Origin/Last Game are free-text per-mon labels and often duplicate a tag under a different string.
@@ -389,9 +473,18 @@ function renderStatsDashboard(){
   const totalMovesLogged = list.reduce((s,p)=>s+p.games.reduce((s2,g)=>s2+g.moves.filter(Boolean).length,0),0);
   const totalAbilitiesLogged = list.reduce((s,p)=>s+p.games.filter(g=>g.ability).length,0);
   const avgGamesPerMon = (totalGameRows/total).toFixed(1);
-  const withNotes = list.filter(p=>stripHTML(p.notes).trim().length>0).length;
+  // Most Pokémon repeat the same handful of moves/abilities, so the raw logged counts above
+  // barely vary roster to roster -- how many *distinct* moves/abilities show up is the
+  // actually interesting number, shown as the secondary stat rather than the headline one.
+  const uniqueMoveNames = new Set();
+  const uniqueAbilityNames = new Set();
+  list.forEach(p => p.games.forEach(g => {
+    g.moves.forEach(m => { const v = stripHTML(m).trim().toLowerCase(); if(v) uniqueMoveNames.add(v); });
+    const a = stripHTML(g.ability).trim().toLowerCase(); if(a) uniqueAbilityNames.add(a);
+  }));
   const withSprite = list.filter(p=>p.sprite).length;
   const withMetLocation = list.filter(p=>stripHTML(p.metLocation).trim().length>0).length;
+  const withGameLogged = list.filter(p=>p.games.length>0).length;
 
   // Most awarded ribbon: which single Ribbons-category achievement has the most Pokémon
   const ribbonItems = [];
@@ -411,77 +504,109 @@ function renderStatsDashboard(){
   const gildedContestCount = list.filter(p => contestMemoryState(p).gold).length;
   const gildedBattleCount = list.filter(p => battleMemoryState(p).gold).length;
 
+  // Headline takeaways: short auto-generated highlights, as many as are actually
+  // interesting given the data on hand (some rosters won't have every one of these).
+  const headlines = [];
+  if(topType){
+    headlines.push(`<b style="color:${TYPE_HEX[topType[0]]}">${topType[0]}</b> is your most common type, appearing on ${((topType[1]/total)*100).toFixed(0)}% of your roster.`);
+  }
+  if(shinyCount > 0){
+    headlines.push(`<b style="color:var(--accent-2)">${shinyPct}%</b> of your roster (${shinyCount}) is shiny.`);
+  }
+  if(dualCount !== monoCount){
+    headlines.push(dualCount > monoCount
+      ? `Most of your roster (${((dualCount/total)*100).toFixed(0)}%) is dual-typed.`
+      : `Most of your roster (${((monoCount/total)*100).toFixed(0)}%) is single-typed.`);
+  }
+  if(topOriginGames.length){
+    const [g,c] = topOriginGames[0];
+    headlines.push(`<b>${escapeHTML(g)}</b> is your most common Origin Game, with ${c} Pok\u00e9mon.`);
+  }
+  if(topNatures.length){
+    const [n,c] = topNatures[0];
+    headlines.push(`<b>${escapeHTML(n)}</b> is your most common Nature, shared by ${c} Pok\u00e9mon.`);
+  }
+  if(topBalls.length){
+    const [b,c] = topBalls[0];
+    headlines.push(`Most of your roster was caught in a <b>${escapeHTML(b)}</b> (${c} Pok\u00e9mon).`);
+  }
+  if(mostAwardedRibbon){
+    headlines.push(`<b>${escapeHTML(mostAwardedRibbon.name)}</b> is your most-awarded Ribbon, held by ${mostAwardedRibbon.count} of ${total} Pok\u00e9mon.`);
+  }
+
   dash.innerHTML = `
-    <div class="stats-section-title">Overview</div>
-    <div class="stats-dash-grid">
-      <div class="dash-cell"><div class="k">Total Roster</div><div class="v">${total}</div></div>
-      <div class="dash-cell"><div class="k">Shiny</div><div class="v">${shinyCount}<small>${shinyPct}%</small></div></div>
-      <div class="dash-cell"><div class="k">Mono / Dual Type</div><div class="v">${monoCount} <small>/ ${dualCount}</small></div></div>
-      <div class="dash-cell"><div class="k">Games Represented</div><div class="v">${allGamesSeen.size}</div></div>
-      <div class="dash-cell"><div class="k">Game Rows Logged</div><div class="v">${totalGameRows}<small>avg ${avgGamesPerMon}/mon</small></div></div>
-      <div class="dash-cell"><div class="k">Moves Logged</div><div class="v">${totalMovesLogged}</div></div>
-      <div class="dash-cell"><div class="k">Abilities Logged</div><div class="v">${totalAbilitiesLogged}</div></div>
-      <div class="dash-cell"><div class="k">With Sprite / Notes</div><div class="v">${withSprite} <small>/ ${withNotes}</small></div></div>
-    </div>
-
-    <div class="stats-section-title">Type Distribution</div>
-    ${typeRows || '<div class="hint">No types assigned yet.</div>'}
-
-    <div class="stats-section-title">Gender</div>
-    <div class="stats-dash-grid">
-      <div class="dash-cell"><div class="k">♂ Male</div><div class="v" style="color:#5B9CFF;">${genderCounts.Male}<small>${genderPct(genderCounts.Male)}%</small></div></div>
-      <div class="dash-cell"><div class="k">♀ Female</div><div class="v" style="color:#FF6FA5;">${genderCounts.Female}<small>${genderPct(genderCounts.Female)}%</small></div></div>
-      <div class="dash-cell"><div class="k">○ Genderless</div><div class="v" style="color:#B07CFF;">${genderCounts.Genderless}<small>${genderPct(genderCounts.Genderless)}%</small></div></div>
-      <div class="dash-cell"><div class="k">No Gender Set</div><div class="v" style="color:var(--text-faint);">${genderCounts.Unset}</div></div>
-    </div>
-
-    <div class="stats-section-title">Achievements</div>
-    <div class="stats-dash-grid">
-      <div class="dash-cell" style="grid-column:span 2;">
-        <div class="k">Most Awarded Ribbon</div>
-        ${mostAwardedRibbon
-          ? `<div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
-               <img src="${mostAwardedRibbon.icon}" alt="" style="width:22px; height:22px; flex-shrink:0;">
-               <div class="v" style="font-size:15px; line-height:1.3;">${escapeHTML(mostAwardedRibbon.name)}<small>${mostAwardedRibbon.count}/${total}</small></div>
-             </div>`
-          : `<div class="v" style="color:var(--text-faint); font-size:15px;">None earned yet</div>`}
-      </div>
-      <div class="dash-cell"><div class="k">Contest Memory Ribbon</div><div class="v">${contestMemoryCount}<small>${gildedContestCount} Gilded</small></div></div>
-      <div class="dash-cell"><div class="k">Battle Memory Ribbon</div><div class="v">${battleMemoryCount}<small>${gildedBattleCount} Gilded</small></div></div>
-    </div>
-
-    <div class="stats-dash-grid" style="margin-top:22px;">
-      <div>
-        <div class="stats-section-title" style="margin-top:0;">Top Origin Games</div>
-        <div class="dash-list">
-          ${topOriginGames.length ? topOriginGames.map(([g,c])=>`<div class="dash-list-row"><span>${escapeHTML(g)}</span><b>${c}</b></div>`).join('') : '<div class="hint">No origin games logged.</div>'}
+    <div class="stats-dashboard-inner">
+      ${headlines.length ? `
+        <div class="stats-section-title">Highlights</div>
+        <div class="stats-headlines">
+          ${headlines.map(h => `<div class="stats-headline">${h}</div>`).join('')}
         </div>
+      ` : ''}
+
+      <div class="stats-section-title">Overview</div>
+      <div class="stats-dash-grid">
+        ${dashCell({ label:'Total Roster', value: total })}
+        ${dashCell({ label:'Shiny', value: shinyCount, small: `${shinyPct}%`, color:'var(--accent-2)' })}
+        ${dashCell({ label:'Mono / Dual Type', valueHTML: `<span class="countup" data-target="${monoCount}">0</span> <small>/ <span class="countup" data-target="${dualCount}">0</span></small>` })}
+        ${dashCell({ label:'Games Represented', value: allGamesSeen.size })}
+        ${dashCell({ label:'Game Rows Logged', value: totalGameRows, small: `avg ${avgGamesPerMon}/mon` })}
+        ${dashCell({ label:'Moves Logged', value: totalMovesLogged, small: `${uniqueMoveNames.size} unique` })}
+        ${dashCell({ label:'Abilities Logged', value: totalAbilitiesLogged, small: `${uniqueAbilityNames.size} unique` })}
+        ${dashCell({ label:'With Sprite', value: withSprite })}
       </div>
-      <div>
-        <div class="stats-section-title" style="margin-top:0;">Top Natures</div>
-        <div class="dash-list">
-          ${topNatures.length ? topNatures.map(([n,c])=>`<div class="dash-list-row"><span>${escapeHTML(n)}</span><b>${c}</b></div>`).join('') : '<div class="hint">No natures logged.</div>'}
-          ${noNatureCount ? `<div class="dash-list-row"><span style="color:var(--text-faint)">No nature set</span><b style="color:var(--text-faint)">${noNatureCount}</b></div>` : ''}
+
+      <div class="stats-section-title">Type Distribution</div>
+      ${typeRows || '<div class="hint">No types assigned yet.</div>'}
+
+      <div class="stats-section-title">Gender</div>
+      ${genderCellsHTML}
+
+      <div class="stats-section-title">Achievements</div>
+      <div class="stats-dash-grid">
+        ${dashCell({
+          label:'Most Awarded Ribbon', wide:true,
+          valueHTML: mostAwardedRibbon
+            ? `<img class="row-icon" src="${mostAwardedRibbon.icon}" alt="">${escapeHTML(mostAwardedRibbon.name)}<small>${mostAwardedRibbon.count}/${total}</small>`
+            : `<span style="color:var(--text-faint); font-size:15px;">None earned yet</span>`
+        })}
+        ${dashCell({ label:'Contest Memory Ribbon', value: contestMemoryCount, small:`${gildedContestCount} Gilded` })}
+        ${dashCell({ label:'Battle Memory Ribbon', value: battleMemoryCount, small:`${gildedBattleCount} Gilded` })}
+      </div>
+
+      <div class="stats-dash-grid two-col" style="margin-top:22px;">
+        <div class="dash-cell">
+          <div class="stats-section-title" style="margin-top:0;">Top Origin Games</div>
+          <div class="dash-list">
+            ${topOriginGames.length ? topOriginGames.map(([g,c])=>`<div class="dash-list-row"><span style="display:flex;align-items:center;gap:6px;">${originGameIconHTML(g)}${escapeHTML(g)}</span><b>${c}</b></div>`).join('') : '<div class="hint">No origin games logged.</div>'}
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="stats-section-title" style="margin-top:0;">Top Poké Balls</div>
-        <div class="dash-list">
-          ${topBalls.length ? topBalls.map(([b,c])=>`<div class="dash-list-row"><span style="display:flex;align-items:center;gap:6px;">${ballIconHTML(b,16)}${escapeHTML(b)}</span><b>${c}</b></div>`).join('') : '<div class="hint">No balls logged.</div>'}
-          ${noBallCount ? `<div class="dash-list-row"><span style="color:var(--text-faint)">No ball set</span><b style="color:var(--text-faint)">${noBallCount}</b></div>` : ''}
+        <div class="dash-cell">
+          <div class="stats-section-title" style="margin-top:0;">Top Natures</div>
+          <div class="dash-list">
+            ${topNatures.length ? topNatures.map(([n,c])=>`<div class="dash-list-row"><span>${escapeHTML(n)}</span><b>${c}</b></div>`).join('') : '<div class="hint">No natures logged.</div>'}
+            ${noNatureCount ? `<div class="dash-list-row"><span style="color:var(--text-faint)">No nature set</span><b style="color:var(--text-faint)">${noNatureCount}</b></div>` : ''}
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="stats-section-title" style="margin-top:0;">Record Completeness</div>
-        <div class="dash-list">
-          <div class="dash-list-row"><span>Has Met Location</span><b>${withMetLocation}/${total}</b></div>
-          <div class="dash-list-row"><span>Has Sprite</span><b>${withSprite}/${total}</b></div>
-          <div class="dash-list-row"><span>Has Notes</span><b>${withNotes}/${total}</b></div>
-          <div class="dash-list-row"><span>Has ≥1 Game Logged</span><b>${list.filter(p=>p.games.length>0).length}/${total}</b></div>
+        <div class="dash-cell">
+          <div class="stats-section-title" style="margin-top:0;">Top Poké Balls</div>
+          <div class="dash-list">
+            ${topBalls.length ? topBalls.map(([b,c])=>`<div class="dash-list-row"><span style="display:flex;align-items:center;gap:6px;">${ballIconHTML(b,16)}${escapeHTML(b)}</span><b>${c}</b></div>`).join('') : '<div class="hint">No balls logged.</div>'}
+            ${noBallCount ? `<div class="dash-list-row"><span style="color:var(--text-faint)">No ball set</span><b style="color:var(--text-faint)">${noBallCount}</b></div>` : ''}
+          </div>
+        </div>
+        <div class="dash-cell">
+          <div class="stats-section-title" style="margin-top:0;">Record Completeness</div>
+          <div class="dash-list">
+            <div class="dash-list-row"><span>Has Met Location</span><b>${withMetLocation}/${total}</b></div>
+            <div class="dash-list-row"><span>Has Sprite</span><b>${withSprite}/${total}</b></div>
+            <div class="dash-list-row"><span>Has ≥1 Game Logged</span><b>${withGameLogged}/${total}</b></div>
+          </div>
         </div>
       </div>
     </div>
   `;
+
+  animateStatsDashboard(dash);
 }
 
 function stripHTML(s){
@@ -712,8 +837,11 @@ function cardHTML(p){
   const displaySprite = resolveDisplaySprite(p);
   const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
   const footerInfo = cardFooterInfoHTML(p);
+  const [glowC1, glowC2, glowC3] = typeGlowColors(p);
   return `
-  <div class="card ${p.shiny ? 'is-shiny' : ''}" style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; border-color:${borderColor}" onclick="openDetail('${p.id}')">
+  <div class="card ${p.shiny ? 'is-shiny' : ''}" style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; border-color:${borderColor}; --glow-c1:${glowC1}; --glow-c2:${glowC2}; --glow-c3:${glowC3}" onclick="openDetail('${p.id}')">
+    <span class="card-glow-ring" aria-hidden="true"></span>
+    <span class="card-glow-halo" aria-hidden="true"></span>
     ${formBadgeRowHTML(p)}
     <div class="card-top">
       <div class="card-sprite">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '🟢'}</div>
@@ -755,11 +883,42 @@ function isNeumorphicActive(){
   return false;
 }
 
+function parseHex(hex){
+  return {
+    r: parseInt(hex.slice(1,3),16),
+    g: parseInt(hex.slice(3,5),16),
+    b: parseInt(hex.slice(5,7),16)
+  };
+}
+
 function hexToRgba(hex, alpha){
-  const r = parseInt(hex.slice(1,3),16);
-  const g = parseInt(hex.slice(3,5),16);
-  const b = parseInt(hex.slice(5,7),16);
+  const {r,g,b} = parseHex(hex);
   return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function mixHex(hexA, hexB, t){
+  const a = parseHex(hexA);
+  const b = parseHex(hexB);
+  const r = Math.round(a.r + (b.r - a.r) * t);
+  const g = Math.round(a.g + (b.g - a.g) * t);
+  const bl = Math.round(a.b + (b.b - a.b) * t);
+  return `rgb(${r}, ${g}, ${bl})`;
+}
+
+// Picks the 3-stop gradient used by the card's border glow effect. Dual-type Pokemon use both
+// type colors plus a blended midpoint, so the gradient stays inside that Pokemon's own palette
+// instead of introducing an unrelated hue. Single-type Pokemon instead get a darker and a
+// lighter shade of their one type color -- mixing everything toward white instead would make
+// all three stops nearly identical, leaving the glow looking washed out and barely visible.
+// Shiny Pokemon swap the third stop for the app's existing shiny gold accent, tying the glow
+// into the same visual language as the shiny badge and shiny card border.
+function typeGlowColors(p){
+  const type1 = TYPE_HEX[p.types[0]] || '#4FD1C5';
+  const type2 = TYPE_HEX[p.types[1]];
+  const c1 = type1;
+  const c2 = type2 || mixHex(type1, '#000000', 0.25);
+  const c3 = p.shiny ? 'var(--accent-2)' : (type2 ? mixHex(c1, c2, 0.5) : mixHex(type1, '#ffffff', 0.4));
+  return [c1, c2, c3];
 }
 
 function calculateAge(metDateStr){

@@ -1,0 +1,64 @@
+/* ---------- CARD HOVER EFFECTS: 3D TILT + BORDER GLOW ---------- */
+/* Rotation and glow values are driven by js/card-effects.js, which tracks pointer position
+   over each card and writes the transform and --glow-* custom properties directly. */
+
+.card{
+  /* Needed so the glow layers' negative z-index and blend mode stay contained to this card
+     instead of reaching past it to siblings or the page underneath. */
+  isolation: isolate;
+  /* Same box-shadow/border-color timing as the base rule, just a snappier transform transition
+     so the tilt can track the pointer closely instead of lagging behind it. */
+  transition: transform .1s ease-out, box-shadow .25s ease, border-color .25s ease;
+}
+
+.card-glow-ring,
+.card-glow-halo{
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  /* Negative z-index puts these behind the card's own sprite/text/badges (which are plain,
+     non-positioned content and always paint above a positioned sibling with z-index 0 or
+     higher). Combined with isolation:isolate above, this keeps the glow scoped to sitting
+     behind just this card's own content, rather than on top of it or bleeding into others. */
+  z-index:-1;
+  opacity: var(--glow-proximity, 0);
+  transition: opacity .2s ease;
+}
+
+/* Colored mesh ring hugging the card border, rotating to face the cursor. Built with the
+   classic gradient-border mask trick: the padding creates the ring's thickness, and the
+   content-box/border-box mask composite cuts out everything but that ring so the card's own
+   background stays untouched underneath. */
+.card-glow-ring{
+  padding:1.5px;
+  background: conic-gradient(from var(--glow-angle, 0deg), var(--glow-c1, transparent), var(--glow-c2, transparent), var(--glow-c3, transparent), var(--glow-c1, transparent));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+}
+
+/* Soft inner halo in the same type colors. Kept as inset shadows (rather than an outer glow)
+   so it stays within the card's own bounds instead of fighting overflow:hidden. */
+.card-glow-halo{
+  box-shadow:
+    inset 0 0 8px 0 var(--glow-c1, transparent),
+    inset 0 0 18px 2px var(--glow-c2, transparent),
+    inset 0 0 32px 4px var(--glow-c3, transparent);
+  mix-blend-mode: plus-lighter;
+}
+
+/* Shiny Pokemon get a brighter, wider glow, per the request to maximize intensity for shinies. */
+.card.is-shiny .card-glow-ring{
+  opacity: min(1, calc(var(--glow-proximity, 0) * 1.4));
+}
+
+.card.is-shiny .card-glow-halo{
+  opacity: min(1, calc(var(--glow-proximity, 0) * 1.4));
+  box-shadow:
+    inset 0 0 14px 1px var(--glow-c1, transparent),
+    inset 0 0 30px 4px var(--glow-c2, transparent),
+    inset 0 0 54px 8px var(--glow-c3, transparent);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .card-glow-ring,
+  .card-glow-halo{ display:none; }
+}

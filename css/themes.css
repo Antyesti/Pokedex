@@ -132,14 +132,17 @@ html[data-style="neumorphic"] .stats-toggle-btn:hover{ box-shadow: var(--nm-shad
 html[data-theme="light"] .stats-toggle-btn.open,
 html[data-style="neumorphic"] .stats-toggle-btn.open{ box-shadow: var(--nm-shadow-in); }
 
-html[data-theme="light"] .stats-dashboard,
-html[data-style="neumorphic"] .stats-dashboard{
+html[data-theme="light"] .stats-dashboard-inner,
+html[data-style="neumorphic"] .stats-dashboard-inner{
   background: var(--bg); border:none; backdrop-filter:none;
   box-shadow: var(--nm-shadow-out);
 }
 
 html[data-theme="light"] .dash-cell,
 html[data-style="neumorphic"] .dash-cell{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-out-sm); }
+
+html[data-theme="light"] .stats-headlines,
+html[data-style="neumorphic"] .stats-headlines{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-out-sm); }
 
 html[data-theme="light"] .type-bar-track,
 html[data-style="neumorphic"] .type-bar-track{ background:var(--bg); border:none; box-shadow: var(--nm-shadow-in); }

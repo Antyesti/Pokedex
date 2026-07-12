@@ -15,12 +15,23 @@
 
 .achv-category{ display:flex; flex-direction:column; gap:14px; }
 
+.achv-header-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+
 .achv-category-label{
   font-family:var(--sans); font-weight:800; font-size:15px; letter-spacing:-0.01em; color:var(--text);
   padding-bottom:6px; border-bottom:1px solid var(--panel-border);
 }
 
-.achv-subcategory{ display:flex; flex-direction:column; gap:10px; }
+.achv-toggle-header{
+  display:flex; align-items:center; gap:9px; background:none; border:none; padding:0; margin:0;
+  cursor:pointer; font:inherit; color:inherit; text-align:left;
+}
+
+.achv-toggle-header:hover .collapse-circle-btn{ border-color:color-mix(in srgb, var(--accent) 45%, transparent); }
+
+.achv-subcategory{ display:flex; flex-direction:column; gap:10px; margin-bottom:18px; }
+
+.achv-subcategory:last-child{ margin-bottom:0; }
 
 .achv-subcategory-label{
   font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent);
@@ -51,6 +62,16 @@
 .achv-badge.selected .achv-badge-label{ color:var(--text); }
 
 .achv-badge.disabled{ opacity:0.45; cursor:not-allowed; }
+
+/* Detail view (read-only): only earned badges are ever shown here, so giving them all the
+   same interactive "selected" glow made the whole grid look like it was permanently
+   pressed/active. Read-only badges get a plain card with the icon shown in full color,
+   without that highlight. */
+.achv-badge.readonly{ cursor:default; }
+
+.achv-badge.readonly img{ opacity:1; filter:none; }
+
+.achv-badge.readonly .achv-badge-label{ color:var(--text); }
 
 .achv-unreleased-tag{
   font-family:var(--mono); font-size:9px; font-weight:450; text-transform:uppercase; letter-spacing:0.05em;
