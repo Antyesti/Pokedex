@@ -130,11 +130,15 @@ css/
   achievements.css       Achievements section styling
   animations.css         Shared keyframe animations
   themes.css             Theme variables (including the Master Ball custom theme)
+  card-effects.css       3D Hover glow effects for individual cards
+  species-picker.css       Styling for the Species database
 js/
   app.js                 Data model, state, form handling, keyboard shortcuts
   achievements.js        Achievement catalog logic, title resolution, Memory Ribbon UI
   renderer.js            Card/grid rendering, stats dashboard, date picker, ball/type UI
   pokemon.js             Add/Edit form modal, import/export
+  species-picker.js             The handling for the species picker
+  card-effects.js             The handling for card effects
   filters.js             Filter and search hooks
   utils.js               Autosave (localStorage), File System Access API helpers, toast notifications
   share.js               Share-as-image: single-card and full-roster PNG/APNG export
@@ -147,6 +151,9 @@ data/
   achievements.js        ACHIEVEMENT_CATALOG (ribbons, marks, misc)
   changelog.js           CHANGELOG (in-app version history)
   pokemon.js             ROSTER_DATA seed (empty by default)
+  pokemon-species.js        Pokemon list for the species picker
+  types.js           Color codes for Pokemon types
+  mega-types.js             Color codes for Mega Pokemon types  
 icons/
   ui-icons.js            Poké Ball art, shiny/mega/gigantamax badges, placeholder icons
   achievement-icons.js   Contest/Battle Memory sub-ribbon icons and per-achievement artwork
