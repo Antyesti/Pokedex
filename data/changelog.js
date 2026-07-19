@@ -33,6 +33,42 @@ const CREDITS = [
 
 const CHANGELOG = [
   {
+    version: "v25",
+    entries: [
+      {
+        title: "Pokémon Species Picker",
+        items: [
+          "All this time, users had to manually type names for Pokémon and select their types. With this feature, the species field will autocomplete everything for you once you select the Pokémon from the species picker.",
+          "The database has National Pokédex species with all regional variants with typings.",
+          "Demonyms show up for all Pokémon with a regional variant. Selected form from the picker are preserved.",
+          "Users can still enter any Pokémon name manually. This helps with future Pokémon if it is not updated or even fan content or custom entires."
+        ]
+      },
+      {
+        title: "Mega Pokémon Type",
+        items: [
+          "Even though Mega Evolution could be enabled before, the types shown would be of the base Pokémon form.",
+          "Now, Mega Pokémon will show their correct types separately from their base form."
+        ]
+      },
+      {
+        title: "Dex Number Display",
+        items: [
+          "National Dex Number will now be displayed when picking a Pokémon from the species list.",
+          "This is not a separate labeled field.",
+          "Dex Numbers are displayed in two places. Card/Detailed view and the Species picker."
+        ]
+      },
+      {
+        title: "Sprites/Avatar",
+        items: [
+          "Sprites and Avatars are still not automatic and that is a design choice. There are plenty of fanarts, alternate official arts that fans love. This tool will never add generic sprites/avatars for Pokémon by itself."
+        ],
+        knownIssue: true
+      }
+    ]
+  },
+  {
     version: "v24",
     entries: [
       {

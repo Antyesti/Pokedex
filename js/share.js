@@ -267,7 +267,8 @@ function drawCardFrame(p, assets, spriteDrawable){
   ctx.fillStyle = '#9aa3b8';
   ctx.font = '600 13px "Kode Mono", monospace';
   const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
-  ctx.fillText(truncateToWidth(ctx, `${formPrefix}${p.species.toUpperCase()}`, textWidth), textX, y + 22);
+  const formSuffix = (p.preferredForm === 'mega' && p.megaForm) ? ' ' + p.megaForm.toUpperCase() : '';
+  ctx.fillText(truncateToWidth(ctx, `${formPrefix}${p.species.toUpperCase()}${formSuffix}`, textWidth), textX, y + 22);
 
   ctx.fillStyle = '#ffffff';
   ctx.font = '700 30px "Outfit", sans-serif';

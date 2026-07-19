@@ -1,6 +1,4 @@
 /* ============== DATA MODEL ============== */
-const TYPES = ["Normal","Fire","Water","Electric","Grass","Ice","Fighting","Poison","Ground","Flying","Psychic","Bug","Rock","Ghost","Dragon","Dark","Steel","Fairy"];
-
 const TYPE_COLOR = {
   Normal:"var(--t-normal)", Fire:"var(--t-fire)", Water:"var(--t-water)", Electric:"var(--t-electric)",
   Grass:"var(--t-grass)", Ice:"var(--t-ice)", Fighting:"var(--t-fighting)", Poison:"var(--t-poison)",
@@ -9,13 +7,6 @@ const TYPE_COLOR = {
   Steel:"var(--t-steel)", Fairy:"var(--t-fairy)"
 };
 
-const TYPE_HEX = {
-  Normal:"#A8A878", Fire:"#F08030", Water:"#6890F0", Electric:"#F8D030",
-  Grass:"#78C850", Ice:"#98D8D8", Fighting:"#C03028", Poison:"#A040A0",
-  Ground:"#E0C068", Flying:"#A890F0", Psychic:"#F85888", Bug:"#A8B820",
-  Rock:"#B8A038", Ghost:"#705898", Dragon:"#7038F8", Dark:"#705848",
-  Steel:"#B8B8D0", Fairy:"#EE99AC"
-};
 
 const STAT_COLOR = {
   "Attack":"#E8D24C", "Defense":"#E0954D", "Speed":"#D85FA8",
@@ -609,7 +600,10 @@ function saveForm(id){
   const payload = {
     nickname: nickname || species,
     species,
+    speciesEntryId: selectedSpeciesEntryId || '',
     types: [...selectedTypes],
+    megaTypes: [...selectedMegaTypes],
+    megaForm: isMega ? selectedMegaForm : '',
     nature: document.getElementById('f_nature').value.trim(),
     gender: selectedGender,
     shiny: document.getElementById('f_shiny').checked,

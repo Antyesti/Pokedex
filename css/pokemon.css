@@ -448,6 +448,8 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 
 .field.span-2{ grid-column:span 2; }
 
+.identity-row{ grid-column:span 2; display:grid; grid-template-columns:2fr 1fr; gap:14px; }
+
 .field label{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-dim); }
 
 .field input, .field select, .field textarea{
@@ -858,16 +860,16 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
   padding:18px 30px 26px;
 }
 
-.color-swatches{ display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; }
+.type-select-row{ display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; }
 
-.swatch{
-  width:24px;height:24px;border-radius:7px; cursor:pointer; border:2px solid transparent;
-  transition: transform .12s, border-color .12s;
+.type-badge.type-select{
+  cursor:pointer; border:2px solid transparent; background-color:transparent; margin:0; outline:none;
+  opacity:0.55; transition: transform .12s, border-color .12s, opacity .12s;
 }
 
-.swatch:hover{ transform:scale(1.1); }
+.type-badge.type-select:hover{ transform:scale(1.05); opacity:0.85; }
 
-.swatch.active{ border-color:#fff; }
+.type-badge.type-select.active{ opacity:1; border-color:#fff; }
 
 .gender-toggle-group{ display:flex; gap:8px; margin-top:4px; }
 
@@ -950,7 +952,6 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 
 .sprite-slot-label{ font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-faint); display:flex; align-items:center; gap:6px; }
 
-.sprite-slot-label .slot-disabled-tag{ font-weight:450; color:var(--text-faint); opacity:0.7; }
 
 .sprite-slot.disabled{ opacity:0.45; }
 

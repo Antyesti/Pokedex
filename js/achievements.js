@@ -109,6 +109,15 @@ function resolveTitleDisplay(p, key){
     const subject = (p.nickname || p.species || 'Pok\u00e9mon').trim();
     return { type:'prefix', text: `${trainer}'s`, full: `${trainer}'s ${subject}` };
   }
+  // Generic dynamic title: the control panel defines a field label/placeholder and a
+  // template containing "{value}", filled in per-Pokémon (see customTitleFieldHTML).
+  // Falls back to the placeholder text itself when nothing's been entered yet.
+  if(item.title.type === 'dynamic'){
+    const raw = ((p.customTitleFields && p.customTitleFields[key]) || '').trim();
+    const value = raw || (item.title.placeholder || '').trim() || 'Someone';
+    const text = (item.title.template || '{value}').replace(/\{value\}/g, value);
+    return { type: item.title.position === 'suffix' ? 'suffix' : 'prefix', text };
+  }
   return { type: item.title.type, text: item.title.text };
 }
 
@@ -154,6 +163,9 @@ function cryptoId(){ return 'p_' + Math.random().toString(36).slice(2,10) + Date
 // Backfills fields introduced after a Pokémon record may have been created/exported, so
 // older saves (or the empty seed array) still get a consistent shape to render and edit against.
 function normalizePokemon(p){
+  if(typeof p.speciesEntryId !== 'string') p.speciesEntryId = '';
+  if(!Array.isArray(p.megaTypes)) p.megaTypes = [];
+  if(typeof p.megaForm !== 'string') p.megaForm = '';
   if(typeof p.isMega !== 'boolean') p.isMega = false;
   if(typeof p.isGigantamax !== 'boolean') p.isGigantamax = false;
   if(typeof p.spriteMega !== 'string') p.spriteMega = '';
@@ -162,9 +174,12 @@ function normalizePokemon(p){
   // Disabling a form also clears it as the preferred sprite variant.
   if(p.preferredForm === 'mega' && !p.isMega) p.preferredForm = 'default';
   if(p.preferredForm === 'gigantamax' && !p.isGigantamax) p.preferredForm = 'default';
+  if(!p.isMega) p.megaForm = '';
 
   // Achievements: ribbons/marks/misc selections, Memory Ribbon sub-collections, custom
-  // achievements, partner trainer name (for the dynamic Partner Ribbon title), and the
+  // achievements, partner trainer name (for the dynamic Partner Ribbon title), custom
+  // dynamic title field values (for any other achievement with a control-panel-defined
+  // dynamic title), and the
   // single active title shown beside the nickname.
   if(!Array.isArray(p.achievementKeys)) p.achievementKeys = [];
   if(!Array.isArray(p.contestMemorySubKeys)) p.contestMemorySubKeys = [];
@@ -199,6 +214,10 @@ function normalizePokemon(p){
     icon: typeof c.icon === 'string' && c.icon ? c.icon : PLACEHOLDER_RIBBON_ICON
   }));
   if(typeof p.partnerTrainerName !== 'string') p.partnerTrainerName = '';
+  if(!p.customTitleFields || typeof p.customTitleFields !== 'object') p.customTitleFields = {};
+  Object.keys(p.customTitleFields).forEach(k => {
+    if(typeof p.customTitleFields[k] !== 'string') p.customTitleFields[k] = '';
+  });
   if(typeof p.activeTitleKey !== 'string') p.activeTitleKey = '';
   // an active title must point at something the Pokémon actually still has selected,
   // otherwise drop it back to "no title" rather than displaying a stale/invalid one
@@ -475,6 +494,45 @@ function customAchievementsForTag(p, tag){
   return p.customAchievements.filter(c => c.tag === tag);
 }
 
+// Renders the inline field for a single achievement with a generic dynamic title (control
+// panel-defined label/placeholder/template), mirroring the built-in Partner Ribbon field
+// below. One of these appears per selected dynamic achievement, in whichever subcategory
+// it actually lives in -- there's nowhere else in the UI to set its per-Pokémon value.
+function customTitleFieldHTML(p, item, readonly){
+  const title = item.title;
+  const value = (p.customTitleFields && p.customTitleFields[item.key]) || '';
+  const display = resolveTitleDisplay(p, item.key);
+  const subject = p.nickname || p.species;
+  const preview = display.type === 'suffix' ? `${subject} ${display.text}` : `${display.text} ${subject}`;
+  const label = escapeHTML(title.fieldLabel || item.name);
+  if(readonly){
+    return `
+      <div class="achv-partner-field">
+        <label>${label}</label>
+        <div class="v">${escapeHTML(value || '-')}</div>
+        <div class="hint">Used in the title: "<span id="dynamicTitlePreview_${p.id}_${item.key}">${escapeHTML(preview)}</span>"</div>
+      </div>
+    `;
+  }
+  return `
+    <div class="achv-partner-field">
+      <label>${label}</label>
+      <input type="text" value="${escapeAttr(value)}" placeholder="${escapeAttr(title.placeholder || '')}"
+        onchange="updateCustomTitleField('${p.id}', '${item.key}', this.value)">
+      <div class="hint">Used in the title: "<span id="dynamicTitlePreview_${p.id}_${item.key}">${escapeHTML(preview)}</span>"</div>
+    </div>
+  `;
+}
+
+// All currently-selected achievements in a given subcategory that have a generic dynamic
+// title, each rendered with its own field via customTitleFieldHTML above.
+function dynamicTitleFieldsHTML(p, sub, readonly){
+  return (sub.items || [])
+    .filter(it => it.title && it.title.type === 'dynamic' && p.achievementKeys.includes(it.key))
+    .map(it => customTitleFieldHTML(p, it, readonly))
+    .join('');
+}
+
 function achievementsSectionHTML(p, readonly){
   const tagToSubcat = {
     'ribbons-league': ACHIEVEMENT_CATALOG.ribbons.subcategories.league,
@@ -549,6 +607,7 @@ function achievementsSectionHTML(p, readonly){
       const subContentHTML = `
         ${groupHTML}
         ${tag === 'ribbons-memorial' && partnerFieldHTML ? partnerFieldHTML : ''}
+        ${dynamicTitleFieldsHTML(p, sub, readonly)}
         ${customs.length ? `<div class="achv-badge-grid achv-custom-grid">${customs.map(c=>customAchievementBadgeHTML(p,c,readonly)).join('')}</div>` : ''}
       `;
       if(subs.length <= 1){
@@ -753,6 +812,15 @@ function updatePartnerTrainerName(id, value){
   renderGrid();
 }
 
+function updateCustomTitleField(id, achievementKey, value){
+  const p = findPokemonById(id);
+  if(!p) return;
+  if(!p.customTitleFields || typeof p.customTitleFields !== 'object') p.customTitleFields = {};
+  p.customTitleFields[achievementKey] = value.trim();
+  refreshAchievementsSection(id);
+  renderGrid();
+}
+
 function setActiveTitle(id, key){
   const p = findPokemonById(id);
   if(!p) return;
@@ -861,9 +929,11 @@ function saveCustomAchievement(pokemonId){
 function openDetail(id){
   const p = state.pokemon.find(x=>x.id===id);
   if(!p) return;
-  const primaryColor = TYPE_HEX[p.types[0]] || '#4FD1C5';
+  const detailTypes = displayTypes(p);
+  const primaryColor = TYPE_HEX[detailTypes[0]] || '#4FD1C5';
   const displaySprite = resolveDisplaySprite(p);
   const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
+  const formSuffix = (p.preferredForm === 'mega' && p.megaForm) ? ' ' + p.megaForm.toUpperCase() : '';
 
   const movesRows = p.games.map(g => {
     const preset = GAME_PRESET_INDEX[g.gameKey || detectGameKeyFromTag(g.tag)];
@@ -893,7 +963,7 @@ function openDetail(id){
         <div style="display:flex; align-items:center; gap:16px;">
           <div class="card-sprite" style="width:64px;height:64px; font-size:30px;">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '🟢'}</div>
           <div>
-            <div class="card-id" style="font-size:12px;">${formPrefix}${escapeHTML(p.species.toUpperCase())}</div>
+            <div class="card-id" style="font-size:12px;">${dexPrefixHTML(p)}${formPrefix}${escapeHTML(p.species.toUpperCase())}${escapeHTML(formSuffix)}</div>
             <div style="font-family:var(--nickname-font); font-weight:800; font-size:26px; letter-spacing:-0.02em; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <span>${titledNicknameHTML(p)}</span>
               ${p.shiny ? `<img src="${SHINY_ICON}" alt="Shiny" title="Shiny" style="width:20px;height:20px;">` : ''}
@@ -902,7 +972,7 @@ function openDetail(id){
                 ${p.isGigantamax ? `<button type="button" class="detail-form-switch-btn ${p.preferredForm==='gigantamax'?'active':''}" title="${p.preferredForm==='gigantamax' ? 'Showing Gigantamax, click to switch to Default' : 'Switch to Gigantamax'}" onclick="setPreferredForm('${p.id}','gigantamax'); closeDetail(); openDetail('${p.id}')"><img src="${GIGANTAMAX_ICON}" alt="Gigantamax"></button>` : ''}
               </span>` : ''}
             </div>
-            <div class="type-row" style="margin:6px 0 0;">${p.types.map(t=>`<span class="type-badge" style="background:${TYPE_HEX[t]}">${t}</span>`).join('')}</div>
+            <div class="type-row" style="margin:6px 0 0;">${detailTypes.map(t=>`<span class="type-badge" style="background:${TYPE_HEX[t]}">${t}</span>`).join('')}</div>
           </div>
         </div>
       </div>

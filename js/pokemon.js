@@ -8,7 +8,7 @@ function openForm(id){
     p = state.pokemon.find(x=>x.id===id);
     formMovesDraft = p.games.map(g => ({...g, moves:[...g.moves], gameKey: g.gameKey || detectGameKeyFromTag(g.tag)}));
   } else {
-    p = { nickname:'', species:'', types:[], nature:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', activeTitleKey:'' };
+    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'' };
     formMovesDraft = [];
   }
 
@@ -39,6 +39,7 @@ function openForm(id){
   setupSpriteUpload('default');
   setupSpriteUpload('mega');
   setupSpriteUpload('gigantamax');
+  renderMegaFormOptions();
   // the date panel is position:fixed so it can escape this container's overflow clipping;
   // close it on scroll rather than letting it float disconnected from its trigger button
   document.getElementById('formBody').addEventListener('scroll', closeAllDatePanels);
@@ -62,7 +63,7 @@ function spriteSlotHTML(slot, label, value, enabled){
   const fieldId = SPRITE_SLOT_FIELD[slot];
   return `
     <div class="sprite-slot ${enabled ? '' : 'disabled'}" id="spriteSlot_${slot}">
-      <div class="sprite-slot-label">${escapeHTML(label)}${slot!=='default' && !enabled ? `<span class="slot-disabled-tag">(enable above)</span>` : ''}</div>
+      <div class="sprite-slot-label">${escapeHTML(label)}</div>
       <div class="sprite-preview" id="spritePreview_${slot}">${value ? `<img src="${escapeAttr(value)}">` : '<span>No image</span>'}</div>
       <div class="sprite-upload-controls">
         <label class="btn ghost sprite-upload-btn" for="f_sprite_file_${slot}" ${enabled ? '' : 'aria-disabled="true" onclick="return false;"'}>Choose Image</label>
@@ -82,13 +83,20 @@ function onFormToggleChange(slot, enabled){
   slotEl.classList.toggle('disabled', !enabled);
   const label = slotEl.querySelector('.sprite-slot-label');
   const labelText = slot === 'mega' ? 'Mega Evolution' : 'Gigantamax';
-  label.innerHTML = `${escapeHTML(labelText)}${!enabled ? `<span class="slot-disabled-tag">(enable above)</span>` : ''}`;
+  label.textContent = labelText;
   const fileInput = document.getElementById(`f_sprite_file_${slot}`);
   const chooseLabel = slotEl.querySelector('.sprite-upload-btn');
   if(fileInput) fileInput.disabled = !enabled;
   if(chooseLabel){
     if(enabled){ chooseLabel.removeAttribute('aria-disabled'); chooseLabel.onclick = null; }
     else { chooseLabel.setAttribute('aria-disabled','true'); chooseLabel.onclick = () => false; }
+  }
+  // Mega Typing only makes sense once Mega Evolution is actually enabled.
+  if(slot === 'mega'){
+    const typingField = document.getElementById('megaTypingField');
+    if(typingField) typingField.style.display = enabled ? '' : 'none';
+    if(enabled) tryAutoFillMegaTypes();
+    renderMegaFormOptions();
   }
 }
 
@@ -139,14 +147,21 @@ function formBodyHTML(p){
   return `
     <div class="section-label">Identity</div>
     <div class="form-grid">
-      <div class="field"><label>Nickname <span style="color:var(--text-faint); font-weight:400;">(optional)</span></label><input id="f_nickname" value="${escapeAttr(p.nickname)}" placeholder="e.g. Sparky"></div>
-      <div class="field"><label>Species</label><input id="f_species" value="${escapeAttr(p.species)}" placeholder="e.g. Pikachu"></div>
+      <div class="identity-row">
+        <div class="field">
+          <label>Species</label>
+          <div class="species-field" id="speciesField_wrap">
+            <input id="f_species" value="${escapeAttr(p.species)}" placeholder="e.g. Pikachu" autocomplete="off" oninput="onSpeciesInput(this.value)" onfocus="onSpeciesInput(this.value)">
+            <div class="species-picker-panel" id="speciesPicker_panel"></div>
+          </div>
+        </div>
+        <div class="field"><label>Nickname</label><input id="f_nickname" value="${escapeAttr(p.nickname)}" placeholder="e.g. Sparky"></div>
+      </div>
       <div class="field span-2">
         <label>Type(s), click to toggle, up to 2</label>
-        <div class="color-swatches" id="typeSwatches">
-          ${TYPES.map(t=>`<div class="swatch ${p.types && p.types.includes(t)?'active':''}" data-type="${t}" style="background:${TYPE_HEX[t]}" title="${t}" onclick="toggleType('${t}')"></div>`).join('')}
+        <div class="type-select-row" id="typeSwatches">
+          ${TYPES.map(t=>`<button type="button" class="type-badge type-select ${p.types && p.types.includes(t)?'active':''}" data-type="${t}" style="background:${TYPE_HEX[t]}" onclick="toggleType('${t}')">${t}</button>`).join('')}
         </div>
-        <div class="hint" id="typeSelectedLabel">${(p.types||[]).join(' / ') || 'No type selected'}</div>
       </div>
       <div class="field"><label>Nature</label>${natureSelectHTML('f_nature', p.nature)}</div>
       <div class="field"><label>Gender</label>
@@ -186,6 +201,16 @@ function formBodyHTML(p){
             </label>
             <label for="f_isGigantamax" style="font-size:13px; color:var(--text-dim); cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><img src="${GIGANTAMAX_ICON}" alt="" style="width:16px;height:16px;">Gigantamax</label>
           </span>
+        </div>
+      </div>
+      <div class="field span-2" id="megaFormField" style="display:none;">
+        <label>Mega Form</label>
+        <div class="btn-toggle-row" id="megaFormButtons"></div>
+      </div>
+      <div class="field span-2" id="megaTypingField" style="${p.isMega ? '' : 'display:none;'}">
+        <label>Mega Evolution Type(s) <span style="color:var(--text-faint); font-weight:400;">(independent of the default typing above)</span></label>
+        <div class="type-select-row" id="megaTypeSwatches">
+          ${TYPES.map(t=>`<button type="button" class="type-badge type-select ${p.megaTypes && p.megaTypes.includes(t)?'active':''}" data-type="${t}" style="background:${TYPE_HEX[t]}" onclick="toggleMegaType('${t}')">${t}</button>`).join('')}
         </div>
       </div>
       <div class="field span-2">
@@ -262,10 +287,88 @@ function toggleType(t){
     if(selectedTypes.length >= 2) selectedTypes.shift();
     selectedTypes.push(t);
   }
-  document.querySelectorAll('#typeSwatches .swatch').forEach(s=>{
+  document.querySelectorAll('#typeSwatches .type-badge').forEach(s=>{
     s.classList.toggle('active', selectedTypes.includes(s.dataset.type));
   });
-  document.getElementById('typeSelectedLabel').textContent = selectedTypes.join(' / ') || 'No type selected';
+}
+
+// Mega Evolution's typing, edited independently of the default typing above -- selecting a
+// species/form from the picker never touches this, and vice versa.
+let selectedMegaTypes = [];
+// Which Mega form this is, for species with more than one (Charizard X/Y, Mewtwo X/Y, ...).
+// Empty string for species with only one Mega, or when typing was set by hand rather than
+// picked via the Mega Form toggle -- see renderMegaFormOptions/selectMegaForm below.
+let selectedMegaForm = '';
+function toggleMegaType(t){
+  if(selectedMegaTypes.includes(t)){
+    selectedMegaTypes = selectedMegaTypes.filter(x=>x!==t);
+  } else {
+    if(selectedMegaTypes.length >= 2) selectedMegaTypes.shift();
+    selectedMegaTypes.push(t);
+  }
+  // Hand-editing the types means they may no longer match any known Mega Form variant.
+  selectedMegaForm = '';
+  document.querySelectorAll('#megaTypeSwatches .type-badge').forEach(s=>{
+    s.classList.toggle('active', selectedMegaTypes.includes(s.dataset.type));
+  });
+  renderMegaFormOptions();
+}
+
+// Auto-fills Mega Evolution Type(s) (and Mega Form, if applicable) from the MEGA_TYPES
+// reference table the moment Mega Evolution gets enabled (or the species changes while
+// it's already enabled) -- only when nothing's been picked yet, so it never overwrites a
+// typing the user already set by hand. A couple of species have more than one Mega form
+// with different typing (Charizard X/Y, Mewtwo X/Y, etc.); the first listed variant is
+// used as the starting guess and can be changed via the Mega Form toggle.
+function tryAutoFillMegaTypes(){
+  if(selectedMegaTypes.length > 0) return;
+  const speciesInput = document.getElementById('f_species');
+  const name = speciesInput ? speciesInput.value.trim() : '';
+  const variants = MEGA_TYPES[name];
+  if(!variants || !variants.length) return;
+  selectedMegaForm = variants[0].label;
+  selectedMegaTypes = [...variants[0].types];
+  document.querySelectorAll('#megaTypeSwatches .type-badge').forEach(s=>{
+    s.classList.toggle('active', selectedMegaTypes.includes(s.dataset.type));
+  });
+  renderMegaFormOptions();
+}
+
+// Shows the Mega Form toggle only for species with more than one known Mega (Charizard,
+// Mewtwo, Absol, Garchomp) -- everyone else's Mega has nothing to disambiguate, so no
+// field is shown and megaForm just stays empty.
+function renderMegaFormOptions(){
+  const field = document.getElementById('megaFormField');
+  const buttons = document.getElementById('megaFormButtons');
+  if(!field || !buttons) return;
+  const megaCheckbox = document.getElementById('f_isMega');
+  const speciesInput = document.getElementById('f_species');
+  const name = speciesInput ? speciesInput.value.trim() : '';
+  const variants = MEGA_TYPES[name];
+  if(!megaCheckbox || !megaCheckbox.checked || !variants || variants.length < 2){
+    field.style.display = 'none';
+    buttons.innerHTML = '';
+    return;
+  }
+  field.style.display = '';
+  buttons.innerHTML = variants.map(v => {
+    const active = selectedMegaForm === v.label;
+    return `<button type="button" class="btn ${active ? 'primary' : 'ghost'}" style="flex:1;" onclick="selectMegaForm('${v.label}')">${escapeHTML(v.label || 'Standard')}</button>`;
+  }).join('');
+}
+
+function selectMegaForm(label){
+  selectedMegaForm = label;
+  const speciesInput = document.getElementById('f_species');
+  const name = speciesInput ? speciesInput.value.trim() : '';
+  const variant = (MEGA_TYPES[name] || []).find(v => v.label === label);
+  if(variant){
+    selectedMegaTypes = [...variant.types];
+    document.querySelectorAll('#megaTypeSwatches .type-badge').forEach(s=>{
+      s.classList.toggle('active', selectedMegaTypes.includes(s.dataset.type));
+    });
+  }
+  renderMegaFormOptions();
 }
 
 let selectedGender = '';
@@ -421,14 +524,21 @@ function closeForm(){
   const el = document.getElementById('formOverlay');
   if(el) el.remove();
   selectedTypes = [];
+  selectedMegaTypes = [];
+  selectedMegaForm = '';
   selectedGender = '';
+  selectedSpeciesEntryId = '';
   formMovesDraft = [];
 }
 
 const _origOpenForm = openForm;
 openForm = function(id){
-  selectedTypes = id ? [...(state.pokemon.find(x=>x.id===id).types)] : [];
-  selectedGender = id ? (state.pokemon.find(x=>x.id===id).gender || '') : '';
+  const existing = id ? state.pokemon.find(x=>x.id===id) : null;
+  selectedTypes = existing ? [...existing.types] : [];
+  selectedMegaTypes = existing ? [...(existing.megaTypes||[])] : [];
+  selectedMegaForm = existing ? (existing.megaForm || '') : '';
+  selectedGender = existing ? (existing.gender || '') : '';
+  selectedSpeciesEntryId = existing ? (existing.speciesEntryId || '') : '';
   _origOpenForm(id);
 };
 

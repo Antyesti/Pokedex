@@ -516,11 +516,8 @@ html[data-style="neumorphic"] .remove-row-btn{
 html[data-theme="light"] .remove-row-btn:hover,
 html[data-style="neumorphic"] .remove-row-btn:hover{ box-shadow: var(--nm-shadow-hover); }
 
-html[data-theme="light"] .swatch,
-html[data-style="neumorphic"] .swatch{ box-shadow: var(--nm-shadow-out-sm); }
-
-html[data-theme="light"] .swatch.active,
-html[data-style="neumorphic"] .swatch.active{ border-color:var(--text); box-shadow: var(--nm-shadow-in); }
+html[data-theme="light"] .type-badge.type-select.active,
+html[data-style="neumorphic"] .type-badge.type-select.active{ border-color:var(--text); }
 
 html[data-theme="light"] .custom-color-field input[type="color"],
 html[data-style="neumorphic"] .custom-color-field input[type="color"]{

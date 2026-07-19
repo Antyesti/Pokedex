@@ -824,18 +824,20 @@ function cardFooterInfoHTML(p){
 }
 
 function cardHTML(p){
-  const primaryColor = TYPE_HEX[p.types[0]] || '#4FD1C5';
-  const secondaryColor = TYPE_HEX[p.types[1]] || primaryColor;
+  const cardTypes = displayTypes(p);
+  const primaryColor = TYPE_HEX[cardTypes[0]] || '#4FD1C5';
+  const secondaryColor = TYPE_HEX[cardTypes[1]] || primaryColor;
   // Build type tint colors with alpha: light/neumorphic surfaces need a stronger tint
   // than dark/glass surfaces to read clearly, since there's no dark base competing for contrast.
   const isLight = isNeumorphicActive();
   const a1 = isLight ? 0.30 : 0.22;
   const a2 = isLight ? 0.24 : 0.18;
-  const tint1 = hexToRgba(TYPE_HEX[p.types[0]] || '#4FD1C5', a1);
-  const tint2 = hexToRgba(TYPE_HEX[p.types[1]] || p.types[0] && TYPE_HEX[p.types[0]] || '#4FD1C5', a2);
+  const tint1 = hexToRgba(TYPE_HEX[cardTypes[0]] || '#4FD1C5', a1);
+  const tint2 = hexToRgba(TYPE_HEX[cardTypes[1]] || cardTypes[0] && TYPE_HEX[cardTypes[0]] || '#4FD1C5', a2);
   const borderColor = hexToRgba(primaryColor, 0.45);
   const displaySprite = resolveDisplaySprite(p);
   const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
+  const formSuffix = (p.preferredForm === 'mega' && p.megaForm) ? ' ' + p.megaForm.toUpperCase() : '';
   const footerInfo = cardFooterInfoHTML(p);
   const [glowC1, glowC2, glowC3] = typeGlowColors(p);
   return `
@@ -846,13 +848,13 @@ function cardHTML(p){
     <div class="card-top">
       <div class="card-sprite">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '🟢'}</div>
       <div>
-        <div class="card-id">${formPrefix}${p.species.toUpperCase()}</div>
+        <div class="card-id">${dexPrefixHTML(p)}${formPrefix}${p.species.toUpperCase()}${formSuffix}</div>
         <div class="card-name">${titledNicknameHTML(p)}</div>
         <div class="card-species">${escapeHTML(p.nature||'')}${p.nature && p.gender ? ' · ' : ''}${genderSymbolHTML(p.gender)}</div>
       </div>
     </div>
     <div class="type-row">
-      ${p.types.map(t=>`<span class="type-badge" style="background:${TYPE_HEX[t]}">${t}</span>`).join('')}
+      ${cardTypes.map(t=>`<span class="type-badge" style="background:${TYPE_HEX[t]}">${t}</span>`).join('')}
     </div>
     <div class="card-meta">
       ${p.metLocation ? `<span>📍 ${p.metLocation}</span>` : ''}
@@ -913,8 +915,9 @@ function mixHex(hexA, hexB, t){
 // Shiny Pokemon swap the third stop for the app's existing shiny gold accent, tying the glow
 // into the same visual language as the shiny badge and shiny card border.
 function typeGlowColors(p){
-  const type1 = TYPE_HEX[p.types[0]] || '#4FD1C5';
-  const type2 = TYPE_HEX[p.types[1]];
+  const t = displayTypes(p);
+  const type1 = TYPE_HEX[t[0]] || '#4FD1C5';
+  const type2 = TYPE_HEX[t[1]];
   const c1 = type1;
   const c2 = type2 || mixHex(type1, '#000000', 0.25);
   const c3 = p.shiny ? 'var(--accent-2)' : (type2 ? mixHex(c1, c2, 0.5) : mixHex(type1, '#ffffff', 0.4));
@@ -1094,6 +1097,9 @@ document.addEventListener('click', (e) => {
   }
   if(!e.target.closest('.game-preset-dropdown')){
     document.querySelectorAll('.game-preset-panel.open').forEach(p => p.classList.remove('open'));
+  }
+  if(!e.target.closest('.species-field')){
+    document.querySelectorAll('.species-picker-panel.open').forEach(p => p.classList.remove('open'));
   }
   // Date panels are now appended to body (not inside .date-field) so check both the
   // field wrapper and any open date-panel directly
