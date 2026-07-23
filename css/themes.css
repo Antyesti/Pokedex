@@ -157,6 +157,12 @@ html[data-style="neumorphic"] select.filter{
   box-shadow: var(--nm-shadow-in); color:var(--text);
 }
 
+html[data-theme="light"] select.filter,
+html[data-style="neumorphic"] select.filter{
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B5B5E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center; background-size:14px 14px;
+}
+
 html[data-theme="light"] .search-wrap input::placeholder,
 html[data-style="neumorphic"] .search-wrap input::placeholder{ color:var(--text-faint); }
 
@@ -600,3 +606,16 @@ html[data-style="neumorphic"] .achv-partner-field input{ background:var(--bg); b
 
 html[data-theme="light"] .achv-category-label,
 html[data-style="neumorphic"] .achv-category-label{ border-bottom:1px solid var(--hairline); }
+
+/* ---------- SPECIES PICKER: frosted glass in Beast Ball (dark) theme ---------- */
+/* The panel normally just uses --panel, which is a near-transparent tint everywhere else
+   in the app. That's fine for small swatches, but a dropdown sitting on top of the rest
+   of the form needs an actual backdrop to stay legible, so give it a heavier, properly
+   blurred glass background here instead. */
+html[data-theme="dark"] .species-picker-panel{
+  background:
+    linear-gradient(155deg, rgba(255,255,255,0.07) 0%, transparent 30%),
+    linear-gradient(160deg, rgba(20,26,34,0.96), rgba(13,17,22,0.97));
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+}

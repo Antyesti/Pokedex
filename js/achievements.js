@@ -725,7 +725,7 @@ function openUnreleasedWarningModal(id, key, item){
     <div class="modal" style="max-width:420px;">
       <div class="modal-head">
         <div style="font-family:var(--sans); font-weight:800; font-size:19px;">Unreleased Achievement</div>
-        <div class="modal-close" onclick="closeUnreleasedWarningModal()">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeUnreleasedWarningModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
       </div>
@@ -878,7 +878,7 @@ function openAddCustomAchievement(pokemonId, defaultTag){
     <div class="modal" style="max-width:420px;">
       <div class="modal-head">
         <div style="font-family:var(--sans); font-weight:800; font-size:19px;">Add Custom Achievement</div>
-        <div class="modal-close" onclick="closeCustomAchievementModal()">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeCustomAchievementModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
       </div>
@@ -954,10 +954,10 @@ function openDetail(id){
   overlay.innerHTML = `
     <div class="modal">
       <div class="modal-head">
-        <div class="modal-close" title="Share as image" style="right:64px;" onclick="shareCardAsImage('${p.id}')">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Share as image" title="Share as image" style="right:64px;" onclick="shareCardAsImage('${p.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
         </div>
-        <div class="modal-close" onclick="closeDetail()">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeDetail()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
         <div style="display:flex; align-items:center; gap:16px;">

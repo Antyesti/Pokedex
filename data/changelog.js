@@ -38,7 +38,14 @@ const CHANGELOG = [
       {
         title: "Bug fixes",
         items: [
-          "Fixed the Species field and its autocomplete picker being cramped and hard to use on mobile."
+          "Fixed the Species field and its autocomplete picker being cramped and hard to use on mobile.",
+          "Fixed the page scrolling behind an open modal on mobile.",
+          "Fixed Pokémon cards staying visually \"stuck\" in their hover state after a tap on touch devices.",
+          "Increased the size of small touch targets (card edit/delete, trainer name edit) that were easy to mis-tap on mobile.",
+          "Reworked the toolbar and header actions into a proper mobile layout instead of letting them wrap unpredictably.",
+          "Fixed several icon-only controls (modal close buttons, card actions) not being reachable by keyboard or announced properly by screen readers.",
+          "Restyled the filter/sort dropdowns' arrow to match the rest of the UI instead of the browser default.",
+          "Improved the Species picker's visibility in the Beast Ball theme with a proper frosted-glass background."
         ]
       }
     ]

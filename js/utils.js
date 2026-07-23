@@ -1,3 +1,28 @@
+/* ============== KEYBOARD SUPPORT FOR DIV-BASED BUTTONS ============== */
+/* A handful of controls (modal close, card edit/delete/share) are rendered as
+   <div role="button"> rather than real <button> elements, since they sit inside larger
+   template strings alongside plain text/icons. This makes Enter/Space activate them the
+   same way a native button would, so they're not mouse/touch-only. */
+document.addEventListener('keydown', (e) => {
+  if(e.key !== 'Enter' && e.key !== ' ') return;
+  const el = e.target.closest('[role="button"]');
+  if(!el) return;
+  e.preventDefault();
+  el.click();
+});
+
+/* ============== MODAL SCROLL LOCK ============== */
+/* Every modal (Add/Edit form, Detail view, Settings, Changelog, Credits, achievement
+   popups) is just a .overlay div appended straight to <body> and removed on close.
+   Watching body for those comings and goings, rather than adding a lock/unlock call to
+   every individual open/close function, means background scroll stays blocked whenever
+   any modal is open -- and any modal added later gets this for free. */
+const bodyScrollObserver = new MutationObserver(() => {
+  const hasOverlay = document.body.querySelector(':scope > .overlay') !== null;
+  document.body.classList.toggle('modal-open', hasOverlay);
+});
+bodyScrollObserver.observe(document.body, { childList: true });
+
 /* ============== AUTOSAVE (localStorage) ============== */
 /* Persists trainer/settings/pokemon to localStorage so a reload restores the
    last session automatically, independent of the File System Access handle

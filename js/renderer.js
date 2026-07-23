@@ -102,7 +102,10 @@ function setTheme(theme){
   document.getElementById('themeIconMoon').style.display = theme === 'light' ? 'none' : '';
   document.getElementById('themeIconSun').style.display = theme === 'light' ? '' : 'none';
   document.getElementById('themeIconCustom').style.display = 'none';
-  if(btn) btn.title = theme === 'light' ? 'Switch to Beast Ball Theme' : 'Switch to Master Ball Theme';
+  if(btn){
+    btn.title = theme === 'light' ? 'Switch to Beast Ball Theme' : 'Switch to Master Ball Theme';
+    btn.setAttribute('aria-label', btn.title);
+  }
 }
 
 /* ---- Master Ball (custom) theme color math ---- */
@@ -133,7 +136,10 @@ function applyCustomTheme(custom){
   document.getElementById('themeIconMoon').style.display = 'none';
   document.getElementById('themeIconSun').style.display = 'none';
   document.getElementById('themeIconCustom').style.display = '';
-  if(btn) btn.title = 'Switch to Poké Ball Theme';
+  if(btn){
+    btn.title = 'Switch to Poké Ball Theme';
+    btn.setAttribute('aria-label', btn.title);
+  }
 
   const bgRgb = hexToRgbArr(custom.bg);
   const lum = relativeLuminance(bgRgb);
@@ -864,13 +870,13 @@ function cardHTML(p){
     <div class="card-foot ${footerInfo ? '' : 'centered'}">
       ${footerInfo}
       <div class="card-actions">
-        <div class="icon-btn" title="Share as image" onclick="event.stopPropagation(); shareCardAsImage('${p.id}')">
+        <div class="icon-btn" role="button" tabindex="0" aria-label="Share as image" title="Share as image" onclick="event.stopPropagation(); shareCardAsImage('${p.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
         </div>
-        <div class="icon-btn" title="Edit" onclick="event.stopPropagation(); openForm('${p.id}')">
+        <div class="icon-btn" role="button" tabindex="0" aria-label="Edit" title="Edit" onclick="event.stopPropagation(); openForm('${p.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </div>
-        <div class="icon-btn danger" title="Delete" onclick="event.stopPropagation(); deletePokemon('${p.id}')">
+        <div class="icon-btn danger" role="button" tabindex="0" aria-label="Delete" title="Delete" onclick="event.stopPropagation(); deletePokemon('${p.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         </div>
       </div>

@@ -24,17 +24,17 @@
         <h1 id="dexTitle">Pokédex</h1>
         <div class="sub" id="trainerRow">
           <span id="trainerLabel">Personal Roster Records</span>
-          <button type="button" class="trainer-edit-btn" id="trainerEditBtn" title="Set Original Trainer">
+          <button type="button" class="trainer-edit-btn" id="trainerEditBtn" title="Set Original Trainer" aria-label="Set Original Trainer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </button>
         </div>
       </div>
     </div>
     <div class="top-actions">
-      <button class="btn ghost" id="settingsBtn" title="Settings">
+      <button class="btn ghost" id="settingsBtn" title="Settings" aria-label="Settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
-      <button class="btn ghost" id="themeToggleBtn" title="Switch to Beast Ball Theme">
+      <button class="btn ghost" id="themeToggleBtn" title="Switch to Beast Ball Theme" aria-label="Switch to Beast Ball Theme">
         <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
         <svg id="themeIconCustom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a9 9 0 0 1 0 18 9 9 0 0 1 0-18z"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
@@ -42,7 +42,7 @@
       <button class="btn ghost last-file-chip" id="lastFileChip" style="display:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
         <span id="lastFileLabel">Load last file</span>
-        <span id="lastFileDismiss" class="chip-dismiss" title="Forget this file">
+        <span id="lastFileDismiss" class="chip-dismiss" role="button" tabindex="0" title="Forget this file" aria-label="Forget this file">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </span>
       </button>
@@ -89,10 +89,10 @@
       <span class="form-filter-icon"><img id="gigantamaxFilterIcon" src="" alt=""></span> Gigantamax
     </button>
     <div class="view-toggle" id="viewToggle" role="group" aria-label="Grid density">
-      <button type="button" class="view-toggle-btn active" data-density="cozy" title="3 per row">
+      <button type="button" class="view-toggle-btn active" data-density="cozy" title="3 per row" aria-label="3 per row">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="5" height="14" rx="1.5"/><rect x="9.5" y="5" width="5" height="14" rx="1.5"/><rect x="16" y="5" width="5" height="14" rx="1.5"/></svg>
       </button>
-      <button type="button" class="view-toggle-btn" data-density="dense" title="6 per row">
+      <button type="button" class="view-toggle-btn" data-density="dense" title="6 per row" aria-label="6 per row">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="2.6" height="12" rx="1"/><rect x="6.6" y="6" width="2.6" height="12" rx="1"/><rect x="10.7" y="6" width="2.6" height="12" rx="1"/><rect x="14.8" y="6" width="2.6" height="12" rx="1"/><rect x="18.9" y="6" width="2.6" height="12" rx="1"/></svg>
       </button>
     </div>

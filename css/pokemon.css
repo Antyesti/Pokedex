@@ -41,6 +41,10 @@
 
 .grid.dense .type-badge{ font-size:9px; padding:3px 7px; }
 
+.grid.dense .icon-btn{ width:30px; height:30px; }
+
+.grid.dense .icon-btn svg{ width:14px; height:14px; }
+
 @media (max-width: 1200px) {
   .grid.dense{ grid-template-columns:repeat(4, 1fr); }
 }
@@ -105,19 +109,21 @@
   transition: opacity .3s ease, transform .5s ease;
 }
 
-.card:hover{
-  transform:translateY(-4px) scale(1.008);
-  border-color: color-mix(in srgb, var(--glow) 55%, var(--panel-border));
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.22),
-    inset 0 0 0 1px rgba(255,255,255,0.04),
-    0 18px 40px -14px color-mix(in srgb, var(--glow) 50%, transparent),
-    0 4px 12px rgba(0,0,0,0.25);
+@media (hover: hover) and (pointer: fine){
+  .card:hover{
+    transform:translateY(-4px) scale(1.008);
+    border-color: color-mix(in srgb, var(--glow) 55%, var(--panel-border));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.22),
+      inset 0 0 0 1px rgba(255,255,255,0.04),
+      0 18px 40px -14px color-mix(in srgb, var(--glow) 50%, transparent),
+      0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  .card:hover::before{ opacity:0.26; }
+
+  .card:not(.is-shiny):hover::after{ transform:translateX(6%); }
 }
-
-.card:hover::before{ opacity:0.26; }
-
-.card:not(.is-shiny):hover::after{ transform:translateX(6%); }
 
 /* shiny shimmer: holographic iridescent foil sweep + sparkle badge */
 
@@ -274,10 +280,10 @@
 
 /* ---- Light theme: cards become flat neumorphic plastic, tinted by type via shadow glow ---- */
 
-.card-actions{ display:flex; gap:6px; flex:none; }
+.card-actions{ display:flex; gap:8px; flex:none; }
 
 .icon-btn{
-  width:28px;height:28px; border-radius:8px; border:1px solid var(--panel-border);
+  width:36px;height:36px; border-radius:10px; border:1px solid var(--panel-border);
   background:rgba(255,255,255,0.03); color:var(--text-dim);
   display:flex; align-items:center; justify-content:center; cursor:pointer;
   transition: all .15s;
@@ -285,7 +291,7 @@
 
 .icon-btn:hover{ background:rgba(255,255,255,0.09); color:var(--text); }
 
-.icon-btn svg{ width:14px;height:14px; }
+.icon-btn svg{ width:16px;height:16px; }
 
 .icon-btn.danger:hover{ background:rgba(229,87,123,0.15); color:#F4A6BA; }
 
@@ -333,6 +339,10 @@
 }
 
 .modal-close:hover{ background:rgba(255,255,255,0.1); color:var(--text); }
+
+.modal-close:focus-visible, .icon-btn:focus-visible{
+  outline:2px solid var(--accent); outline-offset:2px;
+}
 
 .modal-close svg{ width:16px;height:16px; }
 

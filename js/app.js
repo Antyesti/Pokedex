@@ -81,7 +81,7 @@ function openChangelog(){
           <h2 style="font-family:var(--sans); font-size:22px; font-weight:800; letter-spacing:-0.01em; margin:0;">Changelog</h2>
           <div class="hint" style="margin-top:4px;">What's new and what's changed in the Pokédex.</div>
         </div>
-        <div class="modal-close" onclick="closeChangelog()">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeChangelog()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
       </div>
@@ -128,7 +128,7 @@ function openCredits(){
           <h2 style="font-family:var(--sans); font-size:22px; font-weight:800; letter-spacing:-0.01em; margin:0;">Credits</h2>
           <div class="hint" style="margin-top:4px;">Sources and resources this Pokédex relies on.</div>
         </div>
-        <div class="modal-close" onclick="closeCredits()">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeCredits()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
       </div>
@@ -198,7 +198,7 @@ function openSettings(){
           <h2 style="font-family:var(--sans); font-size:19px; margin:0;">Settings</h2>
           <div class="hint" style="margin-top:2px;">Saved into your exported JSON file.</div>
         </div>
-        <div class="modal-close" onclick="closeSettings()">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeSettings()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
       </div>

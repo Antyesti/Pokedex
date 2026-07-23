@@ -20,7 +20,7 @@ function openForm(id){
   overlay.innerHTML = `
     <div class="modal">
       <div class="modal-head">
-        <div class="modal-close" onclick="closeForm()">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeForm()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
         <div style="font-family:var(--sans); font-weight:800; font-size:22px; letter-spacing:-0.02em;">${id ? 'Edit Pokémon' : 'Add Pokémon'}</div>
