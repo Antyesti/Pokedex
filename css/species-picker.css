@@ -43,3 +43,12 @@
 .species-picker-types{ flex:none; display:flex; flex-direction:row; align-items:center; gap:5px; }
 
 .species-picker-types .type-badge{ font-size:9.5px; padding:2px 7px; }
+
+@media (max-width: 560px){
+  .species-picker-row{ padding:12px 10px; gap:8px; }
+  .species-picker-dex{ width:38px; font-size:10px; }
+  .species-picker-name-main{ font-size:13px; }
+  .species-picker-subtitle{ font-size:10.5px; }
+  .species-picker-types{ gap:4px; }
+  .species-picker-types .type-badge{ font-size:8.5px; padding:2px 5px; }
+}

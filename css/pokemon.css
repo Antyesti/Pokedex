@@ -450,6 +450,10 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 
 .identity-row{ grid-column:span 2; display:grid; grid-template-columns:2fr 1fr; gap:14px; }
 
+@media (max-width: 560px){
+  .identity-row{ grid-template-columns:1fr; }
+}
+
 .field label{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-dim); }
 
 .field input, .field select, .field textarea{
@@ -465,6 +469,10 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 .field textarea{ resize:vertical; min-height:54px; font-family:var(--sans); }
 
 .field input::placeholder{ color:var(--text-faint); }
+
+@media (max-width: 560px){
+  .field input, .field select, .field textarea{ font-size:16px; }
+}
 
 /* Custom date picker */
 

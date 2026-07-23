@@ -12510,5 +12510,15 @@ const POKEMON_SPECIES = [
       "Poison",
       "Ghost"
     ]
+  },
+  {
+    id: "pichu-spiky-eared-pichu",
+    dex: 172,
+    species: "Pichu",
+    demonym: null,
+    form: "Spiky-eared Pichu",
+    types: [
+      "Electric"
+    ]
   }
 ];

@@ -33,6 +33,17 @@ const CREDITS = [
 
 const CHANGELOG = [
   {
+    version: "v26",
+    entries: [
+      {
+        title: "Bug fixes",
+        items: [
+          "Fixed the Species field and its autocomplete picker being cramped and hard to use on mobile."
+        ]
+      }
+    ]
+  },
+  {
     version: "v25",
     entries: [
       {
