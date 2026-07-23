@@ -96,6 +96,7 @@ function renderSpeciesPickerPanel(filterText){
 // stale dex number/typing behind.
 function onSpeciesInput(val){
   const trimmed = val.trim();
+  if(trimmed) document.getElementById('f_species').classList.remove('field-error');
   if(selectedSpeciesEntryId){
     const entry = findSpeciesEntry(selectedSpeciesEntryId);
     if(!entry || entry.species.toLowerCase() !== trimmed.toLowerCase()) selectedSpeciesEntryId = '';

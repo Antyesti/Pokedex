@@ -721,7 +721,7 @@ function observeGridLoadMore(){
 
 function emptyStateHTML(title, body){
   return `<div class="empty">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto;color:var(--text-faint)"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a10 10 0 0 1 0 20 10 10 0 0 1 0-20z"/></svg>
+    <div class="brand-mark large"></div>
     <h3>${title}</h3>
     <p>${body}</p>
     <button class="btn primary" onclick="openForm()">Add Pokémon</button>
@@ -852,7 +852,7 @@ function cardHTML(p){
     <span class="card-glow-halo" aria-hidden="true"></span>
     ${formBadgeRowHTML(p)}
     <div class="card-top">
-      <div class="card-sprite">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '🟢'}</div>
+      <div class="card-sprite">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '⭕️'}</div>
       <div>
         <div class="card-id">${dexPrefixHTML(p)}${formPrefix}${p.species.toUpperCase()}${formSuffix}</div>
         <div class="card-name">${titledNicknameHTML(p)}</div>

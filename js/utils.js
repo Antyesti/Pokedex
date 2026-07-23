@@ -11,17 +11,49 @@ document.addEventListener('keydown', (e) => {
   el.click();
 });
 
-/* ============== MODAL SCROLL LOCK ============== */
+/* ============== MODAL SCROLL LOCK + FOCUS TRAP ============== */
 /* Every modal (Add/Edit form, Detail view, Settings, Changelog, Credits, achievement
    popups) is just a .overlay div appended straight to <body> and removed on close.
-   Watching body for those comings and goings, rather than adding a lock/unlock call to
-   every individual open/close function, means background scroll stays blocked whenever
-   any modal is open -- and any modal added later gets this for free. */
+   Watching body for those comings and goings, rather than wiring this into every
+   individual open/close function, means scroll lock, initial focus, Tab containment,
+   and returning focus on close all work for any current or future modal for free. */
+function getFocusableEls(container){
+  return Array.from(container.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )).filter(el => el.offsetParent !== null);
+}
+
+let activeModalEl = null;
+let focusBeforeModal = null;
+
 const bodyScrollObserver = new MutationObserver(() => {
-  const hasOverlay = document.body.querySelector(':scope > .overlay') !== null;
-  document.body.classList.toggle('modal-open', hasOverlay);
+  const overlay = document.body.querySelector(':scope > .overlay');
+  document.body.classList.toggle('modal-open', !!overlay);
+
+  if(overlay && overlay !== activeModalEl){
+    focusBeforeModal = document.activeElement;
+    activeModalEl = overlay;
+    const focusable = getFocusableEls(overlay);
+    if(focusable.length) focusable[0].focus();
+  } else if(!overlay && activeModalEl){
+    activeModalEl = null;
+    if(focusBeforeModal && document.body.contains(focusBeforeModal)) focusBeforeModal.focus();
+    focusBeforeModal = null;
+  }
 });
 bodyScrollObserver.observe(document.body, { childList: true });
+
+document.addEventListener('keydown', (e) => {
+  if(e.key !== 'Tab' || !activeModalEl) return;
+  const focusable = getFocusableEls(activeModalEl);
+  if(!focusable.length) return;
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  if(e.shiftKey && document.activeElement === first){
+    e.preventDefault(); last.focus();
+  } else if(!e.shiftKey && document.activeElement === last){
+    e.preventDefault(); first.focus();
+  }
+});
 
 /* ============== AUTOSAVE (localStorage) ============== */
 /* Persists trainer/settings/pokemon to localStorage so a reload restores the

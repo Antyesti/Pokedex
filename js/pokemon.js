@@ -290,6 +290,7 @@ function toggleType(t){
   document.querySelectorAll('#typeSwatches .type-badge').forEach(s=>{
     s.classList.toggle('active', selectedTypes.includes(s.dataset.type));
   });
+  if(selectedTypes.length > 0) document.getElementById('typeSwatches').classList.remove('field-error');
 }
 
 // Mega Evolution's typing, edited independently of the default typing above -- selecting a
@@ -541,6 +542,55 @@ openForm = function(id){
   selectedSpeciesEntryId = existing ? (existing.speciesEntryId || '') : '';
   _origOpenForm(id);
 };
+
+document.getElementById('btnNewDex').onclick = () => openNewDexModal();
+
+function openNewDexModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'newDexOverlay';
+  overlay.onclick = (e) => { if(e.target === overlay) closeNewDexModal(); };
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:420px;">
+      <div class="modal-head">
+        <div style="font-family:var(--sans); font-weight:800; font-size:19px;">Start a Fresh Pokédex</div>
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeNewDexModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="hint settings-unreleased-warning">⚠ This clears every Pokémon currently in your Pokédex. If you haven't exported this roster to a file yet, do that first, this can't be recovered once you close the tab.</div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn ghost" onclick="closeNewDexModal()">Cancel</button>
+        <button type="button" class="btn danger" onclick="confirmNewDex()">Start Fresh</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function closeNewDexModal(){
+  const el = document.getElementById('newDexOverlay');
+  if(el) el.remove();
+}
+
+function confirmNewDex(){
+  const previous = state;
+  state = { pokemon: [], trainer: '', settings: previous.settings };
+  pendingDeletions = [];
+  closeNewDexModal();
+  applySettings();
+  render();
+  showToast('Started a fresh, empty Pokédex.', {
+    label: 'Undo',
+    onClick: () => {
+      state = previous;
+      applySettings();
+      render();
+    }
+  });
+}
 
 /* ============== IMPORT / EXPORT ============== */
 document.getElementById('btnExport').onclick = async () => {

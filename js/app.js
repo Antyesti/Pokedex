@@ -575,13 +575,23 @@ function saveSettings(){
 document.getElementById('settingsBtn').addEventListener('click', openSettings);
 
 function saveForm(id){
+  document.getElementById('f_species').classList.remove('field-error');
+  document.getElementById('typeSwatches').classList.remove('field-error');
+
   const nickname = document.getElementById('f_nickname').value.trim();
   const species = document.getElementById('f_species').value.trim();
   if(!species){
+    const el = document.getElementById('f_species');
+    el.classList.add('field-error');
+    el.focus();
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
     showToast('Species is required.');
     return;
   }
   if(selectedTypes.length === 0){
+    const el = document.getElementById('typeSwatches');
+    el.classList.add('field-error');
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
     showToast('At least one Type is required.');
     return;
   }
@@ -683,5 +693,7 @@ document.addEventListener('keydown', (e) => {
     closeDetail();
     closeForm();
     closeChangelog();
+    closeSettings();
+    closeCredits();
   }
 });

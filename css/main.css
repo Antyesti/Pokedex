@@ -95,6 +95,10 @@ header.top{
   background:#0B0F14; border:3px solid #fff;
 }
 
+.brand-mark.large{ width:84px; height:84px; border-width:5px; margin:0 auto; }
+
+.brand-mark.large::after{ width:26px; height:26px; border-width:5px; }
+
 .brand h1{
   font-family:var(--sans); font-weight:800; font-size:28px; letter-spacing:-0.02em; margin:0;
   line-height:1;
@@ -333,7 +337,7 @@ header.top{
 
 .dash-cell .k img{ width:14px; height:14px; flex:none; }
 
-.dash-cell .v{ font-family:var(--sans); font-size:19px; font-weight:700; color:var(--text); display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
+.dash-cell .v{ font-family:var(--mono); font-size:19px; font-weight:700; color:var(--text); display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
 
 .dash-cell .v small{ font-family:var(--mono); font-size:11px; color:var(--text-dim); font-weight:450; }
 

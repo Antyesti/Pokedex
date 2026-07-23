@@ -36,6 +36,20 @@ const CHANGELOG = [
     version: "v26",
     entries: [
       {
+        title: "New",
+        items: [
+          "Added a \"New\" option next to Import/Export to start a fresh, empty Pokédex. It warns you to save your current roster first, and offers an Undo right after in case you change your mind."
+        ]
+      },
+      {
+        title: "Visual",
+        items: [
+          "The sprite pedestal on cards now picks up a soft glow of the Pokémon's own type color, instead of the same neutral tint for every Pokémon.",
+          "The empty-Pokédex screen now uses the same Poké Ball mark as the header, instead of a plain placeholder icon.",
+          "Stats dashboard numbers now use the same monospace font as the rest of the app's data readouts."
+        ]
+      },
+      {
         title: "Bug fixes",
         items: [
           "Fixed the Species field and its autocomplete picker being cramped and hard to use on mobile.",
@@ -45,7 +59,12 @@ const CHANGELOG = [
           "Reworked the toolbar and header actions into a proper mobile layout instead of letting them wrap unpredictably.",
           "Fixed several icon-only controls (modal close buttons, card actions) not being reachable by keyboard or announced properly by screen readers.",
           "Restyled the filter/sort dropdowns' arrow to match the rest of the UI instead of the browser default.",
-          "Improved the Species picker's visibility in the Beast Ball theme with a proper frosted-glass background."
+          "Improved the Species picker's visibility in the Beast Ball theme with a proper frosted-glass background.",
+          "Escape now also closes the Settings and Credits modals, matching the other modals in the app.",
+          "Modals now trap keyboard focus while open and return focus to what you were on when closed, instead of letting Tab wander into the page behind them.",
+          "Toast notifications (save confirmations, delete/undo, import/export results) are now announced properly to screen readers.",
+          "The Add/Edit form now highlights, focuses, and scrolls to whichever field actually failed validation instead of just showing a message.",
+          "Replaced the placeholder icon shown when a Pokémon has no sprite with a plain empty circle."
         ]
       }
     ]
