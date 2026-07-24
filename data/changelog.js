@@ -46,7 +46,11 @@ const CHANGELOG = [
         items: [
           "The sprite pedestal on cards now picks up a soft glow of the Pokémon's own type color, instead of the same neutral tint for every Pokémon.",
           "The empty-Pokédex screen now uses the same Poké Ball mark as the header, instead of a plain placeholder icon.",
-          "Stats dashboard numbers now use the same monospace font as the rest of the app's data readouts."
+          "Stats dashboard numbers now use the same monospace font as the rest of the app's data readouts.",
+          "Reworked the shared card and roster images: type-tinted sprite glows, gradient-sheen type badges, a Poké Ball watermark, the dex number, and a glass-chip meta row instead of flat text lines and solid colors.",
+          "The font preview in Settings now shows an actual card (sprite, dex number, type badges, footer) instead of a generic mock-up, so it accurately reflects where each font will actually show up.",
+          "Setting the Original Trainer name now uses an in-app dialog instead of the browser's native prompt, matching the rest of the app.",
+          "Opening a modal now focuses its first real field or button instead of always landing on the close (X) button."
         ]
       },
       {
@@ -64,7 +68,9 @@ const CHANGELOG = [
           "Modals now trap keyboard focus while open and return focus to what you were on when closed, instead of letting Tab wander into the page behind them.",
           "Toast notifications (save confirmations, delete/undo, import/export results) are now announced properly to screen readers.",
           "The Add/Edit form now highlights, focuses, and scrolls to whichever field actually failed validation instead of just showing a message.",
-          "Replaced the placeholder icon shown when a Pokémon has no sprite with a plain empty circle."
+          "Replaced the placeholder icon shown when a Pokémon has no sprite with a small, static version of the header's Poké Ball mark.",
+          "Card footer and shared card images no longer show a redundant \"Game → Game\" when Origin Game and Last Game are the same.",
+          "Shared card/roster images now show a Pokémon's Mega Evolution typing when set, instead of always falling back to its default typing."
         ]
       }
     ]

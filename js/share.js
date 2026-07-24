@@ -89,6 +89,7 @@ async function shareOrDownloadCanvas(canvas, filename){
 const SHARE_CARD_WIDTH = 760;
 const SHARE_PAD = 36;
 const SHARE_CHIP_H = 34;
+const SHARE_META_CHIP_H = 32;
 const SHARE_CHIP_GAP = 10;
 
 // Lays out fixed-width chips left-to-right within maxWidth, wrapping to a new row as
@@ -109,6 +110,105 @@ function layoutChips(items, startX, startY, maxWidth, rowHeight, gap, draw){
 function measureChip(ctx, text, iconSize){
   const textWidth = ctx.measureText(text).width;
   return { text, width: iconSize + 8 + textWidth + 20 };
+}
+
+// How many wrapped rows a set of pre-measured chips will take up at a given width --
+// shared by every block that lays chips out with layoutChips, so the canvas can be
+// sized up front without actually drawing anything yet.
+function chipRowCount(items, maxWidth, gap){
+  if(items.length === 0) return 0;
+  let cx = 0, rows = 1;
+  items.forEach(item => {
+    if(cx !== 0 && cx + item.width > maxWidth){ rows++; cx = 0; }
+    cx += item.width + gap;
+  });
+  return rows;
+}
+
+// A glass-style chip background: soft fill, a diagonal sheen, and a hairline border --
+// used for both the meta row and achievement chips so they read as the same family of UI.
+function drawGlassChip(ctx, x, y, w, h, r){
+  roundRectPath(ctx, x, y, w, h, r);
+  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  ctx.fill();
+  ctx.save();
+  roundRectPath(ctx, x, y, w, h, r);
+  ctx.clip();
+  const sheen = ctx.createLinearGradient(x, y, x + w*0.35, y + h);
+  sheen.addColorStop(0, 'rgba(255,255,255,0.14)');
+  sheen.addColorStop(0.7, 'rgba(255,255,255,0)');
+  ctx.fillStyle = sheen;
+  ctx.fillRect(x, y, w, h);
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+  ctx.lineWidth = 1;
+  roundRectPath(ctx, x+0.5, y+0.5, w-1, h-1, r);
+  ctx.stroke();
+}
+
+function typeBadgeWidth(ctx, label, h, fontPx){
+  ctx.font = `700 ${fontPx}px "Outfit", sans-serif`;
+  return ctx.measureText(label).width + h*0.9;
+}
+
+// A type badge with the same gradient sheen + text shadow the live app's .type-badge uses,
+// instead of a flat solid pill. Returns the badge's drawn width.
+function drawTypeBadgePill(ctx, x, y, label, hex, h, fontPx){
+  const w = typeBadgeWidth(ctx, label, h, fontPx);
+  const r = h/2;
+  roundRectPath(ctx, x, y, w, h, r);
+  ctx.fillStyle = hex;
+  ctx.fill();
+  ctx.save();
+  roundRectPath(ctx, x, y, w, h, r);
+  ctx.clip();
+  const sheen = ctx.createLinearGradient(x, y, x + w*0.4, y + h);
+  sheen.addColorStop(0, 'rgba(255,255,255,0.34)');
+  sheen.addColorStop(0.55, 'rgba(255,255,255,0)');
+  ctx.fillStyle = sheen;
+  ctx.fillRect(x, y, w, h);
+  ctx.restore();
+  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.35)';
+  ctx.shadowBlur = 2;
+  ctx.shadowOffsetY = 1;
+  ctx.fillStyle = '#ffffff';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText(label, x + w/2 - ctx.measureText(label).width/2, y + h*0.68);
+  ctx.restore();
+  return w;
+}
+
+// Draws a Poké Ball glyph (matching the app's own header mark) at a given center/radius,
+// used as a corner watermark on shared images and as the no-sprite placeholder, so an
+// image shared outside the app is still recognizably "from" it.
+function drawPokeBallGlyph(ctx, cx, cy, r, opacity){
+  ctx.save();
+  ctx.globalAlpha = opacity != null ? opacity : 1;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.clip();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(cx-r, cy-r, r*2, r);
+  ctx.fillStyle = '#1a1f26';
+  ctx.fillRect(cx-r, cy, r*2, r);
+  ctx.fillRect(cx-r, cy-r*0.09, r*2, r*0.18);
+  ctx.restore();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r - r*0.065, 0, Math.PI*2);
+  ctx.lineWidth = r*0.13;
+  ctx.strokeStyle = '#1a1f26';
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r*0.32, 0, Math.PI*2);
+  ctx.fillStyle = '#1a1f26';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r*0.32 - r*0.065, 0, Math.PI*2);
+  ctx.fillStyle = '#ffffff';
+  ctx.fill();
+  ctx.restore();
 }
 
 // Decodes an animated PNG data URI into its individual composited frames using the
@@ -190,39 +290,51 @@ function frameBufferToCanvas(buffer, width, height){
 // that's supplied per frame by the caller).
 async function prepareCardShareAssets(p){
   const achievements = earnedAchievementEntries(p);
+  const types = displayTypes(p);
   const measureCanvas = document.createElement('canvas');
   const mctx = measureCanvas.getContext('2d');
   const contentWidth = SHARE_CARD_WIDTH - SHARE_PAD*2;
   mctx.font = '600 15px "Outfit", sans-serif';
   const achievementChips = achievements.map(a => measureChip(mctx, a.name, 26));
 
-  // Pre-measure the achievements block height so the canvas can be sized up front.
-  let achvBlockHeight = 44; // heading row
-  if(achievements.length > 0){
-    let cx = 0, rows = 1;
-    achievementChips.forEach(item => {
-      if(cx !== 0 && cx + item.width > contentWidth){ rows++; cx = 0; }
-      cx += item.width + SHARE_CHIP_GAP;
-    });
-    achvBlockHeight += rows * (SHARE_CHIP_H + SHARE_CHIP_GAP);
-  }
-
-  const headerHeight = 176;
-  const metaHeight = 96;
-  const height = SHARE_PAD*2 + headerHeight + metaHeight + achvBlockHeight + 40;
-
   const ballImg = p.ball ? await loadImageAsync(BALL_LOOKUP[p.ball] || '') : null;
   const achievementIcons = await Promise.all(achievements.map(a => loadImageAsync(a.icon)));
 
-  return { achievements, achievementChips, contentWidth, headerHeight, metaHeight, height, ballImg, achievementIcons };
+  // Meta row (met location / ball / origin-last game) drawn as wrapping chips, same as
+  // achievements, rather than fixed stacked text lines -- so it only takes up as much
+  // room as it actually needs, and reads as the same family of UI as everything else.
+  const metaItems = [];
+  if(p.metLocation) metaItems.push({ text: stripHTML(p.metLocation), icon: null });
+  if(p.ball) metaItems.push({ text: p.ball, icon: ballImg });
+  if(p.originGame || p.lastGame){
+    const route = (p.originGame && p.originGame === p.lastGame) ? p.originGame : `${p.originGame || '-'}  →  ${p.lastGame || '-'}`;
+    metaItems.push({ text: route, icon: null });
+  }
+  mctx.font = '600 14px "Outfit", sans-serif';
+  const maxChipTextWidth = contentWidth * 0.6;
+  const metaChips = metaItems.map(item => {
+    const text = truncateToWidth(mctx, item.text, maxChipTextWidth);
+    return { ...measureChip(mctx, text, item.icon ? 20 : 0), icon: item.icon };
+  });
+
+  const achvRows = chipRowCount(achievementChips, contentWidth, SHARE_CHIP_GAP);
+  const achvBlockHeight = 40 + (achievements.length > 0 ? achvRows * (SHARE_CHIP_H + SHARE_CHIP_GAP) : 26);
+
+  const metaRows = chipRowCount(metaChips, contentWidth, SHARE_CHIP_GAP);
+  const metaBlockHeight = metaChips.length > 0 ? metaRows * (SHARE_META_CHIP_H + SHARE_CHIP_GAP) : 0;
+
+  const headerHeight = 176;
+  const height = SHARE_PAD*2 + headerHeight + metaBlockHeight + achvBlockHeight + 30;
+
+  return { achievements, achievementChips, metaChips, contentWidth, headerHeight, metaBlockHeight, achvBlockHeight, height, ballImg, achievementIcons, types };
 }
 
 // Pure/synchronous: draws one full card frame given already-loaded assets and a sprite
 // drawable (an Image for a static sprite, or a per-frame canvas for an animated one).
 function drawCardFrame(p, assets, spriteDrawable){
-  const { achievements, achievementChips, contentWidth, headerHeight, metaHeight, height, ballImg, achievementIcons } = assets;
-  const primary = TYPE_HEX[p.types[0]] || '#4FD1C5';
-  const secondary = TYPE_HEX[p.types[1]] || primary;
+  const { achievements, achievementChips, metaChips, contentWidth, headerHeight, metaBlockHeight, achvBlockHeight, height, ballImg, achievementIcons, types } = assets;
+  const primary = TYPE_HEX[types[0]] || '#4FD1C5';
+  const secondary = TYPE_HEX[types[1]] || primary;
 
   const scale = 2; // render at 2x for a crisp export
   const canvas = document.createElement('canvas');
@@ -231,8 +343,9 @@ function drawCardFrame(p, assets, spriteDrawable){
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
-  // Background: dark panel with a diagonal type-color tint, independent of the app's
-  // current theme so shared images look consistent across Poké Ball / Beast Ball / Master Ball.
+  // Background: dark glass panel with a diagonal type-color wash and a soft ambient glow
+  // behind the sprite corner, independent of the app's current theme so shared images look
+  // the same regardless of Poké Ball / Beast Ball / Master Ball selection.
   roundRectPath(ctx, 0, 0, SHARE_CARD_WIDTH, height, 28);
   ctx.save();
   ctx.clip();
@@ -246,19 +359,47 @@ function drawCardFrame(p, assets, spriteDrawable){
   tintGrad.addColorStop(1, hexToRgba(secondary, 0.10));
   ctx.fillStyle = tintGrad;
   ctx.fillRect(0, 0, SHARE_CARD_WIDTH, height);
+  const ambientGlow = ctx.createRadialGradient(SHARE_PAD + 70, SHARE_PAD + 70, 0, SHARE_PAD + 70, SHARE_PAD + 70, 260);
+  ambientGlow.addColorStop(0, hexToRgba(primary, 0.22));
+  ambientGlow.addColorStop(1, hexToRgba(primary, 0));
+  ctx.fillStyle = ambientGlow;
+  ctx.fillRect(0, 0, SHARE_CARD_WIDTH, height);
+  // top inner highlight, like the app's own glass cards/modals
+  const topHighlight = ctx.createLinearGradient(0, 0, 0, 40);
+  topHighlight.addColorStop(0, 'rgba(255,255,255,0.10)');
+  topHighlight.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = topHighlight;
+  ctx.fillRect(0, 0, SHARE_CARD_WIDTH, 40);
   ctx.restore();
   ctx.strokeStyle = hexToRgba(primary, 0.5);
   ctx.lineWidth = 2;
   roundRectPath(ctx, 1, 1, SHARE_CARD_WIDTH-2, height-2, 28);
   ctx.stroke();
 
+  // Corner watermark, low-opacity, so a shared image is still recognizably from the app.
+  drawPokeBallGlyph(ctx, SHARE_CARD_WIDTH - 30, height - 30, 16, 0.16);
+
   let x = SHARE_PAD, y = SHARE_PAD;
 
-  // Sprite
+  // Sprite pedestal, tinted with the Pokémon's own type color the same way the live
+  // card grid is, with a Poké Ball glyph standing in when there's no sprite at all.
   roundRectPath(ctx, x, y, 140, 140, 20);
-  ctx.fillStyle = 'rgba(255,255,255,0.06)';
-  ctx.fill();
+  const spriteGlow = ctx.createRadialGradient(x+70, y+91, 0, x+70, y+91, 100);
+  spriteGlow.addColorStop(0, hexToRgba(primary, 0.4));
+  spriteGlow.addColorStop(1, hexToRgba(primary, 0));
+  ctx.save();
+  ctx.clip();
+  ctx.fillStyle = 'rgba(255,255,255,0.05)';
+  ctx.fillRect(x, y, 140, 140);
+  ctx.fillStyle = spriteGlow;
+  ctx.fillRect(x, y, 140, 140);
+  ctx.restore();
+  ctx.strokeStyle = hexToRgba(primary, 0.3);
+  ctx.lineWidth = 1.5;
+  roundRectPath(ctx, x+0.75, y+0.75, 140-1.5, 140-1.5, 20);
+  ctx.stroke();
   if(spriteDrawable) drawCoverImage(ctx, spriteDrawable, x+8, y+8, 124, 124, 14);
+  else drawPokeBallGlyph(ctx, x+70, y+70, 26, 1);
 
   // Name/species column
   const textX = x + 160;
@@ -266,9 +407,11 @@ function drawCardFrame(p, assets, spriteDrawable){
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = '#9aa3b8';
   ctx.font = '600 13px "Kode Mono", monospace';
+  const speciesEntry = p.speciesEntryId ? findSpeciesEntry(p.speciesEntryId) : null;
+  const dexPrefix = speciesEntry ? dexNumberFormatted(speciesEntry.dex) + '  ·  ' : '';
   const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
   const formSuffix = (p.preferredForm === 'mega' && p.megaForm) ? ' ' + p.megaForm.toUpperCase() : '';
-  ctx.fillText(truncateToWidth(ctx, `${formPrefix}${p.species.toUpperCase()}${formSuffix}`, textWidth), textX, y + 22);
+  ctx.fillText(truncateToWidth(ctx, `${dexPrefix}${formPrefix}${p.species.toUpperCase()}${formSuffix}`, textWidth), textX, y + 22);
 
   ctx.fillStyle = '#ffffff';
   ctx.font = '700 30px "Outfit", sans-serif';
@@ -287,44 +430,30 @@ function drawCardFrame(p, assets, spriteDrawable){
     ctx.fillText('★ SHINY', textX, y + 106);
   }
 
-  // Type badges
-  let typeY = y + 116;
+  // Type badges, with the same gradient sheen + text shadow as the live app's badges
   let typeX = textX;
-  ctx.font = '700 13px "Outfit", sans-serif';
-  p.types.forEach(t => {
-    const label = t.toUpperCase();
-    const w = ctx.measureText(label).width + 24;
-    roundRectPath(ctx, typeX, typeY, w, 26, 13);
-    ctx.fillStyle = TYPE_HEX[t] || '#4FD1C5';
-    ctx.fill();
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(label, typeX + 12, typeY + 18);
+  const typeY = y + 116;
+  types.forEach(t => {
+    const w = drawTypeBadgePill(ctx, typeX, typeY, t.toUpperCase(), TYPE_HEX[t] || '#4FD1C5', 26, 13);
     typeX += w + 8;
   });
 
   y += headerHeight;
 
-  // Meta row: met location, ball, origin -> last game
-  ctx.font = '500 14px "Outfit", sans-serif';
-  ctx.fillStyle = '#c3c9d9';
-  let metaY = y;
-  if(p.metLocation){
-    const loc = stripHTML(p.metLocation);
-    ctx.fillText('📍 ' + truncateToWidth(ctx, loc, contentWidth - 20), x, metaY + 16);
-    metaY += 26;
+  // Meta row: met location, ball, origin -> last game, drawn as glass chips
+  if(metaChips.length > 0){
+    ctx.font = '600 14px "Outfit", sans-serif';
+    layoutChips(metaChips, x, y, contentWidth, SHARE_META_CHIP_H, SHARE_CHIP_GAP, (item, cx, cy) => {
+      drawGlassChip(ctx, cx, cy, item.width, SHARE_META_CHIP_H, 16);
+      const icon = item.icon;
+      const textStartX = cx + 14 + (icon ? 20 + 8 : 0);
+      if(icon) ctx.drawImage(icon, cx+14, cy + (SHARE_META_CHIP_H-20)/2, 20, 20);
+      ctx.fillStyle = '#d7dcea';
+      ctx.font = '600 14px "Outfit", sans-serif';
+      ctx.fillText(item.text, textStartX, cy + SHARE_META_CHIP_H/2 + 5);
+    });
+    y += metaBlockHeight;
   }
-  if(p.ball){
-    if(ballImg) ctx.drawImage(ballImg, x, metaY, 20, 20);
-    ctx.fillText(p.ball, x + (ballImg ? 26 : 0), metaY + 16);
-    metaY += 26;
-  }
-  if(p.originGame || p.lastGame){
-    const route = `${p.originGame || '-'}  →  ${p.lastGame || '-'}`;
-    ctx.fillText(truncateToWidth(ctx, route, contentWidth), x, metaY + 16);
-    metaY += 26;
-  }
-
-  y += metaHeight;
 
   // Achievements
   ctx.font = '700 16px "Outfit", sans-serif';
@@ -340,9 +469,7 @@ function drawCardFrame(p, assets, spriteDrawable){
     ctx.font = '600 15px "Outfit", sans-serif';
     layoutChips(achievementChips, x, y, contentWidth, SHARE_CHIP_H, SHARE_CHIP_GAP, (item, cx, cy) => {
       const idx = achievementChips.indexOf(item);
-      roundRectPath(ctx, cx, cy, item.width, SHARE_CHIP_H, 17);
-      ctx.fillStyle = 'rgba(255,255,255,0.08)';
-      ctx.fill();
+      drawGlassChip(ctx, cx, cy, item.width, SHARE_CHIP_H, 17);
       const icon = achievementIcons[idx];
       if(icon) ctx.drawImage(icon, cx+8, cy+4, 26, 26);
       ctx.fillStyle = '#e8ecf5';
@@ -453,18 +580,28 @@ async function buildRosterShareCanvas(){
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
-  ctx.fillStyle = '#12141c';
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+  bgGrad.addColorStop(0, '#161923');
+  bgGrad.addColorStop(1, '#0f1118');
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, width, height);
+  const ambientGlow = ctx.createRadialGradient(width*0.15, 0, 0, width*0.15, 0, 340);
+  ambientGlow.addColorStop(0, 'rgba(79,209,197,0.14)');
+  ambientGlow.addColorStop(1, 'rgba(79,209,197,0)');
+  ctx.fillStyle = ambientGlow;
+  ctx.fillRect(0, 0, width, height);
+
+  drawPokeBallGlyph(ctx, ROSTER_PAD + 15, 34, 15, 1);
 
   const trainerName = (state.trainer||'').trim();
   ctx.fillStyle = '#ffffff';
   ctx.font = '700 30px "Outfit", sans-serif';
-  ctx.fillText(trainerName ? `${trainerName}'s Pokédex` : 'Pokédex', ROSTER_PAD, 48);
+  ctx.fillText(trainerName ? `${trainerName}'s Pokédex` : 'Pokédex', ROSTER_PAD + 40, 48);
 
   const shinyCount = list.filter(p=>p.shiny).length;
   ctx.font = '500 15px "Kode Mono", monospace';
   ctx.fillStyle = '#9aa3b8';
-  ctx.fillText(`${list.length} Pok\u00e9mon  ·  ${shinyCount} shiny  ·  As on ${new Date().toLocaleDateString()}`, ROSTER_PAD, 76);
+  ctx.fillText(`${list.length} Pok\u00e9mon  ·  ${shinyCount} shiny  ·  As on ${new Date().toLocaleDateString()}`, ROSTER_PAD + 40, 76);
 
   const sprites = await Promise.all(list.map(p => loadImageAsync(resolveDisplaySprite(p))));
 
@@ -472,11 +609,21 @@ async function buildRosterShareCanvas(){
     const col = i % columns, row = Math.floor(i / columns);
     const cx = ROSTER_PAD + col*(ROSTER_CELL_W+ROSTER_GAP);
     const cy = headerHeight + ROSTER_PAD + row*(ROSTER_CELL_H+ROSTER_GAP);
-    const primary = TYPE_HEX[p.types[0]] || '#4FD1C5';
+    const types = displayTypes(p);
+    const primary = TYPE_HEX[types[0]] || '#4FD1C5';
 
     roundRectPath(ctx, cx, cy, ROSTER_CELL_W, ROSTER_CELL_H, 18);
     ctx.fillStyle = hexToRgba(primary, 0.14);
     ctx.fill();
+    ctx.save();
+    roundRectPath(ctx, cx, cy, ROSTER_CELL_W, ROSTER_CELL_H, 18);
+    ctx.clip();
+    const cellSheen = ctx.createLinearGradient(cx, cy, cx, cy + ROSTER_CELL_H*0.3);
+    cellSheen.addColorStop(0, 'rgba(255,255,255,0.08)');
+    cellSheen.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = cellSheen;
+    ctx.fillRect(cx, cy, ROSTER_CELL_W, ROSTER_CELL_H*0.3);
+    ctx.restore();
     ctx.strokeStyle = hexToRgba(primary, 0.4);
     ctx.lineWidth = 1.5;
     roundRectPath(ctx, cx+0.75, cy+0.75, ROSTER_CELL_W-1.5, ROSTER_CELL_H-1.5, 18);
@@ -484,10 +631,20 @@ async function buildRosterShareCanvas(){
 
     const spriteBox = 96;
     const spriteX = cx + (ROSTER_CELL_W-spriteBox)/2;
-    roundRectPath(ctx, spriteX, cy+14, spriteBox, spriteBox, 14);
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.fill();
-    if(sprites[i]) drawCoverImage(ctx, sprites[i], spriteX+6, cy+20, spriteBox-12, spriteBox-12, 10);
+    const spriteY = cy+14;
+    roundRectPath(ctx, spriteX, spriteY, spriteBox, spriteBox, 14);
+    const spriteGlow = ctx.createRadialGradient(spriteX+spriteBox/2, spriteY+spriteBox*0.65, 0, spriteX+spriteBox/2, spriteY+spriteBox*0.65, spriteBox*0.7);
+    spriteGlow.addColorStop(0, hexToRgba(primary, 0.35));
+    spriteGlow.addColorStop(1, hexToRgba(primary, 0));
+    ctx.save();
+    ctx.clip();
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    ctx.fillRect(spriteX, spriteY, spriteBox, spriteBox);
+    ctx.fillStyle = spriteGlow;
+    ctx.fillRect(spriteX, spriteY, spriteBox, spriteBox);
+    ctx.restore();
+    if(sprites[i]) drawCoverImage(ctx, sprites[i], spriteX+6, spriteY+6, spriteBox-12, spriteBox-12, 10);
+    else drawPokeBallGlyph(ctx, spriteX+spriteBox/2, spriteY+spriteBox/2, 18, 1);
 
     if(p.shiny){
       ctx.fillStyle = '#FFD24C';
@@ -504,20 +661,12 @@ async function buildRosterShareCanvas(){
     ctx.fillStyle = '#9aa3b8';
     ctx.fillText(truncateToWidth(ctx, p.species.toUpperCase(), ROSTER_CELL_W - 16), cx + ROSTER_CELL_W/2, cy + 150);
 
-    let typeX = cx + ROSTER_CELL_W/2;
-    const typeLabels = p.types.map(t => t.toUpperCase());
-    ctx.font = '700 10px "Outfit", sans-serif';
-    const totalTypeWidth = typeLabels.reduce((sum,l)=>sum+ctx.measureText(l).width+18+6, -6);
-    typeX -= totalTypeWidth/2;
+    const typeLabels = types.map(t => t.toUpperCase());
+    const totalTypeWidth = typeLabels.reduce((sum,l)=>sum+typeBadgeWidth(ctx,l,20,10)+6, -6);
+    let typeX = cx + ROSTER_CELL_W/2 - totalTypeWidth/2;
     ctx.textAlign = 'left';
-    p.types.forEach(t => {
-      const label = t.toUpperCase();
-      const w = ctx.measureText(label).width + 18;
-      roundRectPath(ctx, typeX, cy+164, w, 20, 10);
-      ctx.fillStyle = TYPE_HEX[t] || '#4FD1C5';
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(label, typeX+9, cy+178);
+    types.forEach(t => {
+      const w = drawTypeBadgePill(ctx, typeX, cy+164, t.toUpperCase(), TYPE_HEX[t] || '#4FD1C5', 20, 10);
       typeX += w + 6;
     });
     ctx.textAlign = 'left';

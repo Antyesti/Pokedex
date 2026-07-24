@@ -961,7 +961,7 @@ function openDetail(id){
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
         <div style="display:flex; align-items:center; gap:16px;">
-          <div class="card-sprite" style="width:64px;height:64px; font-size:30px; --glow:${primaryColor};">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '⭕️'}</div>
+          <div class="card-sprite" style="width:64px;height:64px; font-size:30px; --glow:${primaryColor};">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '<div class="brand-mark mini"></div>'}</div>
           <div>
             <div class="card-id" style="font-size:12px;">${dexPrefixHTML(p)}${formPrefix}${escapeHTML(p.species.toUpperCase())}${escapeHTML(formSuffix)}</div>
             <div style="font-family:var(--nickname-font); font-weight:800; font-size:26px; letter-spacing:-0.02em; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">

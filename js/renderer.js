@@ -277,15 +277,51 @@ document.getElementById('themeToggleBtn').addEventListener('click', () => {
   renderGrid(); // card type-tint alpha is theme-aware, so cards need to rebuild
 });
 
-document.getElementById('trainerEditBtn').addEventListener('click', () => {
-  const current = state.trainer || '';
-  const next = prompt('Original Trainer name:', current);
-  if(next === null) return; // Operation cancelled
-  state.trainer = next.trim();
+document.getElementById('trainerEditBtn').addEventListener('click', () => openTrainerNameModal());
+
+function openTrainerNameModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'trainerNameOverlay';
+  overlay.onclick = (e) => { if(e.target === overlay) closeTrainerNameModal(); };
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:400px;">
+      <div class="modal-head">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeTrainerNameModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+        <div style="font-family:var(--sans); font-weight:800; font-size:19px;">Original Trainer</div>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Trainer Name</label>
+          <input type="text" id="trainerNameInput" value="${escapeAttr(state.trainer||'')}" placeholder="e.g. Red" maxlength="40">
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn ghost" onclick="closeTrainerNameModal()">Cancel</button>
+        <button type="button" class="btn primary" onclick="saveTrainerName()">Save</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById('trainerNameInput').addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') saveTrainerName();
+  });
+}
+
+function closeTrainerNameModal(){
+  const el = document.getElementById('trainerNameOverlay');
+  if(el) el.remove();
+}
+
+function saveTrainerName(){
+  state.trainer = document.getElementById('trainerNameInput').value.trim();
   renderTrainer();
   scheduleAutosave();
+  closeTrainerNameModal();
   showToast(state.trainer ? `Dex is now set to ${state.trainer}.` : 'Trainer name cleared.');
-});
+}
 
 function renderStats(){
   const total = state.pokemon.length;
@@ -821,10 +857,19 @@ function cardFooterInfoHTML(p){
     case 'last':
       return p.lastGame ? `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.lastGame)}</span>` : '';
     case 'arrow':
+      if(p.originGame && p.originGame === p.lastGame){
+        return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.originGame)}</span>`;
+      }
       return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.originGame)} → ${gameTagHTML(p.lastGame)}</span>`;
     case 'arrowIconsOnly':
+      if(p.originGame && p.originGame === p.lastGame){
+        return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagIconOnlyHTML(p.originGame)}</span>`;
+      }
       return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagIconOnlyHTML(p.originGame)} → ${gameTagIconOnlyHTML(p.lastGame)}</span>`;
     default:
+      if(p.originGame && p.originGame === p.lastGame){
+        return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.originGame)}</span>`;
+      }
       return `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.originGame)} → ${gameTagHTML(p.lastGame)}</span>`;
   }
 }
@@ -852,7 +897,7 @@ function cardHTML(p){
     <span class="card-glow-halo" aria-hidden="true"></span>
     ${formBadgeRowHTML(p)}
     <div class="card-top">
-      <div class="card-sprite">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '⭕️'}</div>
+      <div class="card-sprite">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '<div class="brand-mark mini"></div>'}</div>
       <div>
         <div class="card-id">${dexPrefixHTML(p)}${formPrefix}${p.species.toUpperCase()}${formSuffix}</div>
         <div class="card-name">${titledNicknameHTML(p)}</div>

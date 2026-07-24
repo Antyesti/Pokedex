@@ -34,7 +34,8 @@ const bodyScrollObserver = new MutationObserver(() => {
     focusBeforeModal = document.activeElement;
     activeModalEl = overlay;
     const focusable = getFocusableEls(overlay);
-    if(focusable.length) focusable[0].focus();
+    const preferred = focusable.find(el => !el.classList.contains('modal-close')) || focusable[0];
+    if(preferred) preferred.focus();
   } else if(!overlay && activeModalEl){
     activeModalEl = null;
     if(focusBeforeModal && document.body.contains(focusBeforeModal)) focusBeforeModal.focus();
@@ -137,9 +138,10 @@ async function loadHandle(){
   } catch(e){ return null; }
 }
 
-async function applyFileToState(file){
-  const text = await file.text();
-  const data = JSON.parse(text);
+// Shared validation + migration for imported JSON, used by both the File System Access
+// path and the legacy <input type=file> fallback, so a future shape/settings change only
+// needs to happen in one place instead of being kept in sync across two copies.
+function normalizeImportedData(data){
   if(!data.pokemon || !Array.isArray(data.pokemon)) throw new Error('bad shape');
   if(typeof data.trainer !== 'string') data.trainer = '';
   if(typeof data.settings !== 'object' || !data.settings) data.settings = { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting() };
@@ -150,6 +152,12 @@ async function applyFileToState(file){
   if(typeof data.settings.bodyFont !== 'object' || !data.settings.bodyFont) data.settings.bodyFont = defaultFontSetting();
   if(typeof data.settings.nicknameFont !== 'object' || !data.settings.nicknameFont) data.settings.nicknameFont = defaultFontSetting();
   data.pokemon = data.pokemon.map(normalizePokemon);
+  return data;
+}
+
+async function applyFileToState(file){
+  const text = await file.text();
+  const data = normalizeImportedData(JSON.parse(text));
   state = data;
   pendingDeletions = [];
   applySettings();

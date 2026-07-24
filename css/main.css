@@ -99,6 +99,10 @@ header.top{
 
 .brand-mark.large::after{ width:26px; height:26px; border-width:5px; }
 
+.brand-mark.mini{ width:38px; height:38px; border-width:3px; animation:none; }
+
+.brand-mark.mini::after{ width:12px; height:12px; border-width:3px; }
+
 .brand h1{
   font-family:var(--sans); font-weight:800; font-size:28px; letter-spacing:-0.02em; margin:0;
   line-height:1;

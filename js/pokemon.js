@@ -649,17 +649,7 @@ document.getElementById('fileInput').onchange = (e) => {
   const reader = new FileReader();
   reader.onload = (ev) => {
     try{
-      const data = JSON.parse(ev.target.result);
-      if(!data.pokemon || !Array.isArray(data.pokemon)) throw new Error('bad shape');
-      if(typeof data.trainer !== 'string') data.trainer = '';
-      if(typeof data.settings !== 'object' || !data.settings) data.settings = { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting() };
-      if(typeof data.settings.custom !== 'object' || !data.settings.custom) data.settings.custom = defaultCustomTheme();
-      // migrate the older single "font" setting (pre-nickname-font split) into bodyFont
-      if(data.settings.font && !data.settings.bodyFont) data.settings.bodyFont = data.settings.font;
-      delete data.settings.font;
-      if(typeof data.settings.bodyFont !== 'object' || !data.settings.bodyFont) data.settings.bodyFont = defaultFontSetting();
-      if(typeof data.settings.nicknameFont !== 'object' || !data.settings.nicknameFont) data.settings.nicknameFont = defaultFontSetting();
-      data.pokemon = data.pokemon.map(normalizePokemon);
+      const data = normalizeImportedData(JSON.parse(ev.target.result));
       state = data;
       pendingDeletions = [];
       applySettings();

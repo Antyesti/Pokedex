@@ -187,6 +187,14 @@ function openSettings(){
   const nicknameFont = s.nicknameFont || defaultFontSetting();
   const cardFooterInfo = s.cardFooterInfo || 'arrow';
   const sortBallsAlpha = !!s.sortBallsAlpha;
+  const previewMon = { types:['Fire','Flying'], preferredForm:'default', shiny:false };
+  const previewIsLight = isNeumorphicActive();
+  const previewA1 = previewIsLight ? 0.30 : 0.22;
+  const previewA2 = previewIsLight ? 0.24 : 0.18;
+  const previewTint1 = hexToRgba(TYPE_HEX.Fire, previewA1);
+  const previewTint2 = hexToRgba(TYPE_HEX.Flying, previewA2);
+  const previewBorder = hexToRgba(TYPE_HEX.Fire, 0.45);
+  const [previewGlowC1, previewGlowC2, previewGlowC3] = typeGlowColors(previewMon);
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
   overlay.id = 'settingsOverlay';
@@ -307,10 +315,24 @@ function openSettings(){
           <div style="margin-top:16px;">
             ${fontPickerFieldHTML('nickname', 'Nickname Font', 'Used only for Pokémon nicknames, on cards and in the detail view.', nicknameFont)}
           </div>
-          <div class="font-preview-card" id="fontPreviewCard">
-            <div class="font-preview-name" id="fontPreviewName">Charizard</div>
-            <div class="font-preview-species">#006 · Fire / Flying</div>
-            <div class="font-preview-sample">This is how the rest of your Pokédex will read.</div>
+          <div class="card" id="fontPreviewCard" style="margin-top:14px; cursor:default; --glow:${TYPE_HEX.Fire}; --type-tint-1:${previewTint1}; --type-tint-2:${previewTint2}; border-color:${previewBorder}; --glow-c1:${previewGlowC1}; --glow-c2:${previewGlowC2}; --glow-c3:${previewGlowC3};">
+            <span class="card-glow-ring" aria-hidden="true"></span>
+            <span class="card-glow-halo" aria-hidden="true"></span>
+            <div class="card-top">
+              <div class="card-sprite"><div class="brand-mark mini"></div></div>
+              <div>
+                <div class="card-id">#0006 · CHARIZARD</div>
+                <div class="card-name" id="fontPreviewName">Charizard</div>
+                <div class="card-species">Adamant · ♂</div>
+              </div>
+            </div>
+            <div class="type-row">
+              <span class="type-badge" style="background:${TYPE_HEX.Fire}">FIRE</span>
+              <span class="type-badge" style="background:${TYPE_HEX.Flying}">FLYING</span>
+            </div>
+            <div class="card-foot">
+              <span class="origin-label">This is how the rest of your Pokédex will read.</span>
+            </div>
           </div>
         </div>
       </div>

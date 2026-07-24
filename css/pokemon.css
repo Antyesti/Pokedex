@@ -45,6 +45,10 @@
 
 .grid.dense .icon-btn svg{ width:14px; height:14px; }
 
+.grid.dense .brand-mark.mini{ width:26px; height:26px; border-width:2px; }
+
+.grid.dense .brand-mark.mini::after{ width:8px; height:8px; border-width:2px; }
+
 @media (max-width: 1200px) {
   .grid.dense{ grid-template-columns:repeat(4, 1fr); }
 }
@@ -935,18 +939,6 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 .hex-input:focus{ border-color:color-mix(in srgb, var(--accent) 55%, transparent); }
 
 .hex-input.invalid{ border-color:color-mix(in srgb, var(--danger) 60%, transparent); }
-
-.font-preview-card{
-  margin-top:14px; padding:16px 18px; border-radius:14px;
-  border:1px solid var(--panel-border); background:var(--panel);
-  transition: font-family .1s ease;
-}
-
-.font-preview-name{ font-size:19px; font-weight:800; letter-spacing:-0.01em; color:var(--text); margin-bottom:2px; }
-
-.font-preview-species{ font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-dim); margin-bottom:10px; }
-
-.font-preview-sample{ font-size:14px; line-height:1.5; color:var(--text-dim); }
 
 .gender-toggle-btn{
   width:42px; height:42px; border-radius:12px; cursor:pointer;
