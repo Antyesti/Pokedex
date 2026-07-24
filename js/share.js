@@ -88,9 +88,20 @@ async function shareOrDownloadCanvas(canvas, filename){
 
 const SHARE_CARD_WIDTH = 760;
 const SHARE_PAD = 36;
-const SHARE_CHIP_H = 34;
 const SHARE_META_CHIP_H = 32;
 const SHARE_CHIP_GAP = 10;
+const SHARE_ACHV_BADGE_D = 44;
+const SHARE_ICON_BADGE_D = 40;
+const SHARE_ICON_ROW_H = 56;
+const SHARE_SHADOW_MARGIN = 44;
+
+// Matches genderSymbolHTML()'s colors exactly, so the shared card codes gender the same
+// way the live app does rather than a flat neutral gray.
+const GENDER_COLORS = {
+  Male: { color: '#5B9CFF', label: '♂ Male' },
+  Female: { color: '#FF6FA5', label: '♀ Female' },
+  Genderless: { color: '#B07CFF', label: '○ Genderless' }
+};
 
 // Lays out fixed-width chips left-to-right within maxWidth, wrapping to a new row as
 // needed, and returns the y-coordinate immediately below the last row drawn.
@@ -211,7 +222,95 @@ function drawPokeBallGlyph(ctx, cx, cy, r, opacity){
   ctx.restore();
 }
 
-// Decodes an animated PNG data URI into its individual composited frames using the
+// A small tileable grain texture, generated once per canvas rather than shipped as an
+// asset, for the subtle noise modern "aurora" gradients use to avoid looking too flat/clean.
+function createNoisePattern(ctx){
+  const n = document.createElement('canvas');
+  n.width = 96; n.height = 96;
+  const nctx = n.getContext('2d');
+  const imgData = nctx.createImageData(96, 96);
+  for(let i = 0; i < imgData.data.length; i += 4){
+    const v = Math.random() * 255;
+    imgData.data[i] = v; imgData.data[i+1] = v; imgData.data[i+2] = v;
+    imgData.data[i+3] = 14;
+  }
+  nctx.putImageData(imgData, 0, 0);
+  return ctx.createPattern(n, 'repeat');
+}
+
+// The card's background: a near-black base with a couple of large, soft, off-center
+// color blobs (an "aurora"/mesh-gradient look) tinted with the Pokémon's own type colors,
+// a fine grain texture over the top, and a glass-style top highlight -- read as a lot more
+// contemporary than a single flat diagonal gradient.
+function drawAuroraCardBackground(ctx, w, h, radius, primaryHex, secondaryHex){
+  roundRectPath(ctx, 0, 0, w, h, radius);
+  ctx.save();
+  ctx.clip();
+
+  ctx.fillStyle = '#0d0f16';
+  ctx.fillRect(0, 0, w, h);
+
+  const blob1 = ctx.createRadialGradient(w*0.12, h*0.08, 0, w*0.12, h*0.08, w*0.62);
+  blob1.addColorStop(0, hexToRgba(primaryHex, 0.34));
+  blob1.addColorStop(1, hexToRgba(primaryHex, 0));
+  ctx.fillStyle = blob1;
+  ctx.fillRect(0, 0, w, h);
+
+  const blob2 = ctx.createRadialGradient(w*0.95, h*0.85, 0, w*0.95, h*0.85, w*0.55);
+  blob2.addColorStop(0, hexToRgba(secondaryHex, 0.26));
+  blob2.addColorStop(1, hexToRgba(secondaryHex, 0));
+  ctx.fillStyle = blob2;
+  ctx.fillRect(0, 0, w, h);
+
+  const blob3 = ctx.createRadialGradient(w*0.7, h*0.05, 0, w*0.7, h*0.05, w*0.4);
+  blob3.addColorStop(0, hexToRgba(secondaryHex, 0.14));
+  blob3.addColorStop(1, hexToRgba(secondaryHex, 0));
+  ctx.fillStyle = blob3;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.globalAlpha = 0.5;
+  ctx.fillStyle = createNoisePattern(ctx);
+  ctx.fillRect(0, 0, w, h);
+  ctx.globalAlpha = 1;
+
+  const topHighlight = ctx.createLinearGradient(0, 0, 0, h*0.12);
+  topHighlight.addColorStop(0, 'rgba(255,255,255,0.09)');
+  topHighlight.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = topHighlight;
+  ctx.fillRect(0, 0, w, h*0.12);
+
+  ctx.restore();
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+  ctx.lineWidth = 1;
+  roundRectPath(ctx, 0.5, 0.5, w-1, h-1, radius);
+  ctx.stroke();
+}
+
+// A small circular glass badge with an icon centered inside -- used for the ball, the
+// origin/last game, and achievements now that they're icon-only instead of icon+text chips.
+function drawIconCircleBadge(ctx, cx, cy, r, img, tintHex){
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.fillStyle = tintHex ? hexToRgba(tintHex, 0.16) : 'rgba(255,255,255,0.07)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r-0.5, 0, Math.PI*2);
+  ctx.stroke();
+  if(img){
+    const size = r*1.25;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r-3, 0, Math.PI*2);
+    ctx.clip();
+    ctx.drawImage(img, cx-size/2, cy-size/2, size, size);
+    ctx.restore();
+  }
+}
+
+
 // vendored UPNG/pako libraries. Returns null for static images or anything that isn't a
 // PNG.
 function decodeAnimatedApng(dataUri){
@@ -294,87 +393,78 @@ async function prepareCardShareAssets(p){
   const measureCanvas = document.createElement('canvas');
   const mctx = measureCanvas.getContext('2d');
   const contentWidth = SHARE_CARD_WIDTH - SHARE_PAD*2;
-  mctx.font = '600 15px "Outfit", sans-serif';
-  const achievementChips = achievements.map(a => measureChip(mctx, a.name, 26));
 
   const ballImg = p.ball ? await loadImageAsync(BALL_LOOKUP[p.ball] || '') : null;
   const achievementIcons = await Promise.all(achievements.map(a => loadImageAsync(a.icon)));
 
-  // Meta row (met location / ball / origin-last game) drawn as wrapping chips, same as
-  // achievements, rather than fixed stacked text lines -- so it only takes up as much
-  // room as it actually needs, and reads as the same family of UI as everything else.
+  // Origin/Last Game render as icons only now, same as the ball -- reuse the same game
+  // preset lookup the live detail view uses to go from a stored game name to its icon.
+  const sameGame = !!(p.originGame && p.originGame === p.lastGame);
+  const originKey = p.originGame ? detectGameKeyFromTag(p.originGame) : null;
+  const lastKey = (!sameGame && p.lastGame) ? detectGameKeyFromTag(p.lastGame) : null;
+  const originIcon = originKey ? await loadImageAsync(GAME_PRESET_INDEX[originKey].icon) : null;
+  const lastIcon = lastKey ? await loadImageAsync(GAME_PRESET_INDEX[lastKey].icon) : null;
+  const hasIconRow = !!(ballImg || originIcon || lastIcon);
+
+  // Met location / Met date -- there's no natural icon for either, so these stay text chips.
   const metaItems = [];
-  if(p.metLocation) metaItems.push({ text: stripHTML(p.metLocation), icon: null });
-  if(p.ball) metaItems.push({ text: p.ball, icon: ballImg });
-  if(p.originGame || p.lastGame){
-    const route = (p.originGame && p.originGame === p.lastGame) ? p.originGame : `${p.originGame || '-'}  →  ${p.lastGame || '-'}`;
-    metaItems.push({ text: route, icon: null });
+  if(p.metLocation) metaItems.push('📍 ' + stripHTML(p.metLocation));
+  if(p.metDate){
+    const formatted = formatMetDate(p.metDate);
+    if(formatted) metaItems.push('📅 Met ' + formatted);
   }
   mctx.font = '600 14px "Outfit", sans-serif';
   const maxChipTextWidth = contentWidth * 0.6;
-  const metaChips = metaItems.map(item => {
-    const text = truncateToWidth(mctx, item.text, maxChipTextWidth);
-    return { ...measureChip(mctx, text, item.icon ? 20 : 0), icon: item.icon };
-  });
+  const metaChips = metaItems.map(text => measureChip(mctx, truncateToWidth(mctx, text, maxChipTextWidth), 0));
 
-  const achvRows = chipRowCount(achievementChips, contentWidth, SHARE_CHIP_GAP);
-  const achvBlockHeight = 40 + (achievements.length > 0 ? achvRows * (SHARE_CHIP_H + SHARE_CHIP_GAP) : 26);
+  const achvBadges = achievements.map((a, i) => ({ width: SHARE_ACHV_BADGE_D, icon: achievementIcons[i] }));
+
+  const iconRowHeight = hasIconRow ? SHARE_ICON_ROW_H : 0;
 
   const metaRows = chipRowCount(metaChips, contentWidth, SHARE_CHIP_GAP);
   const metaBlockHeight = metaChips.length > 0 ? metaRows * (SHARE_META_CHIP_H + SHARE_CHIP_GAP) : 0;
 
-  const headerHeight = 176;
-  const height = SHARE_PAD*2 + headerHeight + metaBlockHeight + achvBlockHeight + 30;
+  const achvRows = chipRowCount(achvBadges, contentWidth, SHARE_CHIP_GAP);
+  const achvBlockHeight = 40 + (achievements.length > 0 ? achvRows * (SHARE_ACHV_BADGE_D + SHARE_CHIP_GAP) : 26);
 
-  return { achievements, achievementChips, metaChips, contentWidth, headerHeight, metaBlockHeight, achvBlockHeight, height, ballImg, achievementIcons, types };
+  const headerHeight = 176;
+  const height = SHARE_PAD*2 + headerHeight + iconRowHeight + metaBlockHeight + achvBlockHeight + 30;
+
+  return { achievements, achvBadges, metaChips, contentWidth, headerHeight, iconRowHeight, metaBlockHeight, achvBlockHeight, height, ballImg, originIcon, lastIcon, sameGame, hasIconRow, types };
 }
 
 // Pure/synchronous: draws one full card frame given already-loaded assets and a sprite
 // drawable (an Image for a static sprite, or a per-frame canvas for an animated one).
 function drawCardFrame(p, assets, spriteDrawable){
-  const { achievements, achievementChips, metaChips, contentWidth, headerHeight, metaBlockHeight, achvBlockHeight, height, ballImg, achievementIcons, types } = assets;
+  const { achievements, achvBadges, metaChips, contentWidth, headerHeight, iconRowHeight, metaBlockHeight, achvBlockHeight, height, ballImg, originIcon, lastIcon, sameGame, hasIconRow, types } = assets;
   const primary = TYPE_HEX[types[0]] || '#4FD1C5';
   const secondary = TYPE_HEX[types[1]] || primary;
 
   const scale = 2; // render at 2x for a crisp export
+  const m = SHARE_SHADOW_MARGIN;
   const canvas = document.createElement('canvas');
-  canvas.width = SHARE_CARD_WIDTH * scale;
-  canvas.height = height * scale;
+  canvas.width = (SHARE_CARD_WIDTH + m*2) * scale;
+  canvas.height = (height + m*2) * scale;
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
+  ctx.translate(m, m);
 
-  // Background: dark glass panel with a diagonal type-color wash and a soft ambient glow
-  // behind the sprite corner, independent of the app's current theme so shared images look
-  // the same regardless of Poké Ball / Beast Ball / Master Ball selection.
-  roundRectPath(ctx, 0, 0, SHARE_CARD_WIDTH, height, 28);
+  // A floating drop shadow beneath the card, cast from a throwaway filled shape -- the
+  // actual visible background is painted on top of this and unaffected by the shadow
+  // itself, only by where it falls outside the card's own rounded rect.
   ctx.save();
-  ctx.clip();
-  const grad = ctx.createLinearGradient(0, 0, SHARE_CARD_WIDTH, height);
-  grad.addColorStop(0, '#161923');
-  grad.addColorStop(1, '#1c2030');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, SHARE_CARD_WIDTH, height);
-  const tintGrad = ctx.createLinearGradient(0, 0, SHARE_CARD_WIDTH, height);
-  tintGrad.addColorStop(0, hexToRgba(primary, 0.16));
-  tintGrad.addColorStop(1, hexToRgba(secondary, 0.10));
-  ctx.fillStyle = tintGrad;
-  ctx.fillRect(0, 0, SHARE_CARD_WIDTH, height);
-  const ambientGlow = ctx.createRadialGradient(SHARE_PAD + 70, SHARE_PAD + 70, 0, SHARE_PAD + 70, SHARE_PAD + 70, 260);
-  ambientGlow.addColorStop(0, hexToRgba(primary, 0.22));
-  ambientGlow.addColorStop(1, hexToRgba(primary, 0));
-  ctx.fillStyle = ambientGlow;
-  ctx.fillRect(0, 0, SHARE_CARD_WIDTH, height);
-  // top inner highlight, like the app's own glass cards/modals
-  const topHighlight = ctx.createLinearGradient(0, 0, 0, 40);
-  topHighlight.addColorStop(0, 'rgba(255,255,255,0.10)');
-  topHighlight.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.fillStyle = topHighlight;
-  ctx.fillRect(0, 0, SHARE_CARD_WIDTH, 40);
+  ctx.shadowColor = 'rgba(0,0,0,0.55)';
+  ctx.shadowBlur = 48;
+  ctx.shadowOffsetY = 20;
+  roundRectPath(ctx, 0, 0, SHARE_CARD_WIDTH, height, 28);
+  ctx.fillStyle = '#000000';
+  ctx.fill();
   ctx.restore();
-  ctx.strokeStyle = hexToRgba(primary, 0.5);
-  ctx.lineWidth = 2;
-  roundRectPath(ctx, 1, 1, SHARE_CARD_WIDTH-2, height-2, 28);
-  ctx.stroke();
+
+  // Background: a dark aurora/mesh gradient tinted with the Pokémon's own type colors,
+  // independent of the app's current theme so shared images look the same regardless of
+  // Poké Ball / Beast Ball / Master Ball selection.
+  drawAuroraCardBackground(ctx, SHARE_CARD_WIDTH, height, 28, primary, secondary);
 
   // Corner watermark, low-opacity, so a shared image is still recognizably from the app.
   drawPokeBallGlyph(ctx, SHARE_CARD_WIDTH - 30, height - 30, 16, 0.16);
@@ -418,11 +508,23 @@ function drawCardFrame(p, assets, spriteDrawable){
   const name = titledNicknamePlainText(p);
   ctx.fillText(truncateToWidth(ctx, name, textWidth), textX, y + 58);
 
+  // Nature + gender, with gender color-coded the same as the live app (blue/pink/purple).
   ctx.font = '500 15px "Outfit", sans-serif';
-  ctx.fillStyle = '#c3c9d9';
-  const genderSymbol = p.gender === 'Male' ? '♂ Male' : p.gender === 'Female' ? '♀ Female' : p.gender === 'Genderless' ? '○ Genderless' : '';
-  const subLine = [p.nature, genderSymbol].filter(Boolean).join('  ·  ');
-  if(subLine) ctx.fillText(truncateToWidth(ctx, subLine, textWidth), textX, y + 82);
+  let subX = textX;
+  if(p.nature){
+    ctx.fillStyle = '#c3c9d9';
+    ctx.fillText(p.nature, subX, y + 82);
+    subX += ctx.measureText(p.nature).width;
+  }
+  if(p.gender && GENDER_COLORS[p.gender]){
+    if(p.nature){
+      ctx.fillStyle = '#8891a5';
+      ctx.fillText('  ·  ', subX, y + 82);
+      subX += ctx.measureText('  ·  ').width;
+    }
+    ctx.fillStyle = GENDER_COLORS[p.gender].color;
+    ctx.fillText(GENDER_COLORS[p.gender].label, subX, y + 82);
+  }
 
   if(p.shiny){
     ctx.fillStyle = '#FFD24C';
@@ -440,22 +542,52 @@ function drawCardFrame(p, assets, spriteDrawable){
 
   y += headerHeight;
 
-  // Meta row: met location, ball, origin -> last game, drawn as glass chips
+  // Ball / Origin Game / Last Game -- icons only, no labels.
+  if(hasIconRow){
+    const r = SHARE_ICON_BADGE_D/2;
+    const cy = y + r;
+    let ix = x;
+    if(ballImg){
+      drawIconCircleBadge(ctx, ix+r, cy, r, ballImg);
+      ix += SHARE_ICON_BADGE_D + 14;
+    }
+    if(originIcon){
+      drawIconCircleBadge(ctx, ix+r, cy, r, originIcon, primary);
+      ix += SHARE_ICON_BADGE_D;
+      if(!sameGame && lastIcon){
+        ix += 12;
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(ix, cy);
+        ctx.lineTo(ix+16, cy);
+        ctx.moveTo(ix+10, cy-5);
+        ctx.lineTo(ix+16, cy);
+        ctx.lineTo(ix+10, cy+5);
+        ctx.stroke();
+        ix += 16 + 12;
+        drawIconCircleBadge(ctx, ix+r, cy, r, lastIcon, primary);
+        ix += SHARE_ICON_BADGE_D;
+      }
+      ix += 14;
+    }
+    y += iconRowHeight;
+  }
+
+  // Met location / Met date
   if(metaChips.length > 0){
     ctx.font = '600 14px "Outfit", sans-serif';
     layoutChips(metaChips, x, y, contentWidth, SHARE_META_CHIP_H, SHARE_CHIP_GAP, (item, cx, cy) => {
       drawGlassChip(ctx, cx, cy, item.width, SHARE_META_CHIP_H, 16);
-      const icon = item.icon;
-      const textStartX = cx + 14 + (icon ? 20 + 8 : 0);
-      if(icon) ctx.drawImage(icon, cx+14, cy + (SHARE_META_CHIP_H-20)/2, 20, 20);
       ctx.fillStyle = '#d7dcea';
       ctx.font = '600 14px "Outfit", sans-serif';
-      ctx.fillText(item.text, textStartX, cy + SHARE_META_CHIP_H/2 + 5);
+      ctx.fillText(item.text, cx+14, cy + SHARE_META_CHIP_H/2 + 5);
     });
     y += metaBlockHeight;
   }
 
-  // Achievements
+  // Achievements -- icons only, no names.
   ctx.font = '700 16px "Outfit", sans-serif';
   ctx.fillStyle = '#ffffff';
   ctx.fillText(`Achievements (${achievements.length})`, x, y + 16);
@@ -466,15 +598,9 @@ function drawCardFrame(p, assets, spriteDrawable){
     ctx.fillStyle = '#8891a5';
     ctx.fillText('None yet.', x, y + 14);
   } else {
-    ctx.font = '600 15px "Outfit", sans-serif';
-    layoutChips(achievementChips, x, y, contentWidth, SHARE_CHIP_H, SHARE_CHIP_GAP, (item, cx, cy) => {
-      const idx = achievementChips.indexOf(item);
-      drawGlassChip(ctx, cx, cy, item.width, SHARE_CHIP_H, 17);
-      const icon = achievementIcons[idx];
-      if(icon) ctx.drawImage(icon, cx+8, cy+4, 26, 26);
-      ctx.fillStyle = '#e8ecf5';
-      ctx.font = '600 15px "Outfit", sans-serif';
-      ctx.fillText(item.text, cx + 8 + 26 + 8, cy + 22);
+    layoutChips(achvBadges, x, y, contentWidth, SHARE_ACHV_BADGE_D, SHARE_CHIP_GAP, (item, cx, cy) => {
+      const r = SHARE_ACHV_BADGE_D/2;
+      drawIconCircleBadge(ctx, cx+r, cy+r, r, item.icon);
     });
   }
 
@@ -574,22 +700,24 @@ async function buildRosterShareCanvas(){
   const height = headerHeight + ROSTER_PAD + rows*ROSTER_CELL_H + (rows-1)*ROSTER_GAP + ROSTER_PAD;
 
   const scale = 2;
+  const m = SHARE_SHADOW_MARGIN;
   const canvas = document.createElement('canvas');
-  canvas.width = width * scale;
-  canvas.height = height * scale;
+  canvas.width = (width + m*2) * scale;
+  canvas.height = (height + m*2) * scale;
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
+  ctx.translate(m, m);
 
-  const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-  bgGrad.addColorStop(0, '#161923');
-  bgGrad.addColorStop(1, '#0f1118');
-  ctx.fillStyle = bgGrad;
-  ctx.fillRect(0, 0, width, height);
-  const ambientGlow = ctx.createRadialGradient(width*0.15, 0, 0, width*0.15, 0, 340);
-  ambientGlow.addColorStop(0, 'rgba(79,209,197,0.14)');
-  ambientGlow.addColorStop(1, 'rgba(79,209,197,0)');
-  ctx.fillStyle = ambientGlow;
-  ctx.fillRect(0, 0, width, height);
+  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.55)';
+  ctx.shadowBlur = 48;
+  ctx.shadowOffsetY = 20;
+  roundRectPath(ctx, 0, 0, width, height, 24);
+  ctx.fillStyle = '#000000';
+  ctx.fill();
+  ctx.restore();
+
+  drawAuroraCardBackground(ctx, width, height, 24, '#4FD1C5', '#F2C14E');
 
   drawPokeBallGlyph(ctx, ROSTER_PAD + 15, 34, 15, 1);
 

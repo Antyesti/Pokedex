@@ -84,7 +84,9 @@
       "megaTypes": [],
       "customMemorySubKeys": {
         "leaf_crown": []
-      }
+      },
+      "megaForm": "",
+      "customTitleFields": {}
     }
   ]
 }

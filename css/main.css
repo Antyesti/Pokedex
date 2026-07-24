@@ -132,8 +132,16 @@ header.top{
   .app{ padding:20px 16px 60px; }
 
   .top-actions{ width:100%; }
-  .top-actions .btn{ flex:1 1 auto; justify-content:center; }
-  #btnAdd{ flex:1 1 100%; order:-1; }
+  .top-actions .btn{ justify-content:center; }
+
+  #btnAdd, #lastFileChip{ flex:1 1 100%; order:-1; }
+
+  #settingsBtn, #themeToggleBtn, #btnImport, #btnExport, #btnNewDex, #btnShareRoster{
+    flex:1 1 0; min-width:0; padding-left:10px; padding-right:10px;
+  }
+  #btnImport .btn-label, #btnExport .btn-label, #btnNewDex .btn-label, #btnShareRoster .btn-label{
+    display:none;
+  }
 }
 
 .btn{

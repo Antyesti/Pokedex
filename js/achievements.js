@@ -957,7 +957,7 @@ function openDetail(id){
         <div class="modal-close" role="button" tabindex="0" aria-label="Share as image" title="Share as image" style="right:64px;" onclick="shareCardAsImage('${p.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
         </div>
-        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeDetail()">
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" data-autofocus onclick="closeDetail()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
         <div style="display:flex; align-items:center; gap:16px;">
@@ -979,7 +979,7 @@ function openDetail(id){
       <div class="modal-body">
         <div class="section-label">Profile</div>
         <div class="info-grid">
-          <div class="info-cell"><div class="k">Nature</div><div class="v" style="display:flex; align-items:center; gap:6px;">${escapeHTML(p.nature)||'-'}${p.nature ? `<span class="nature-tooltip-trigger" tabindex="0" style="width:22px;height:22px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="nature-tooltip" style="bottom:auto; top:calc(100% + 8px); left:0; right:auto;">${natureTooltipHTML(p.nature)}</div></span>` : ''}</div></div>
+          <div class="info-cell"><div class="k">Nature</div><div class="v" style="display:flex; align-items:center; gap:6px;">${escapeHTML(p.nature)||'-'}${p.nature ? `<span class="nature-tooltip-trigger" tabindex="0" data-no-autofocus style="width:22px;height:22px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div class="nature-tooltip" style="bottom:auto; top:calc(100% + 8px); left:0; right:auto;">${natureTooltipHTML(p.nature)}</div></span>` : ''}</div></div>
           <div class="info-cell"><div class="k">Gender</div><div class="v">${genderSymbolHTML(p.gender)||'-'}</div></div>
           <div class="info-cell"><div class="k">Met Location</div><div class="v">${p.metLocation||'-'}</div></div>
           <div class="info-cell"><div class="k">Housed Ball</div><div class="v" style="display:flex; align-items:center; gap:6px;">${p.ball ? `${ballIconHTML(p.ball,26)}${escapeHTML(p.ball)}` : '-'}</div></div>

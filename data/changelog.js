@@ -38,7 +38,7 @@ const CHANGELOG = [
       {
         title: "New",
         items: [
-          "Added a \"New\" option next to Import/Export to start a fresh, empty Pokédex. It warns you to save your current roster first, and offers an Undo right after in case you change your mind."
+          "Added a \"<b>New</b>\" option next to Import/Export to start a fresh, empty Pokédex. It warns you to save your current roster first, and offers an Undo right after in case you change your mind."
         ]
       },
       {
@@ -47,10 +47,11 @@ const CHANGELOG = [
           "The sprite pedestal on cards now picks up a soft glow of the Pokémon's own type color, instead of the same neutral tint for every Pokémon.",
           "The empty-Pokédex screen now uses the same Poké Ball mark as the header, instead of a plain placeholder icon.",
           "Stats dashboard numbers now use the same monospace font as the rest of the app's data readouts.",
+          "On mobile, Settings, Theme, Import, Export, New, and Share now sit as 6 icon-only buttons in a single row instead of wrapping across several lines with labels.",
           "Reworked the shared card and roster images: type-tinted sprite glows, gradient-sheen type badges, a Poké Ball watermark, the dex number, and a glass-chip meta row instead of flat text lines and solid colors.",
-          "The font preview in Settings now shows an actual card (sprite, dex number, type badges, footer) instead of a generic mock-up, so it accurately reflects where each font will actually show up.",
+          "The font preview in Settings now shows an actual card like the sprite, dex number, type badges, and footer instead of a generic mock-up, so it accurately reflects where each font will actually show up.",
           "Setting the Original Trainer name now uses an in-app dialog instead of the browser's native prompt, matching the rest of the app.",
-          "Opening a modal now focuses its first real field or button instead of always landing on the close (X) button."
+          "Opening a modal now focuses its first real field or button instead of always landing on the close ❌ button."
         ]
       },
       {
@@ -61,12 +62,11 @@ const CHANGELOG = [
           "Fixed Pokémon cards staying visually \"stuck\" in their hover state after a tap on touch devices.",
           "Increased the size of small touch targets (card edit/delete, trainer name edit) that were easy to mis-tap on mobile.",
           "Reworked the toolbar and header actions into a proper mobile layout instead of letting them wrap unpredictably.",
-          "Fixed several icon-only controls (modal close buttons, card actions) not being reachable by keyboard or announced properly by screen readers.",
           "Restyled the filter/sort dropdowns' arrow to match the rest of the UI instead of the browser default.",
           "Improved the Species picker's visibility in the Beast Ball theme with a proper frosted-glass background.",
           "Escape now also closes the Settings and Credits modals, matching the other modals in the app.",
           "Modals now trap keyboard focus while open and return focus to what you were on when closed, instead of letting Tab wander into the page behind them.",
-          "Toast notifications (save confirmations, delete/undo, import/export results) are now announced properly to screen readers.",
+          "Several icon-only controls like modal close buttons and card actions, and Toast notifications are now announced to screen readers.",
           "The Add/Edit form now highlights, focuses, and scrolls to whichever field actually failed validation instead of just showing a message.",
           "Replaced the placeholder icon shown when a Pokémon has no sprite with a small, static version of the header's Poké Ball mark.",
           "Card footer and shared card images no longer show a redundant \"Game → Game\" when Origin Game and Last Game are the same.",

@@ -34,7 +34,8 @@ const bodyScrollObserver = new MutationObserver(() => {
     focusBeforeModal = document.activeElement;
     activeModalEl = overlay;
     const focusable = getFocusableEls(overlay);
-    const preferred = focusable.find(el => !el.classList.contains('modal-close')) || focusable[0];
+    const explicit = focusable.find(el => el.hasAttribute('data-autofocus'));
+    const preferred = explicit || focusable.find(el => !el.classList.contains('modal-close') && !el.hasAttribute('data-no-autofocus')) || focusable[0];
     if(preferred) preferred.focus();
   } else if(!overlay && activeModalEl){
     activeModalEl = null;

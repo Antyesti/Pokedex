@@ -151,7 +151,7 @@ function formBodyHTML(p){
         <div class="field">
           <label>Species</label>
           <div class="species-field" id="speciesField_wrap">
-            <input id="f_species" value="${escapeAttr(p.species)}" placeholder="e.g. Pikachu" autocomplete="off" oninput="onSpeciesInput(this.value)" onfocus="onSpeciesInput(this.value)">
+            <input id="f_species" value="${escapeAttr(p.species)}" placeholder="e.g. Pikachu" autocomplete="off" data-no-autofocus oninput="onSpeciesInput(this.value)" onfocus="onSpeciesInput(this.value)">
             <div class="species-picker-panel" id="speciesPicker_panel"></div>
           </div>
         </div>
@@ -215,7 +215,7 @@ function formBodyHTML(p){
       </div>
       <div class="field span-2">
         <label style="display:flex; align-items:center; gap:6px;">Sprite Images
-          <span class="info-tooltip-trigger" tabindex="0">
+          <span class="info-tooltip-trigger" tabindex="0" data-no-autofocus>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             <span class="info-tooltip">Default is required; Mega/Gigantamax are optional and only apply when that form is enabled above.</span>
           </span>

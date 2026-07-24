@@ -248,7 +248,7 @@ function openSettings(){
         </div>
         <div class="field" style="margin-top:16px;">
           <label style="display:flex; align-items:center; gap:6px;">Animated Sprite Format
-            <span class="info-tooltip-trigger" tabindex="0">
+            <span class="info-tooltip-trigger" tabindex="0" data-no-autofocus>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
               <span class="info-tooltip"><sup>Most photo viewers, including phone galleries and Windows Photos, do not animate APNG files. Web browsers are the most reliable way to view APNG animations. GIFs, on the other hand, are supported almost everywhere, including previews in Discord and Slack.</sup></span>
             </span>

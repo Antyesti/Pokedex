@@ -486,8 +486,9 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 }
 
 #typeSwatches.field-error{
-  border:1px solid var(--danger); border-radius:10px; padding:8px;
-  box-shadow:0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent);
+  outline:2px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  outline-offset:6px;
+  border-radius:10px;
 }
 
 .field select option{ background:var(--select-option-bg); color:var(--select-option-text); }
