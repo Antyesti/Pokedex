@@ -77,12 +77,20 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" id="searchInput" placeholder="Search nickname, species, nature, ball, move, notes, achievements...">
     </div>
-    <select class="filter" id="typeFilter">
-      <option value="">All Types</option>
-    </select>
-    <select class="filter" id="gameFilter">
-      <option value="">All Origin Games</option>
-    </select>
+    <div class="ball-dropdown type-filter-dropdown" id="typeFilter">
+      <button type="button" class="ball-dropdown-trigger type-filter-trigger" id="typeFilterTrigger" onclick="toggleTypeFilterDropdown()">
+        <span class="ball-dropdown-current" id="typeFilterCurrent"><span class="placeholder">All Types</span></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex:none;opacity:0.6;"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="ball-dropdown-panel type-filter-panel" id="typeFilterPanel"></div>
+    </div>
+    <div class="ball-dropdown game-filter-dropdown" id="gameFilter">
+      <button type="button" class="ball-dropdown-trigger game-filter-trigger" id="gameFilterTrigger" onclick="toggleGameFilterDropdown()">
+        <span class="ball-dropdown-current" id="gameFilterCurrent"><span class="placeholder">All Origin Games</span></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex:none;opacity:0.6;"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="ball-dropdown-panel game-filter-panel" id="gameFilterPanel"></div>
+    </div>
     <button type="button" class="btn ghost filter-toggle" id="shinyFilterBtn" title="Show only shiny Pokémon" aria-pressed="false">
       <span class="shiny-filter-star"><img src="data:image/png;base64,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" alt=""></span> Shiny
     </button>
