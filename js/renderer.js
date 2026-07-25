@@ -66,9 +66,11 @@ function renderTypeFilterPanel(){
     <div class="ball-option game-preset-option ${!typeFilterValue?'active':''}" onclick="selectTypeFilterValue('')">
       <span class="game-preset-option-blank"></span><span>All Types</span>
     </div>
-    <div class="type-filter-grid">
-      ${TYPES.map(t => `<span class="type-badge type-filter-option ${typeFilterValue===t?'active':''}" style="background:${TYPE_HEX[t]}" onclick="selectTypeFilterValue('${t}')">${t}</span>`).join('')}
-    </div>
+    ${TYPES.map(t => `
+      <div class="ball-option type-filter-row ${typeFilterValue===t?'active':''}" onclick="selectTypeFilterValue('${t}')">
+        <span class="type-badge" style="background:${TYPE_HEX[t]}">${t}</span>
+      </div>
+    `).join('')}
   `;
 }
 
