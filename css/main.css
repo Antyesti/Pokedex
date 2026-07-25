@@ -276,6 +276,14 @@ header.top{
 
 .stats-toggle-btn.open svg{ transform:rotate(180deg); }
 
+@media (max-width: 560px){
+  .statsbar{ flex-wrap:nowrap; gap:8px; }
+  .stat-chip{ padding:8px 10px; font-size:9.5px; flex:1 1 0; min-width:0; justify-content:center; white-space:nowrap; }
+  .stat-chip b{ font-size:12.5px; }
+  .stat-chip-type{ display:none; }
+  .stats-toggle-btn{ flex:0 0 auto; padding:8px 10px; font-size:9.5px; }
+}
+
 .stats-dashboard{
   overflow:hidden;
   max-height:0;
@@ -424,6 +432,7 @@ select.filter option{ background:var(--select-option-bg); color:var(--select-opt
 @media (max-width: 560px){
   .search-wrap{ flex:1 1 100%; max-width:none; min-width:0; }
   #typeFilter, #gameFilter{ flex:1 1 calc(50% - 6px); min-width:0; }
+  .game-filter-dropdown, .type-filter-dropdown{ min-width:0; }
   .filter-toggle{ flex:1 1 calc(33.33% - 8px); justify-content:center; }
   .view-toggle{ flex:1 1 100%; justify-content:center; }
   #sortFilter{ flex:1 1 100%; }
