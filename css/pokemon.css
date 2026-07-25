@@ -858,18 +858,9 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
   border-color:color-mix(in srgb, var(--accent) 50%, transparent);
 }
 
-.type-filter-panel{ min-width:260px; }
+.type-filter-panel{ min-width:220px; }
 
-.type-filter-grid{ display:flex; flex-wrap:wrap; gap:6px; padding:8px 6px 4px; }
-
-.type-badge.type-filter-option{
-  cursor:pointer; border:2px solid transparent; margin:0; outline:none;
-  transition: transform .12s, border-color .12s;
-}
-
-.type-badge.type-filter-option:hover{ transform:scale(1.06); }
-
-.type-badge.type-filter-option.active{ border-color:#fff; }
+.type-filter-row .type-badge{ pointer-events:none; }
 
 .move-row input{
   background:rgba(255,255,255,0.04); border:1px solid var(--panel-border); border-radius:8px;
