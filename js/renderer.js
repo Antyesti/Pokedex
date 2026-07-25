@@ -1,10 +1,11 @@
 /* ============== RENDER ============== */
 const gridWrap = document.getElementById('gridWrap');
 const statsBar = document.getElementById('statsBar');
-const typeFilter = document.getElementById('typeFilter');
-const gameFilter = document.getElementById('gameFilter');
 const sortFilter = document.getElementById('sortFilter');
 const searchInput = document.getElementById('searchInput');
+let typeFilterValue = '';
+let gameFilterValue = '';
+let gameFilterOptions = [];
 let gridDensity = 'cozy'; // 'cozy' (3/row, default) or 'dense' (6/row)
 let shinyOnly = false;
 let megaOnly = false;
@@ -23,11 +24,7 @@ function init(){
     seedData();
   }
   applySettings();
-  TYPES.forEach(t=>{
-    const o = document.createElement('option');
-    o.value = t; o.textContent = t;
-    typeFilter.appendChild(o);
-  });
+  renderTypeFilterPanel();
   document.querySelectorAll('#viewToggle .view-toggle-btn').forEach(btn=>{
     btn.addEventListener('click', () => {
       gridDensity = btn.dataset.density;
@@ -59,14 +56,102 @@ function init(){
   render();
 }
 
+// The type list is fixed (unlike Origin Game, which depends on what's in the roster), so
+// the panel only needs building once -- selecting an option just re-renders it in place to
+// update which pill is marked active.
+function renderTypeFilterPanel(){
+  const panel = document.getElementById('typeFilterPanel');
+  if(!panel) return;
+  panel.innerHTML = `
+    <div class="ball-option game-preset-option ${!typeFilterValue?'active':''}" onclick="selectTypeFilterValue('')">
+      <span class="game-preset-option-blank"></span><span>All Types</span>
+    </div>
+    <div class="type-filter-grid">
+      ${TYPES.map(t => `<span class="type-badge type-filter-option ${typeFilterValue===t?'active':''}" style="background:${TYPE_HEX[t]}" onclick="selectTypeFilterValue('${t}')">${t}</span>`).join('')}
+    </div>
+  `;
+}
+
+function selectTypeFilterValue(type){
+  typeFilterValue = type;
+  renderTypeFilterPanel();
+  updateTypeFilterTrigger();
+  const panel = document.getElementById('typeFilterPanel');
+  if(panel) panel.classList.remove('open');
+  renderGrid();
+}
+
+function updateTypeFilterTrigger(){
+  const current = document.getElementById('typeFilterCurrent');
+  if(!current) return;
+  current.innerHTML = typeFilterValue
+    ? `<span class="type-badge" style="background:${TYPE_HEX[typeFilterValue]}; font-size:10px; padding:4px 9px;">${typeFilterValue}</span>`
+    : `<span class="placeholder">All Types</span>`;
+}
+
+function toggleTypeFilterDropdown(){
+  const panel = document.getElementById('typeFilterPanel');
+  if(!panel) return;
+  panel.classList.toggle('open', !panel.classList.contains('open'));
+}
+
 function populateGameFilter(){
   const games = new Set();
   state.pokemon.forEach(p => { if(p.originGame) games.add(p.originGame); });
-  const current = gameFilter.value;
-  const sorted = [...games].sort((a,b)=>a.localeCompare(b));
-  gameFilter.innerHTML = `<option value="">All Origin Games</option>` +
-    sorted.map(g => `<option value="${escapeAttr(g)}">${escapeHTML(g)}</option>`).join('');
-  if(sorted.includes(current)) gameFilter.value = current;
+  gameFilterOptions = [...games].sort((a,b)=>a.localeCompare(b));
+  if(!gameFilterOptions.includes(gameFilterValue)) gameFilterValue = '';
+  renderGameFilterPanel();
+  updateGameFilterTrigger();
+}
+
+// Rebuilds the dropdown's option rows -- each shows the game's preset icon when its typed
+// name resolves to one (same fuzzy matching used for the Origin/Last Game fields elsewhere),
+// and falls back to text-only for a custom-typed game name that doesn't match a preset.
+function renderGameFilterPanel(){
+  const panel = document.getElementById('gameFilterPanel');
+  if(!panel) return;
+  panel.innerHTML = `
+    <div class="ball-option game-preset-option ${!gameFilterValue?'active':''}" onclick="selectGameFilterValue(-1)">
+      <span class="game-preset-option-blank"></span><span>All Origin Games</span>
+    </div>
+    ${gameFilterOptions.map((g,i) => {
+      const key = detectGameKeyFromTag(g);
+      const preset = key ? GAME_PRESET_INDEX[key] : null;
+      return `
+        <div class="ball-option game-preset-option ${gameFilterValue===g?'active':''}" onclick="selectGameFilterValue(${i})">
+          ${preset ? `<img src="${preset.icon}" alt="">` : `<span class="game-preset-option-blank"></span>`}
+          <span>${escapeHTML(g)}</span>
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+function selectGameFilterValue(index){
+  gameFilterValue = index === -1 ? '' : gameFilterOptions[index];
+  renderGameFilterPanel();
+  updateGameFilterTrigger();
+  const panel = document.getElementById('gameFilterPanel');
+  if(panel) panel.classList.remove('open');
+  renderGrid();
+}
+
+function updateGameFilterTrigger(){
+  const current = document.getElementById('gameFilterCurrent');
+  if(!current) return;
+  if(!gameFilterValue){
+    current.innerHTML = `<span class="placeholder">All Origin Games</span>`;
+    return;
+  }
+  const key = detectGameKeyFromTag(gameFilterValue);
+  const preset = key ? GAME_PRESET_INDEX[key] : null;
+  current.innerHTML = `${preset ? `<img src="${preset.icon}" alt="" style="width:16px;height:16px;flex:none;border-radius:3px;object-fit:contain;">` : ''}<span style="overflow:hidden;text-overflow:ellipsis;">${escapeHTML(gameFilterValue)}</span>`;
+}
+
+function toggleGameFilterDropdown(){
+  const panel = document.getElementById('gameFilterPanel');
+  if(!panel) return;
+  panel.classList.toggle('open', !panel.classList.contains('open'));
 }
 
 function render(){
@@ -329,14 +414,12 @@ function renderStats(){
   const typeCounts = {};
   state.pokemon.forEach(p => p.types.forEach(t => typeCounts[t] = (typeCounts[t]||0)+1));
   const topType = Object.entries(typeCounts).sort((a,b)=>b[1]-a[1])[0];
-  const totalGames = state.pokemon.reduce((sum,p)=>sum + p.games.length, 0);
 
   const dashOpen = document.getElementById('statsDashboard').classList.contains('open');
   statsBar.innerHTML = `
     <div class="stat-chip">ROSTER &nbsp;<b>${total}</b></div>
     <div class="stat-chip">SHINY &nbsp;<b style="color:var(--accent-2)">${shinyCount}</b></div>
-    <div class="stat-chip">TOTAL GAME APPEARANCES &nbsp;<b>${totalGames}</b></div>
-    ${topType ? `<div class="stat-chip">MOST COMMON TYPE &nbsp;<b style="color:${TYPE_HEX[topType[0]]}">${topType[0]}</b></div>` : ''}
+    ${topType ? `<div class="stat-chip stat-chip-type">MOST COMMON TYPE &nbsp;<b style="color:${TYPE_HEX[topType[0]]}">${topType[0]}</b></div>` : ''}
     <button type="button" class="stats-toggle-btn ${dashOpen?'open':''}" id="statsToggleBtn">
       Full Stats
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -682,8 +765,8 @@ let gridLoadMoreObserver = null;
 
 function renderGrid(){
   const q = searchInput.value.trim();
-  const tFilter = typeFilter.value;
-  const gFilter = gameFilter.value;
+  const tFilter = typeFilterValue;
+  const gFilter = gameFilterValue;
   const sortMode = sortFilter.value;
 
   const signature = JSON.stringify([q, tFilter, gFilter, sortMode, shinyOnly, megaOnly, gigantamaxOnly, gridDensity]);
@@ -1148,6 +1231,12 @@ document.addEventListener('click', (e) => {
   }
   if(!e.target.closest('.game-preset-dropdown')){
     document.querySelectorAll('.game-preset-panel.open').forEach(p => p.classList.remove('open'));
+  }
+  if(!e.target.closest('.game-filter-dropdown')){
+    document.querySelectorAll('.game-filter-panel.open').forEach(p => p.classList.remove('open'));
+  }
+  if(!e.target.closest('.type-filter-dropdown')){
+    document.querySelectorAll('.type-filter-panel.open').forEach(p => p.classList.remove('open'));
   }
   if(!e.target.closest('.species-field')){
     document.querySelectorAll('.species-picker-panel.open').forEach(p => p.classList.remove('open'));
