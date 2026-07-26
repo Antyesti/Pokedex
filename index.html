@@ -73,9 +73,15 @@
   <div class="stats-dashboard" id="statsDashboard"></div>
 
   <div class="toolbar">
-    <div class="search-wrap">
+    <div class="search-wrap t-clear" id="searchWrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="searchInput" placeholder="Search nickname, species, nature, ball, move, notes, achievements...">
+      <input type="text" id="searchInput" aria-label="Search nickname, species, nature, ball, move, notes, achievements">
+      <div class="t-clear-mirror" id="searchMirror" aria-hidden="true"></div>
+      <div class="t-clear-placeholder" id="searchPlaceholder" aria-hidden="true">Search nickname, species, nature, ball, move, notes, achievements...</div>
+      <div class="t-clear-glow" id="searchGlow" aria-hidden="true"></div>
+      <button type="button" class="search-clear-btn t-clear-btn" id="searchClearBtn" title="Clear search" aria-label="Clear search" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
     <div class="ball-dropdown type-filter-dropdown" id="typeFilter">
       <button type="button" class="ball-dropdown-trigger type-filter-trigger" id="typeFilterTrigger" onclick="toggleTypeFilterDropdown()">
@@ -108,19 +114,26 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="2.6" height="12" rx="1"/><rect x="6.6" y="6" width="2.6" height="12" rx="1"/><rect x="10.7" y="6" width="2.6" height="12" rx="1"/><rect x="14.8" y="6" width="2.6" height="12" rx="1"/><rect x="18.9" y="6" width="2.6" height="12" rx="1"/></svg>
       </button>
     </div>
-    <select class="filter" id="sortFilter">
-      <option value="recent">Sort: Recently Added</option>
-      <option value="oldest" selected>Sort: Oldest Added</option>
-      <option value="name">Sort: Name (A–Z)</option>
-      <option value="species">Sort: Species (A–Z)</option>
-    </select>
+    <div class="ball-dropdown sort-dropdown" id="sortDropdown">
+      <button type="button" class="btn ghost sort-dropdown-trigger" id="sortDropdownTrigger" onclick="toggleSortDropdown()" title="Sort" aria-label="Sort" aria-haspopup="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 3v18"/><path d="M3.5 6.5 7 3l3.5 3.5"/><path d="M17 21V3"/><path d="M13.5 17.5 17 21l3.5-3.5"/></svg>
+      </button>
+      <div class="ball-dropdown-panel sort-dropdown-panel" id="sortDropdownPanel"></div>
+    </div>
   </div>
 
   <div id="gridWrap"></div>
 
+  <div class="history-bar" id="historyBar" style="display:none;">
+    <button type="button" class="btn ghost" id="historyBtn" onclick="openHistory()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/><polyline points="12 7 12 12 16 14"/></svg>
+      History <span id="historyCount">0</span>
+    </button>
+  </div>
+
   <footer class="bottom">
     Made by <strong class="footer-credit-name">Antyesti</strong><br>
-    POKÉDEX · AUTOSAVED IN THIS BROWSER · USE EXPORT FOR A PORTABLE BACKUP<br>
+    <div class="ld-marquee"></div><br>
     <a href="https://discord.gg/TRAxc8Jn2M" target="_blank" rel="noopener noreferrer" class="footer-discord-link"><b>Discord</b></a> · <a href="https://github.com/Antyesti/Pokedex" target="_blank" rel="noopener noreferrer" class="footer-github-link"><b>Github</b></a><br><br>
     <a href="#" class="footer-pill-btn" id="changelogLink">Changelog</a> <a href="#" class="footer-pill-btn" id="creditsLink">Credits</a><br>
     <span class="footer-legal-note">Pokémon and related images are © Nintendo, Creatures Inc., Game Freak, and The Pokémon Company. This is an unofficial, non-commercial fan project and is not affiliated with or endorsed by Nintendo, Creatures Inc., Game Freak, or The Pokémon Company.</span>
@@ -129,6 +142,9 @@
 
 <input type="file" id="fileInput" accept=".json" style="display:none">
 <div class="toast" id="toast" role="status" aria-live="polite"><span class="dot"></span><span id="toastMsg"></span><button type="button" class="toast-action" id="toastAction" style="display:none;"></button></div>
+<button type="button" class="btn ghost scroll-top-btn" id="scrollTopBtn" title="Back to top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+</button>
 
 <script src="icons/ui-icons.js"></script>
 <script src="icons/achievement-icons.js"></script>

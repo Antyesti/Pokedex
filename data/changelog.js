@@ -38,7 +38,13 @@ const CHANGELOG = [
       {
         title: "New",
         items: [
-          "Added a \"<b>New</b>\" option next to Import/Export to start a fresh, empty Pokédex. It warns you to save your current roster first, and offers an Undo right after in case you change your mind."
+          "Added a \"<b>New</b>\" option next to Import/Export to start a fresh, empty Pokédex. It warns you to save your current roster first, and offers an Undo right after in case you change your mind.",
+          "Added a ✕ button inside the search box to instantly clear whatever you've typed.",
+          "Added a \"Clear Filters\" button to the no-matches empty state, so an overly narrow search/filter combo is one click to reset.",
+          "Added a back-to-top button that appears once you've scrolled down, for quickly returning to the header on long rosters.",
+          "Deleting a Pokémon now also drops it into a <b>History</b> button that appears once its Undo toast has expired, so an accidental deletion is still recoverable after the toast is gone.",
+          "Reworked the Sort control into a compact ⇅ menu with three keys (Added, Species, Nickname), each remembering its own direction (Oldest/Newest, A–Z/Z–A) independently.",
+          "Added Pokérus as a status: Infected, None, or Cured, set from the edit form. Infected and Cured each get their own badge on the card, next to Shiny, and their own card glow color."
         ]
       },
       {
@@ -47,11 +53,24 @@ const CHANGELOG = [
           "The sprite pedestal on cards now picks up a soft glow of the Pokémon's own type color, instead of the same neutral tint for every Pokémon.",
           "The empty-Pokédex screen now uses the same Poké Ball mark as the header, instead of a plain placeholder icon.",
           "Stats dashboard numbers now use the same monospace font as the rest of the app's data readouts.",
+          "Reworked the shared card and roster images: color-coded gender, icon-only Ball/Origin/Last Game/Achievements, a Met Date chip, and a modern aurora-style background with a floating drop shadow instead of a flat gradient panel.",
           "On mobile, Settings, Theme, Import, Export, New, and Share now sit as 6 icon-only buttons in a single row instead of wrapping across several lines with labels.",
           "Reworked the shared card and roster images: type-tinted sprite glows, gradient-sheen type badges, a Poké Ball watermark, the dex number, and a glass-chip meta row instead of flat text lines and solid colors.",
+          "Removed Total Game Appearances from the home screen summary. It's still in Full Stats as Game Rows Logged; the mobile summary now keeps Roster, Shiny, and Full Stats on one line.",
+          "The Origin Game filter now shows each game's icon next to its name, matching the icons already used for Origin/Last Game elsewhere in the app.",
+          "The Type filter now shows each type as its own colored pill (matching the badges used on cards) instead of plain text.",
           "The font preview in Settings now shows an actual card like the sprite, dex number, type badges, and footer instead of a generic mock-up, so it accurately reflects where each font will actually show up.",
           "Setting the Original Trainer name now uses an in-app dialog instead of the browser's native prompt, matching the rest of the app.",
-          "Opening a modal now focuses its first real field or button instead of always landing on the close ❌ button."
+          "Opening a modal now focuses its first real field or button instead of always landing on the close ❌ button.",
+          "Settings switches now settle into place with a little bounce instead of just sliding. Shiny and Forms now bounce the same way.",
+          "A required field that fails validation now shakes briefly along with its red border, so it's obvious at a glance which one needs attention.",
+          "The autosave notice in the footer now scrolls by as a continuous ticker with no visible seam, instead of cutting off partway through.",
+          "Reworked the Pokérus card effect: Infected weaves its color into the card's own type gradient instead of a separate overlay, and both Infected and Cured now tint the card's border the same way Shiny does.",
+          "The Pokérus toggle in the edit form now matches the grid density control's look instead of the gender toggle's.",
+          "Infected and Cured Pokémon now show their Pokérus badge in the detail view too, not just on the card.",
+          "Default Sort in Settings now reads \"Sort by ...\" and includes Z–A options for Nickname and Species. Also renamed \"Name\" to \"Nickname\" to match what's actually being sorted.",
+          "Clearing the search box now flies the old text away with a soft light streak instead of just blanking the field.",
+          "The Roster and Shiny counts in the stats bar now spin like an odometer when they change, instead of just jumping to the new number."
         ]
       },
       {

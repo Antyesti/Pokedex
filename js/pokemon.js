@@ -183,6 +183,14 @@ function formBodyHTML(p){
         </div>
       </div>
       <div class="field">
+        <label>Pokérus</label>
+        <div class="pokerus-toggle-group" id="pokerusToggleGroup" role="group" aria-label="Pokérus status">
+          <button type="button" class="pokerus-toggle-btn infected ${p.pokerus==='infected'?'active':''}" data-pokerus="infected" onclick="togglePokerus('infected')" title="Infected"><img src="${POKERUS_INFECTED_ICON}" alt="">Infected</button>
+          <button type="button" class="pokerus-toggle-btn none-status ${(!p.pokerus || p.pokerus==='none')?'active':''}" data-pokerus="none" onclick="togglePokerus('none')" title="No Interaction">None</button>
+          <button type="button" class="pokerus-toggle-btn cured ${p.pokerus==='cured'?'active':''}" data-pokerus="cured" onclick="togglePokerus('cured')" title="Cured"><img src="${POKERUS_CURED_ICON}" alt="">Cured</button>
+        </div>
+      </div>
+      <div class="field">
         <label>Forms</label>
         <div class="shiny-field" style="flex-wrap:wrap; gap:14px;">
           <span class="shiny-field" style="gap:10px;">
@@ -380,6 +388,14 @@ function toggleGender(g){
   });
 }
 
+let selectedPokerus = 'none';
+function togglePokerus(status){
+  selectedPokerus = status;
+  document.querySelectorAll('#pokerusToggleGroup .pokerus-toggle-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.pokerus === selectedPokerus);
+  });
+}
+
 function renderMovesEditor(){
   const wrap = document.getElementById('movesEditor');
   if(formMovesDraft.length === 0){
@@ -528,6 +544,7 @@ function closeForm(){
   selectedMegaTypes = [];
   selectedMegaForm = '';
   selectedGender = '';
+  selectedPokerus = 'none';
   selectedSpeciesEntryId = '';
   formMovesDraft = [];
 }
@@ -539,6 +556,7 @@ openForm = function(id){
   selectedMegaTypes = existing ? [...(existing.megaTypes||[])] : [];
   selectedMegaForm = existing ? (existing.megaForm || '') : '';
   selectedGender = existing ? (existing.gender || '') : '';
+  selectedPokerus = existing ? (existing.pokerus || 'none') : 'none';
   selectedSpeciesEntryId = existing ? (existing.speciesEntryId || '') : '';
   _origOpenForm(id);
 };
@@ -579,6 +597,8 @@ function confirmNewDex(){
   const previous = state;
   state = { pokemon: [], trainer: '', settings: previous.settings };
   pendingDeletions = [];
+  historyBarVisible = false;
+  updateHistoryBar();
   closeNewDexModal();
   applySettings();
   render();
@@ -652,6 +672,8 @@ document.getElementById('fileInput').onchange = (e) => {
       const data = normalizeImportedData(JSON.parse(ev.target.result));
       state = data;
       pendingDeletions = [];
+      historyBarVisible = false;
+      updateHistoryBar();
       applySettings();
       render();
       showToast(`Imported ${data.pokemon.length} Pokémon.`);

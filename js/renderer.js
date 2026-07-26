@@ -1,7 +1,6 @@
 /* ============== RENDER ============== */
 const gridWrap = document.getElementById('gridWrap');
 const statsBar = document.getElementById('statsBar');
-const sortFilter = document.getElementById('sortFilter');
 const searchInput = document.getElementById('searchInput');
 let typeFilterValue = '';
 let gameFilterValue = '';
@@ -10,6 +9,84 @@ let gridDensity = 'cozy'; // 'cozy' (3/row, default) or 'dense' (6/row)
 let shinyOnly = false;
 let megaOnly = false;
 let gigantamaxOnly = false;
+
+// Sort dropdown: each key (Added/Species/Nickname) keeps its own remembered direction, so
+// switching keys doesn't lose the direction you'd picked for the others. SORT_KEY_MAP maps
+// key+direction to the flat sort mode string renderGrid() (and the older defaultSort setting)
+// already understands.
+const SORT_KEY_MAP = {
+  added: { asc:'oldest', desc:'recent' },
+  species: { asc:'species', desc:'species-desc' },
+  nickname: { asc:'name', desc:'name-desc' }
+};
+const SORT_KEY_LABELS = { added:'Added', species:'Species', nickname:'Nickname' };
+const SORT_DIR_LABELS = {
+  added: { asc:'Oldest ↑', desc:'Newest ↓' },
+  species: { asc:'A–Z', desc:'Z–A' },
+  nickname: { asc:'A–Z', desc:'Z–A' }
+};
+let activeSortKey = 'added';
+let sortDirections = { added:'asc', species:'asc', nickname:'asc' };
+
+function currentSortValue(){
+  return SORT_KEY_MAP[activeSortKey][sortDirections[activeSortKey]];
+}
+
+// Reverse lookup so an incoming flat value (from state.settings.defaultSort, an imported
+// file, etc.) sets both the active key and that key's remembered direction.
+function applySortValue(value){
+  for(const key in SORT_KEY_MAP){
+    for(const dir in SORT_KEY_MAP[key]){
+      if(SORT_KEY_MAP[key][dir] === value){
+        activeSortKey = key;
+        sortDirections[key] = dir;
+        return;
+      }
+    }
+  }
+  activeSortKey = 'added';
+  sortDirections.added = 'asc';
+}
+
+function toggleSortDropdown(){
+  const panel = document.getElementById('sortDropdownPanel');
+  if(!panel) return;
+  const opening = !panel.classList.contains('open');
+  if(opening) renderSortPanel();
+  panel.classList.toggle('open', opening);
+}
+
+function renderSortPanel(){
+  const panel = document.getElementById('sortDropdownPanel');
+  if(!panel) return;
+  panel.innerHTML = Object.keys(SORT_KEY_MAP).map(key => `
+    <div class="sort-option ${activeSortKey===key ? 'active' : ''}" onclick="selectSortKey('${key}')">
+      <span class="sort-option-label">${SORT_KEY_LABELS[key]}</span>
+      <button type="button" class="sort-direction-btn" onclick="event.stopPropagation(); toggleSortDirection('${key}')">${SORT_DIR_LABELS[key][sortDirections[key]]}</button>
+    </div>
+  `).join('');
+}
+
+function updateSortTrigger(){
+  const trigger = document.getElementById('sortDropdownTrigger');
+  if(!trigger) return;
+  trigger.title = `Sort: ${SORT_KEY_LABELS[activeSortKey]} (${SORT_DIR_LABELS[activeSortKey][sortDirections[activeSortKey]]})`;
+}
+
+function selectSortKey(key){
+  activeSortKey = key;
+  renderSortPanel();
+  updateSortTrigger();
+  renderGrid();
+}
+
+function toggleSortDirection(key){
+  sortDirections[key] = sortDirections[key] === 'asc' ? 'desc' : 'asc';
+  activeSortKey = key;
+  renderSortPanel();
+  updateSortTrigger();
+  renderGrid();
+}
 
 function init(){
   document.documentElement.style.setProperty('--shiny-icon-url', `url("${SHINY_ICON}")`);
@@ -25,10 +102,10 @@ function init(){
   }
   applySettings();
   renderTypeFilterPanel();
-  document.querySelectorAll('#viewToggle .view-toggle-btn').forEach(btn=>{
+  document.querySelectorAll('#viewToggle .view-toggle-btn[data-density]').forEach(btn=>{
     btn.addEventListener('click', () => {
       gridDensity = btn.dataset.density;
-      document.querySelectorAll('#viewToggle .view-toggle-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      document.querySelectorAll('#viewToggle .view-toggle-btn[data-density]').forEach(b=>b.classList.toggle('active', b===btn));
       renderGrid();
     });
   });
@@ -345,7 +422,8 @@ function applySettings(){
   } else {
     setTheme(s.defaultTheme === 'dark' ? 'dark' : 'light');
   }
-  if(sortFilter) sortFilter.value = s.defaultSort || 'oldest';
+  applySortValue(s.defaultSort || 'oldest');
+  updateSortTrigger();
   applyFontSlot('body', s.bodyFont || defaultFontSetting());
   applyFontSlot('nickname', s.nicknameFont || defaultFontSetting());
 }
@@ -410,6 +488,77 @@ function saveTrainerName(){
   showToast(state.trainer ? `Dex is now set to ${state.trainer}.` : 'Trainer name cleared.');
 }
 
+// Slot-machine style digit reel used for the two headline stat-chip counters (Roster,
+// Shiny). Spins from the previously shown value to the new one on a real change; jumps
+// straight to the final digits on first render, when the digit count changes (e.g. going
+// from 9 to 10), or when the person prefers reduced motion -- spinning "from nothing"
+// wouldn't mean anything in any of those cases.
+const REEL_CELL = 18; // px, matches --reel-cell
+let reelFilterCounter = 0;
+let statsReelPrev = { total: null, shiny: null };
+
+function reelHTML(value){
+  return `<span class="t-reel">${String(value).split('').map(() => reelColumnHTML()).join('')}</span>`;
+}
+
+function reelColumnHTML(){
+  const filterId = `reel-blur-${reelFilterCounter++}`;
+  const cells = Array.from({length:10}, (_,n) => `<span class="t-reel-digit">${n}</span>`).join('');
+  return `<span class="t-reel-col" data-filter="${filterId}">` +
+    `<svg width="0" height="0" style="position:absolute;"><filter id="${filterId}"><feGaussianBlur stdDeviation="0 0"/></filter></svg>` +
+    `<span class="t-reel-strip" style="filter:url(#${filterId})">${cells}</span>` +
+  `</span>`;
+}
+
+// Drives the actual spin: translates each column's strip up to (spins*10 + digit) cells,
+// and decays that column's own directional (vertical-only) blur back to 0 as it settles,
+// each on its own staggered clock. A plain CSS blur() would smear sideways too, which is
+// exactly the artifact a vertical-only feGaussianBlur avoids.
+function spinReel(container, prevValue, value){
+  if(!container) return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const digitsStr = String(value);
+  const cols = Array.from(container.querySelectorAll('.t-reel-col'));
+  const skip = reduceMotion || prevValue === null || prevValue === undefined
+    || prevValue === value || String(prevValue).length !== digitsStr.length;
+  const dur = 1400;
+  const stagger = 90;
+  const spinBlur = 3;
+
+  cols.forEach((col, i) => {
+    const strip = col.querySelector('.t-reel-strip');
+    const filterId = col.dataset.filter;
+    const filterEl = document.querySelector(`#${filterId} feGaussianBlur`);
+    const digit = Number(digitsStr[i]);
+
+    if(skip){
+      strip.style.transition = 'none';
+      strip.style.transform = `translateY(${-digit * REEL_CELL}px)`;
+      if(filterEl) filterEl.setAttribute('stdDeviation', '0 0');
+      return;
+    }
+
+    const spins = 2;
+    const targetCell = spins * 10 + digit;
+    const delay = i * stagger;
+    strip.style.transition = `transform ${dur}ms cubic-bezier(0.16,1,0.3,1) ${delay}ms`;
+    requestAnimationFrame(() => {
+      strip.style.transform = `translateY(${-targetCell * REEL_CELL}px)`;
+    });
+
+    if(filterEl){
+      filterEl.setAttribute('stdDeviation', `0 ${spinBlur}`);
+      const start = performance.now() + delay;
+      function decay(now){
+        const t = Math.min(Math.max((now - start) / dur, 0), 1);
+        filterEl.setAttribute('stdDeviation', `0 ${(spinBlur * (1 - t)).toFixed(2)}`);
+        if(t < 1) requestAnimationFrame(decay);
+      }
+      requestAnimationFrame(decay);
+    }
+  });
+}
+
 function renderStats(){
   const total = state.pokemon.length;
   const shinyCount = state.pokemon.filter(p=>p.shiny).length;
@@ -419,14 +568,18 @@ function renderStats(){
 
   const dashOpen = document.getElementById('statsDashboard').classList.contains('open');
   statsBar.innerHTML = `
-    <div class="stat-chip">ROSTER &nbsp;<b>${total}</b></div>
-    <div class="stat-chip">SHINY &nbsp;<b style="color:var(--accent-2)">${shinyCount}</b></div>
+    <div class="stat-chip">ROSTER &nbsp;<b>${reelHTML(total)}</b></div>
+    <div class="stat-chip">SHINY &nbsp;<b style="color:var(--accent-2)">${reelHTML(shinyCount)}</b></div>
     ${topType ? `<div class="stat-chip stat-chip-type">MOST COMMON TYPE &nbsp;<b style="color:${TYPE_HEX[topType[0]]}">${topType[0]}</b></div>` : ''}
     <button type="button" class="stats-toggle-btn ${dashOpen?'open':''}" id="statsToggleBtn">
       Full Stats
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
   `;
+  const reels = statsBar.querySelectorAll('.stat-chip .t-reel');
+  spinReel(reels[0], statsReelPrev.total, total);
+  spinReel(reels[1], statsReelPrev.shiny, shinyCount);
+  statsReelPrev = { total, shiny: shinyCount };
   document.getElementById('statsToggleBtn').addEventListener('click', (e) => {
     const panel = document.getElementById('statsDashboard');
     const willOpen = !panel.classList.contains('open');
@@ -769,7 +922,7 @@ function renderGrid(){
   const q = searchInput.value.trim();
   const tFilter = typeFilterValue;
   const gFilter = gameFilterValue;
-  const sortMode = sortFilter.value;
+  const sortMode = currentSortValue();
 
   const signature = JSON.stringify([q, tFilter, gFilter, sortMode, shinyOnly, megaOnly, gigantamaxOnly, gridDensity]);
   if(signature !== gridFilterSignature){
@@ -787,7 +940,9 @@ function renderGrid(){
   );
 
   if(sortMode === 'name') list = [...list].sort((a,b)=>a.nickname.localeCompare(b.nickname));
+  else if(sortMode === 'name-desc') list = [...list].sort((a,b)=>b.nickname.localeCompare(a.nickname));
   else if(sortMode === 'species') list = [...list].sort((a,b)=>a.species.localeCompare(b.species));
+  else if(sortMode === 'species-desc') list = [...list].sort((a,b)=>b.species.localeCompare(a.species));
   else if(sortMode === 'oldest') { /* natural insertion order already = oldest first */ }
   else list = [...list].reverse();
 
@@ -797,7 +952,7 @@ function renderGrid(){
     return;
   }
   if(list.length === 0){
-    gridWrap.innerHTML = emptyStateHTML("No matches", "Try a different search term or clear your filters.");
+    gridWrap.innerHTML = emptyStateHTML("No matches", "Try a different search term or clear your filters.", true);
     scheduleAutosave();
     return;
   }
@@ -840,13 +995,45 @@ function observeGridLoadMore(){
   gridLoadMoreObserver.observe(sentinel);
 }
 
-function emptyStateHTML(title, body){
+function emptyStateHTML(title, body, showClearFilters){
   return `<div class="empty">
     <div class="brand-mark large"></div>
     <h3>${title}</h3>
     <p>${body}</p>
-    <button class="btn primary" onclick="openForm()">Add Pokémon</button>
+    <div class="empty-actions">
+      <button class="btn primary" onclick="openForm()">Add Pokémon</button>
+      ${showClearFilters ? `<button type="button" class="btn ghost" onclick="clearAllFilters()">Clear Filters</button>` : ''}
+    </div>
   </div>`;
+}
+
+// Resets every search/filter control back to its default so "No matches" always has a
+// one-click way out, instead of making the user hunt down and undo each filter by hand.
+function clearAllFilters(){
+  searchInput.value = '';
+  typeFilterValue = '';
+  gameFilterValue = '';
+  shinyOnly = false;
+  megaOnly = false;
+  gigantamaxOnly = false;
+
+  renderTypeFilterPanel();
+  updateTypeFilterTrigger();
+  renderGameFilterPanel();
+  updateGameFilterTrigger();
+
+  const shinyBtn = document.getElementById('shinyFilterBtn');
+  shinyBtn.classList.remove('active');
+  shinyBtn.setAttribute('aria-pressed', 'false');
+  const megaBtn = document.getElementById('megaFilterBtn');
+  megaBtn.classList.remove('active');
+  megaBtn.setAttribute('aria-pressed', 'false');
+  const gigantamaxBtn = document.getElementById('gigantamaxFilterBtn');
+  gigantamaxBtn.classList.remove('active');
+  gigantamaxBtn.setAttribute('aria-pressed', 'false');
+
+  updateSearchClearBtn();
+  renderGrid();
 }
 
 function sparkleParticlesHTML(seed){
@@ -879,6 +1066,8 @@ function resolveDisplaySprite(p){
 
 function formBadgeRowHTML(p){
   const badges = [];
+  if(p.pokerus === 'infected') badges.push(`<span class="pokerus-badge infected" title="Infected with Pokérus"><img src="${POKERUS_INFECTED_ICON}" alt="Infected"></span>`);
+  else if(p.pokerus === 'cured') badges.push(`<span class="pokerus-badge cured" title="Recovered from Pokérus"><img src="${POKERUS_CURED_ICON}" alt="Cured"></span>`);
   if(p.shiny) badges.push(`<span class="shiny-badge" title="Shiny"><img src="${SHINY_ICON}" alt="Shiny"></span>`);
   if(p.isMega){
     const active = p.preferredForm === 'mega';
@@ -970,14 +1159,25 @@ function cardHTML(p){
   const a2 = isLight ? 0.24 : 0.18;
   const tint1 = hexToRgba(TYPE_HEX[cardTypes[0]] || '#4FD1C5', a1);
   const tint2 = hexToRgba(TYPE_HEX[cardTypes[1]] || cardTypes[0] && TYPE_HEX[cardTypes[0]] || '#4FD1C5', a2);
-  const borderColor = hexToRgba(primaryColor, 0.45);
+  // Pokérus reuses the same "tint the persistent border" trick Shiny uses (see .card.is-shiny),
+  // rather than a separate hover-only ring, so it reads as a real card status rather than a
+  // hover effect. Infected additionally weaves its color into the middle of the card's own
+  // type-blend gradient; Cured keeps the border tint but the gradient goes back to plain.
+  let borderColor = hexToRgba(primaryColor, 0.45);
+  let midTintStyle = '';
+  if(p.pokerus === 'infected'){
+    borderColor = hexToRgba('#eb3cae', 0.6);
+    midTintStyle = `--type-tint-mid:${hexToRgba('#fe50d3', isLight ? 0.34 : 0.28)};`;
+  } else if(p.pokerus === 'cured'){
+    borderColor = hexToRgba('#eb3cae', 0.6);
+  }
   const displaySprite = resolveDisplaySprite(p);
   const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
   const formSuffix = (p.preferredForm === 'mega' && p.megaForm) ? ' ' + p.megaForm.toUpperCase() : '';
   const footerInfo = cardFooterInfoHTML(p);
   const [glowC1, glowC2, glowC3] = typeGlowColors(p);
   return `
-  <div class="card ${p.shiny ? 'is-shiny' : ''}" style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; border-color:${borderColor}; --glow-c1:${glowC1}; --glow-c2:${glowC2}; --glow-c3:${glowC3}" onclick="openDetail('${p.id}')">
+  <div class="card ${p.shiny ? 'is-shiny' : ''} ${p.pokerus === 'infected' ? 'pokerus-infected' : ''} ${p.pokerus === 'cured' ? 'pokerus-cured' : ''}" style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; ${midTintStyle} border-color:${borderColor}; --glow-c1:${glowC1}; --glow-c2:${glowC2}; --glow-c3:${glowC3}" onclick="openDetail('${p.id}')">
     <span class="card-glow-ring" aria-hidden="true"></span>
     <span class="card-glow-halo" aria-hidden="true"></span>
     ${formBadgeRowHTML(p)}

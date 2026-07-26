@@ -175,6 +175,7 @@ function normalizePokemon(p){
   if(p.preferredForm === 'mega' && !p.isMega) p.preferredForm = 'default';
   if(p.preferredForm === 'gigantamax' && !p.isGigantamax) p.preferredForm = 'default';
   if(!p.isMega) p.megaForm = '';
+  if(p.pokerus !== 'infected' && p.pokerus !== 'cured') p.pokerus = 'none';
 
   // Achievements: ribbons/marks/misc selections, Memory Ribbon sub-collections, custom
   // achievements, partner trainer name (for the dynamic Partner Ribbon title), custom
@@ -966,6 +967,8 @@ function openDetail(id){
             <div class="card-id" style="font-size:12px;">${dexPrefixHTML(p)}${formPrefix}${escapeHTML(p.species.toUpperCase())}${escapeHTML(formSuffix)}</div>
             <div style="font-family:var(--nickname-font); font-weight:800; font-size:26px; letter-spacing:-0.02em; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <span>${titledNicknameHTML(p)}</span>
+              ${p.pokerus === 'infected' ? `<img src="${POKERUS_INFECTED_ICON}" alt="Infected" title="Infected with Pokérus" style="width:20px;height:20px;">` : ''}
+              ${p.pokerus === 'cured' ? `<img src="${POKERUS_CURED_ICON}" alt="Cured" title="Recovered from Pokérus" style="width:20px;height:20px;">` : ''}
               ${p.shiny ? `<img src="${SHINY_ICON}" alt="Shiny" title="Shiny" style="width:20px;height:20px;">` : ''}
               ${(p.isMega || p.isGigantamax) ? `<span class="detail-form-switcher">
                 ${p.isMega ? `<button type="button" class="detail-form-switch-btn ${p.preferredForm==='mega'?'active':''}" title="${p.preferredForm==='mega' ? 'Showing Mega Evolution, click to switch to Default' : 'Switch to Mega Evolution'}" onclick="setPreferredForm('${p.id}','mega'); closeDetail(); openDetail('${p.id}')"><img src="${MEGA_ICON}" alt="Mega Evolution"></button>` : ''}

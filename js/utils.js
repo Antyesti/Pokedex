@@ -161,6 +161,8 @@ async function applyFileToState(file){
   const data = normalizeImportedData(JSON.parse(text));
   state = data;
   pendingDeletions = [];
+  historyBarVisible = false;
+  updateHistoryBar();
   applySettings();
   render();
   showToast(`Loaded ${data.pokemon.length} Pokémon from ${file.name}.`);
@@ -198,15 +200,30 @@ document.getElementById('lastFileDismiss')?.addEventListener('click', (e) => {
 
 /* ============== TOAST ============== */
 let toastTimer = null;
-function showToast(msg, action){
+// Only one toast is ever showing at a time, so only one "vanish" callback needs tracking.
+// A toast counts as vanished once it's no longer visible and its action (if any) wasn't
+// used to handle whatever it was offering -- either it timed out, or a newer toast replaced
+// it before the person acted on it.
+let toastVanishCallback = null;
+
+function showToast(msg, action, opts){
   const t = document.getElementById('toast');
   const actionBtn = document.getElementById('toastAction');
+
+  if(toastVanishCallback){
+    const cb = toastVanishCallback;
+    toastVanishCallback = null;
+    cb();
+  }
+  toastVanishCallback = (opts && opts.onVanish) || null;
+
   document.getElementById('toastMsg').textContent = msg;
   if(action){
     actionBtn.textContent = action.label;
     actionBtn.style.display = 'inline-flex';
     actionBtn.onclick = () => {
-      // Just call the action; showToast inside it will manage visibility
+      // The action handled it directly, so this isn't a vanish.
+      toastVanishCallback = null;
       action.onClick();
     };
   } else {
@@ -217,6 +234,39 @@ function showToast(msg, action){
   t.offsetHeight; // flush reflow so removal registers before re-add
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> t.classList.remove('show'), action ? 8000 : 2600);
+  toastTimer = setTimeout(()=> {
+    t.classList.remove('show');
+    if(toastVanishCallback){
+      const cb = toastVanishCallback;
+      toastVanishCallback = null;
+      cb();
+    }
+  }, action ? 8000 : 2600);
 }
+
+// Any .switch, anywhere (Shiny, Mega, Gigantamax, Settings, future ones too) gets the
+// bounce on its first toggle. Delegated on document so it works on switches that don't
+// exist yet when this script runs (modals build their content dynamically), without
+// needing separate wiring per checkbox.
+document.addEventListener('change', (e) => {
+  if(e.target.matches('input[type="checkbox"]')){
+    const sw = e.target.closest('.switch');
+    if(sw) sw.classList.add('is-init');
+  }
+});
+
+/* ============== SCROLL TO TOP ============== */
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+let scrollTopTicking = false;
+window.addEventListener('scroll', () => {
+  if(scrollTopTicking) return;
+  scrollTopTicking = true;
+  requestAnimationFrame(() => {
+    scrollTopBtn.classList.toggle('show', window.scrollY > 480);
+    scrollTopTicking = false;
+  });
+}, { passive: true });
+scrollTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 

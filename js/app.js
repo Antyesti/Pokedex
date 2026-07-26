@@ -214,10 +214,12 @@ function openSettings(){
         <div class="field">
           <label>Default Sort</label>
           <select id="settingsDefaultSort">
-            <option value="recent" ${s.defaultSort==='recent'?'selected':''}>Sort: Recently Added</option>
-            <option value="oldest" ${s.defaultSort==='oldest'?'selected':''}>Sort: Oldest Added</option>
-            <option value="name" ${s.defaultSort==='name'?'selected':''}>Sort: Name (A–Z)</option>
-            <option value="species" ${s.defaultSort==='species'?'selected':''}>Sort: Species (A–Z)</option>
+            <option value="recent" ${s.defaultSort==='recent'?'selected':''}>Sort by Recently Added</option>
+            <option value="oldest" ${s.defaultSort==='oldest'?'selected':''}>Sort by Oldest Added</option>
+            <option value="name" ${s.defaultSort==='name'?'selected':''}>Sort by Nickname (A–Z)</option>
+            <option value="name-desc" ${s.defaultSort==='name-desc'?'selected':''}>Sort by Nickname (Z–A)</option>
+            <option value="species" ${s.defaultSort==='species'?'selected':''}>Sort by Species (A–Z)</option>
+            <option value="species-desc" ${s.defaultSort==='species-desc'?'selected':''}>Sort by Species (Z–A)</option>
           </select>
         </div>
         <div class="field" style="margin-top:16px;">
@@ -596,6 +598,15 @@ function saveSettings(){
 
 document.getElementById('settingsBtn').addEventListener('click', openSettings);
 
+// Restarts the shake even if the field is still marked invalid from the previous
+// attempt: removing the class, forcing a reflow, then re-adding it is what makes the
+// CSS animation replay instead of silently no-op'ing on an unchanged class list.
+function shakeField(el){
+  el.classList.remove('is-shaking');
+  void el.offsetWidth;
+  el.classList.add('is-shaking');
+}
+
 function saveForm(id){
   document.getElementById('f_species').classList.remove('field-error');
   document.getElementById('typeSwatches').classList.remove('field-error');
@@ -605,6 +616,7 @@ function saveForm(id){
   if(!species){
     const el = document.getElementById('f_species');
     el.classList.add('field-error');
+    shakeField(el);
     el.focus();
     el.scrollIntoView({ behavior:'smooth', block:'center' });
     showToast('Species is required.');
@@ -613,6 +625,7 @@ function saveForm(id){
   if(selectedTypes.length === 0){
     const el = document.getElementById('typeSwatches');
     el.classList.add('field-error');
+    shakeField(el);
     el.scrollIntoView({ behavior:'smooth', block:'center' });
     showToast('At least one Type is required.');
     return;
@@ -639,6 +652,7 @@ function saveForm(id){
     nature: document.getElementById('f_nature').value.trim(),
     gender: selectedGender,
     shiny: document.getElementById('f_shiny').checked,
+    pokerus: selectedPokerus,
     metLocation: document.getElementById('metLocEdit').innerHTML.trim(),
     metDate: document.getElementById('f_metDate').value,
     ball: document.getElementById('f_ball').value.trim(),
@@ -671,6 +685,9 @@ function saveForm(id){
    clicking Undo always restores the most recently deleted entry, and clicking it again restores
    the one before that, instead of earlier deletions being silently overwritten/lost. */
 let pendingDeletions = [];
+// True once the deletion toast has vanished (timed out or been replaced) while deletions
+// are still pending -- that's the signal to reveal the History button as a fallback.
+let historyBarVisible = false;
 
 function deletePokemon(id){
   const idx = state.pokemon.findIndex(x=>x.id===id);
@@ -678,6 +695,8 @@ function deletePokemon(id){
   const [removed] = state.pokemon.splice(idx, 1);
   pendingDeletions.push({ pokemon: removed, idx });
   render();
+  historyBarVisible = false;
+  updateHistoryBar();
   const count = pendingDeletions.length;
   const msg = count > 1
     ? `${removed.nickname} removed. (${count} to undo)`
@@ -685,15 +704,34 @@ function deletePokemon(id){
   showToast(msg, {
     label: 'Undo',
     onClick: undoLastDeletion
+  }, {
+    onVanish: () => {
+      if(pendingDeletions.length > 0){
+        historyBarVisible = true;
+        updateHistoryBar();
+      }
+    }
   });
 }
 
-function undoLastDeletion(){
-  const entry = pendingDeletions.pop();
-  if(!entry) return;
+// Shared restore logic for both "Undo" on the toast and "Restore" from the History panel --
+// finds the entry by pokemon id (rather than assuming it's last) so History can restore any
+// pending deletion, not just the most recent one.
+function restoreDeletionCore(pokemonId){
+  const i = pendingDeletions.findIndex(e => e.pokemon.id === pokemonId);
+  if(i === -1) return null;
+  const [entry] = pendingDeletions.splice(i, 1);
   const insertAt = Math.min(entry.idx, state.pokemon.length);
   state.pokemon.splice(insertAt, 0, entry.pokemon);
   render();
+  updateHistoryBar();
+  return entry;
+}
+
+function undoLastDeletion(){
+  if(pendingDeletions.length === 0) return;
+  const entry = restoreDeletionCore(pendingDeletions[pendingDeletions.length - 1].pokemon.id);
+  if(!entry) return;
   const remaining = pendingDeletions.length;
   if(remaining > 0){
     const msg = remaining > 1
@@ -702,10 +740,87 @@ function undoLastDeletion(){
     showToast(msg, {
       label: 'Undo',
       onClick: undoLastDeletion
+    }, {
+      onVanish: () => {
+        if(pendingDeletions.length > 0){
+          historyBarVisible = true;
+          updateHistoryBar();
+        }
+      }
     });
   } else {
     showToast(`${entry.pokemon.nickname} restored.`);
   }
+}
+
+/* ============== HISTORY (deletion safety net) ============== */
+/* Once a deletion toast expires without being undone, the History button becomes the
+   fallback: it stays hidden the rest of the time so it doesn't clutter the page, and only
+   ever lists Pokémon that were deleted and haven't been restored yet. */
+function updateHistoryBar(){
+  const bar = document.getElementById('historyBar');
+  if(!bar) return;
+  const show = historyBarVisible && pendingDeletions.length > 0;
+  bar.style.display = show ? 'flex' : 'none';
+  if(show) document.getElementById('historyCount').textContent = pendingDeletions.length;
+  if(pendingDeletions.length === 0) closeHistory();
+  else renderHistoryModalBody();
+}
+
+function historyEntryHTML(entry){
+  const p = entry.pokemon;
+  const sprite = resolveDisplaySprite(p);
+  return `
+    <div class="history-entry">
+      <div class="history-entry-sprite">${sprite ? `<img src="${escapeAttr(sprite)}">` : '<div class="brand-mark mini"></div>'}</div>
+      <div class="history-entry-info">
+        <div class="history-entry-name">${escapeHTML(p.nickname)}</div>
+        <div class="history-entry-species">${escapeHTML(p.species)}</div>
+      </div>
+      <button type="button" class="btn ghost" onclick="restoreDeletionFromHistory('${p.id}')">Restore</button>
+    </div>
+  `;
+}
+
+function renderHistoryModalBody(){
+  const body = document.getElementById('historyModalBody');
+  if(!body) return;
+  body.innerHTML = [...pendingDeletions].reverse().map(historyEntryHTML).join('');
+}
+
+function openHistory(){
+  if(pendingDeletions.length === 0) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'historyOverlay';
+  overlay.onclick = (e) => { if(e.target === overlay) closeHistory(); };
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-head">
+        <div>
+          <h2 style="font-family:var(--sans); font-size:22px; font-weight:800; letter-spacing:-0.01em; margin:0;">History</h2>
+          <div class="hint" style="margin-top:4px;">Recently deleted Pokémon you can still bring back.</div>
+        </div>
+        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeHistory()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+      </div>
+      <div class="modal-body" id="historyModalBody"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  renderHistoryModalBody();
+}
+
+function closeHistory(){
+  const el = document.getElementById('historyOverlay');
+  if(el) el.remove();
+}
+
+function restoreDeletionFromHistory(pokemonId){
+  const entry = restoreDeletionCore(pokemonId);
+  if(!entry) return;
+  showToast(`${entry.pokemon.nickname} restored.`);
 }
 
 /* hook up the type swatches whenever form opens for editing existing pokemon */
@@ -717,5 +832,6 @@ document.addEventListener('keydown', (e) => {
     closeChangelog();
     closeSettings();
     closeCredits();
+    closeHistory();
   }
 });

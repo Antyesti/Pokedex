@@ -39,6 +39,8 @@
 
 .grid.dense .shiny-badge{ width:16px; height:16px; }
 
+.grid.dense .pokerus-badge{ width:16px; height:16px; }
+
 .grid.dense .type-badge{ font-size:9px; padding:3px 7px; }
 
 .grid.dense .icon-btn{ width:30px; height:30px; }
@@ -69,6 +71,9 @@
   --t-ground:#E0C068; --t-flying:#A890F0; --t-psychic:#F85888; --t-bug:#A8B820;
   --t-rock:#B8A038; --t-ghost:#705898; --t-dragon:#7038F8; --t-dark:#705848;
   --t-steel:#B8B8D0; --t-fairy:#EE99AC;
+  --shake-distance: 6px; --shake-overshoot: 4px;
+  --shake-dur-a: 80ms; --shake-dur-b: 60ms;
+  --shake-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .card{
@@ -83,9 +88,10 @@
   --glow: var(--accent);
   --type-tint-1: rgba(128,128,128,0.18);
   --type-tint-2: rgba(128,128,128,0.18);
+  --type-tint-mid: var(--type-tint-1);
   background:
     linear-gradient(155deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0.03) 100%),
-    linear-gradient(135deg, var(--type-tint-1) 0%, var(--type-tint-2) 100%),
+    linear-gradient(135deg, var(--type-tint-1) 0%, var(--type-tint-mid) 50%, var(--type-tint-2) 100%),
     rgba(15,22,32,0.82);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.14),
@@ -162,6 +168,14 @@
 }
 
 .shiny-badge img{ width:100%; height:100%; display:block; }
+
+.pokerus-badge{
+  width:20px; height:20px;
+  display:block;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.35));
+}
+
+.pokerus-badge img{ width:100%; height:100%; display:block; }
 
 /* still used by .sparkle-particle's holographic shimmer below */
 
@@ -491,6 +505,26 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
   border-radius:10px;
 }
 
+/* Shake plays once per invalid submit attempt. JS toggles .is-shaking off, forces a
+   reflow, then back on, so it replays even if the same field is still marked invalid
+   from the previous attempt. */
+.field-error.is-shaking, .field input.field-error.is-shaking, .field select.field-error.is-shaking,
+.field textarea.field-error.is-shaking, #typeSwatches.field-error.is-shaking{
+  animation: field-error-shake calc(var(--shake-dur-a) * 2 + var(--shake-dur-b) * 2) linear;
+}
+
+@keyframes field-error-shake {
+  0%      { transform: translateX(0);                                animation-timing-function: var(--shake-ease); }
+  28.57%  { transform: translateX(var(--shake-distance));             animation-timing-function: var(--shake-ease); }
+  57.14%  { transform: translateX(calc(var(--shake-distance) * -1));  animation-timing-function: var(--shake-ease); }
+  78.57%  { transform: translateX(var(--shake-overshoot));            animation-timing-function: var(--shake-ease); }
+  100%    { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .is-shaking{ animation:none !important; transform:none !important; }
+}
+
 .field select option{ background:var(--select-option-bg); color:var(--select-option-text); }
 
 .field textarea{ resize:vertical; min-height:54px; font-family:var(--sans); }
@@ -648,6 +682,8 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 
 .switch{
   position:relative; width:42px; height:24px; flex:none; cursor:pointer;
+  --switch-travel: 18px; --switch-ov1: 1px; --switch-ov2: 0px;
+  --switch-dur: 350ms; --switch-ease: cubic-bezier(0.34, 1.35, 0.64, 1);
 }
 
 .switch input{ position:absolute; inset:0; opacity:0; cursor:pointer; margin:0; }
@@ -660,12 +696,35 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 .switch .thumb{
   position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%;
   background:#cfd6dd; box-shadow:0 1px 3px rgba(0,0,0,0.3);
-  transition: transform .2s cubic-bezier(.2,.8,.3,1), background .2s;
+  translate: 0 0; transition: background .2s; will-change: translate;
 }
 
 .switch input:checked ~ .track{ background:linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 85%, transparent), color-mix(in srgb, var(--accent-2) 50%, transparent)); border-color:color-mix(in srgb, var(--accent-2) 60%, transparent); }
 
-.switch input:checked ~ .thumb{ transform:translateX(18px); background:#fff; }
+/* Resting position for each state (covers the very first render, before .is-init
+   exists). Once .is-init is added on first interaction, the bounce keyframes below
+   take over and land on this same final position. */
+.switch input:checked ~ .thumb{ translate: var(--switch-travel) 0; background:#fff; }
+
+.switch.is-init input:checked ~ .thumb{ animation: switch-thumb-on var(--switch-dur) var(--switch-ease) both; }
+.switch.is-init input:not(:checked) ~ .thumb{ animation: switch-thumb-off var(--switch-dur) var(--switch-ease) both; }
+
+@keyframes switch-thumb-on {
+  0% { translate: 0 0; }
+  55% { translate: calc(var(--switch-travel) + var(--switch-ov1)) 0; }
+  80% { translate: calc(var(--switch-travel) - var(--switch-ov2)) 0; }
+  100% { translate: var(--switch-travel) 0; }
+}
+@keyframes switch-thumb-off {
+  0% { translate: var(--switch-travel) 0; }
+  55% { translate: calc(0px - var(--switch-ov1)) 0; }
+  80% { translate: var(--switch-ov2) 0; }
+  100% { translate: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .switch .thumb{ animation:none !important; }
+}
 
 .shiny-field label{ cursor:pointer; }
 
@@ -862,6 +921,37 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 
 .type-filter-row .type-badge{ pointer-events:none; }
 
+/* ---------- SORT DROPDOWN ---------- */
+/* Lives here (after .ball-dropdown's base width:100% earlier in this file) so the
+   width:auto/flex:none override actually takes effect instead of losing the cascade tie. */
+
+.sort-dropdown{ width:auto; flex:none; }
+
+.sort-dropdown-trigger{ width:44px; height:44px; padding:0; justify-content:center; }
+
+.sort-dropdown-trigger svg{ width:18px; height:18px; }
+
+.sort-dropdown-panel{ left:auto; right:0; width:200px; padding:6px; }
+
+.sort-option{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:6px 6px 6px 10px; border-radius:8px; cursor:pointer;
+  font-size:13.5px; color:var(--text-dim); transition:background .12s, color .12s;
+}
+
+.sort-option:hover{ background:rgba(255,255,255,0.07); color:var(--text); }
+
+.sort-option.active{ background:color-mix(in srgb, var(--accent) 14.0%, transparent); color:var(--accent); }
+
+.sort-direction-btn{
+  font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.02em;
+  padding:5px 9px; border-radius:6px; border:1px solid var(--panel-border);
+  background:rgba(255,255,255,0.04); color:inherit; cursor:pointer; white-space:nowrap;
+  transition:border-color .15s, background .15s;
+}
+
+.sort-direction-btn:hover{ border-color:color-mix(in srgb, var(--accent) 55%, transparent); background:rgba(255,255,255,0.09); }
+
 .move-row input{
   background:rgba(255,255,255,0.04); border:1px solid var(--panel-border); border-radius:8px;
   padding:8px 9px; color:var(--text); font-family:var(--sans); font-size:12.5px; outline:none; width:100%;
@@ -1005,6 +1095,44 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
   box-shadow: 0 2px 10px -2px rgba(176,124,255,0.5);
 }
 
+.pokerus-toggle-group{
+  display:flex; gap:4px; padding:4px; border-radius:12px; border:1px solid var(--panel-border);
+  background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01) 60%), var(--panel);
+  backdrop-filter:blur(14px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  width:fit-content;
+}
+
+.pokerus-toggle-btn{
+  height:32px; padding:0 13px; border-radius:8px; border:1px solid transparent; cursor:pointer;
+  font-size:11.5px; font-family:var(--sans); font-weight:700; text-transform:uppercase; letter-spacing:0.03em;
+  background:transparent; color:var(--text-faint);
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  transition: all .18s cubic-bezier(.2,.8,.3,1);
+}
+
+.pokerus-toggle-btn:hover{ color:var(--text); }
+
+.pokerus-toggle-btn img{ width:14px; height:14px; flex:none; }
+
+.pokerus-toggle-btn.infected.active{
+  background: linear-gradient(160deg, rgba(254,80,211,0.32), rgba(254,80,211,0.08));
+  border-color: color-mix(in srgb, #fe50d3 45%, transparent); color:#fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 8px -2px rgba(254,80,211,0.4);
+}
+
+.pokerus-toggle-btn.cured.active{
+  background: linear-gradient(160deg, rgba(235,60,174,0.32), rgba(235,60,174,0.08));
+  border-color: color-mix(in srgb, #eb3cae 45%, transparent); color:#fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 8px -2px rgba(235,60,174,0.4);
+}
+
+.pokerus-toggle-btn.none-status.active{
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 28.0%, transparent), color-mix(in srgb, var(--accent) 8%, transparent));
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent); color:#fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 8px -2px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
 .sprite-slots-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-top:4px; }
 
 .sprite-slot{ display:flex; flex-direction:column; align-items:center; gap:8px; }
@@ -1104,4 +1232,26 @@ footer.bottom{
 
 .footer-legal-note{
   display:inline-block; margin-top:8px; max-width:640px; color:var(--text-faint); font-size:10px; line-height:1.6;
+}
+
+/* Scrolling ticker for the autosave notice. The text is duplicated back to back in
+   `content`, and the animation travels exactly one copy's width (-50% of the doubled
+   string's total width), so the moment it "restarts" the second copy is already sitting
+   exactly where the first one began -- a continuous flow with no visible seam or cut. */
+.ld-marquee{
+  display:inline-block; width:400px; max-width:90%; overflow:hidden; vertical-align:bottom;
+  font-family:var(--mono); font-size:11px; font-weight:600; color:currentColor;
+  letter-spacing:0.12em; white-space:nowrap;
+}
+
+.ld-marquee::after{
+  content:"POKÉDEX · AUTOSAVED IN THIS BROWSER · USE EXPORT FOR A PORTABLE BACKUP · POKÉDEX · AUTOSAVED IN THIS BROWSER · USE EXPORT FOR A PORTABLE BACKUP · ";
+  display:inline-block;
+  animation:footer-marquee 28s linear infinite;
+}
+
+@keyframes footer-marquee{ to{ transform:translateX(-50%); } }
+
+@media (prefers-reduced-motion: reduce){
+  .ld-marquee::after{ animation:none; }
 }
