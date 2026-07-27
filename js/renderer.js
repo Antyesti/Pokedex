@@ -493,7 +493,6 @@ function saveTrainerName(){
 // straight to the final digits on first render, when the digit count changes (e.g. going
 // from 9 to 10), or when the person prefers reduced motion -- spinning "from nothing"
 // wouldn't mean anything in any of those cases.
-const REEL_CELL = 18; // px, matches --reel-cell
 let reelFilterCounter = 0;
 let statsReelPrev = { total: null, shiny: null };
 
@@ -530,10 +529,14 @@ function spinReel(container, prevValue, value){
     const filterId = col.dataset.filter;
     const filterEl = document.querySelector(`#${filterId} feGaussianBlur`);
     const digit = Number(digitsStr[i]);
+    // Read the actually-rendered cell height rather than assuming a fixed px value, since
+    // --reel-cell shrinks under the mobile breakpoint -- a hardcoded number here would
+    // desync from that and land each digit at the wrong offset inside its own window.
+    const cellHeight = col.getBoundingClientRect().height;
 
     if(skip){
       strip.style.transition = 'none';
-      strip.style.transform = `translateY(${-digit * REEL_CELL}px)`;
+      strip.style.transform = `translateY(${-digit * cellHeight}px)`;
       if(filterEl) filterEl.setAttribute('stdDeviation', '0 0');
       return;
     }
@@ -543,7 +546,7 @@ function spinReel(container, prevValue, value){
     const delay = i * stagger;
     strip.style.transition = `transform ${dur}ms cubic-bezier(0.16,1,0.3,1) ${delay}ms`;
     requestAnimationFrame(() => {
-      strip.style.transform = `translateY(${-targetCell * REEL_CELL}px)`;
+      strip.style.transform = `translateY(${-targetCell * cellHeight}px)`;
     });
 
     if(filterEl){

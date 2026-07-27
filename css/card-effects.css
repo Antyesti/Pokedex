@@ -58,6 +58,15 @@
     inset 0 0 54px 8px var(--glow-c3, transparent);
 }
 
+/* Pokérus tints the hover ring solid, matching the persistent border-color set in JS,
+   so the "border glow" reads the same whether the card is being looked at at rest or
+   while hovered/tilted. The background gradient's own middle stop (--type-tint-mid) is
+   what carries the Infected-only color into the card itself; this is just the ring. */
+.card.pokerus-infected .card-glow-ring,
+.card.pokerus-cured .card-glow-ring{
+  background: #eb3cae;
+}
+
 @media (prefers-reduced-motion: reduce){
   .card-glow-ring,
   .card-glow-halo{ display:none; }

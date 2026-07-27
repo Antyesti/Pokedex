@@ -36,9 +36,26 @@
 
 html,body{margin:0;padding:0;}
 
+/* Static fallback so that if a scroll-repaint gap ever does slip through, it shows the
+   theme's own base color instead of the browser's default (often white, sometimes a
+   flash of black on mobile) blank tile. */
+html{ background:var(--bg); }
+
 body.modal-open{ overflow:hidden; }
 
 body{
+  color:var(--text);
+  font-family:var(--sans);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Ambient drifting gradient. Fixed and sized to the viewport (not the page), so it costs
+   the same to rasterize whether the roster is 5 Pokemon or 500 -- animating this directly
+   on body previously meant its size scaled with the whole scrollable page. */
+body::after{
+  content:"";
+  position:fixed; inset:0;
   background:
     radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 45%),
     radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--accent-2) 8%, transparent), transparent 50%),
@@ -46,14 +63,12 @@ body{
     var(--bg);
   background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
   animation: ambientDrift 50s ease-in-out infinite alternate;
-  color:var(--text);
-  font-family:var(--sans);
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
+  pointer-events:none;
+  z-index:-1;
 }
 
 @media (prefers-reduced-motion: reduce){
-  body{ animation:none; }
+  body::after{ animation:none; }
   .stats-dashboard{ transition:none; }
 }
 
@@ -505,7 +520,6 @@ html[data-theme="custom"]:not([data-style="neumorphic"]) .t-clear-glow{ mix-blen
   #typeFilter, #gameFilter{ flex:1 1 calc(50% - 6px); min-width:0; }
   .game-filter-dropdown, .type-filter-dropdown{ min-width:0; }
   .filter-toggle{ flex:1 1 calc(33.33% - 8px); justify-content:center; }
-  .view-toggle{ flex:1 1 100%; justify-content:center; }
 }
 
 .view-toggle{

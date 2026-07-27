@@ -8,6 +8,8 @@
 
   const TILT_DIVISOR = 20; // higher = subtler tilt
   let activeCard = null;
+  let pendingX = 0, pendingY = 0;
+  let rafScheduled = false;
 
   function resetCard(card){
     card.style.transform = '';
@@ -39,6 +41,11 @@
     card.style.setProperty('--glow-angle', `${angle.toFixed(1)}deg`);
   }
 
+  // pointermove can fire well over 100 times/sec on a fast mouse. The rect is measured once
+  // per animation frame here (inside the rAF callback, right before it's used), not once per
+  // raw event -- that's the actual fix for the layout-thrashing cost, and it stays correct
+  // even if the page scrolls while the pointer holds still over the same card, since it's
+  // never reused across frames.
   gridWrap.addEventListener('pointermove', (e) => {
     if(e.pointerType === 'touch') return;
     const card = e.target.closest('.card');
@@ -47,8 +54,17 @@
       activeCard = card;
     }
     if(!card) return;
-    const rect = card.getBoundingClientRect();
-    updateCard(card, e.clientX - rect.left, e.clientY - rect.top, rect);
+    pendingX = e.clientX;
+    pendingY = e.clientY;
+    if(!rafScheduled){
+      rafScheduled = true;
+      requestAnimationFrame(() => {
+        rafScheduled = false;
+        if(!activeCard) return;
+        const rect = activeCard.getBoundingClientRect();
+        updateCard(activeCard, pendingX - rect.left, pendingY - rect.top, rect);
+      });
+    }
   });
 
   gridWrap.addEventListener('pointerleave', () => {

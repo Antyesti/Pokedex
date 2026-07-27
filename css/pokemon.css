@@ -481,7 +481,9 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 .identity-row{ grid-column:span 2; display:grid; grid-template-columns:2fr 1fr; gap:14px; }
 
 @media (max-width: 560px){
-  .identity-row{ grid-template-columns:1fr; }
+  .form-grid{ grid-template-columns:1fr; }
+  .field.span-2{ grid-column:span 1; }
+  .identity-row{ grid-template-columns:1fr; grid-column:span 1; }
 }
 
 .field label{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-dim); }
@@ -1247,10 +1249,13 @@ footer.bottom{
 .ld-marquee::after{
   content:"POKÉDEX · AUTOSAVED IN THIS BROWSER · USE EXPORT FOR A PORTABLE BACKUP · POKÉDEX · AUTOSAVED IN THIS BROWSER · USE EXPORT FOR A PORTABLE BACKUP · ";
   display:inline-block;
+  transform:translate3d(0,0,0);
+  will-change:transform;
+  backface-visibility:hidden;
   animation:footer-marquee 28s linear infinite;
 }
 
-@keyframes footer-marquee{ to{ transform:translateX(-50%); } }
+@keyframes footer-marquee{ to{ transform:translate3d(-50%,0,0); } }
 
 @media (prefers-reduced-motion: reduce){
   .ld-marquee::after{ animation:none; }

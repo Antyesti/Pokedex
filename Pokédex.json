@@ -2,7 +2,7 @@
   "trainer": "Ash",
   "settings": {
     "defaultSort": "oldest",
-    "defaultTheme": "light",
+    "defaultTheme": "custom",
     "custom": {
       "style": "glass",
       "bg": "#0B0F14",
@@ -86,7 +86,8 @@
         "leaf_crown": []
       },
       "megaForm": "",
-      "customTitleFields": {}
+      "customTitleFields": {},
+      "pokerus": "infected"
     }
   ]
 }

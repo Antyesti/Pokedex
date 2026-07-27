@@ -33,10 +33,16 @@ const bodyScrollObserver = new MutationObserver(() => {
   if(overlay && overlay !== activeModalEl){
     focusBeforeModal = document.activeElement;
     activeModalEl = overlay;
-    const focusable = getFocusableEls(overlay);
-    const explicit = focusable.find(el => el.hasAttribute('data-autofocus'));
-    const preferred = explicit || focusable.find(el => !el.classList.contains('modal-close') && !el.hasAttribute('data-no-autofocus')) || focusable[0];
-    if(preferred) preferred.focus();
+    // Auto-focus is for keyboard/screen-reader users landing somewhere sensible; on a touch
+    // device it can instead pop open a native <select> picker the instant the modal appears,
+    // before the person has tapped anything, so skip it there entirely.
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if(!isTouch){
+      const focusable = getFocusableEls(overlay);
+      const explicit = focusable.find(el => el.hasAttribute('data-autofocus'));
+      const preferred = explicit || focusable.find(el => !el.classList.contains('modal-close') && !el.hasAttribute('data-no-autofocus')) || focusable[0];
+      if(preferred) preferred.focus();
+    }
   } else if(!overlay && activeModalEl){
     activeModalEl = null;
     if(focusBeforeModal && document.body.contains(focusBeforeModal)) focusBeforeModal.focus();

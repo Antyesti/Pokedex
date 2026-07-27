@@ -76,6 +76,13 @@ const CHANGELOG = [
       {
         title: "Bug fixes",
         items: [
+          "Fixed the Pokérus border tint not showing up on the card.",
+          "Fixed Settings opening a native picker (Default Sort) automatically on mobile the instant the modal appeared.",
+          "Fixed the Roster/Shiny stat counters rendering misaligned on mobile.",
+          "Fixed the grid density and sort controls wrapping onto separate lines on mobile, with a lot of empty space around the density control.",
+          "Fixed Nature, Shiny, and Forms being squeezed into a half-width column in the edit form on mobile.",
+          "Fixed the footer ticker still showing a visible seam and a repaint hitch each time it looped.",
+          "Fixed black bars flashing in during fast scrolling in the Beast Ball theme.",
           "Fixed the Species field and its autocomplete picker being cramped and hard to use on mobile.",
           "Fixed the page scrolling behind an open modal on mobile.",
           "Fixed Pokémon cards staying visually \"stuck\" in their hover state after a tap on touch devices.",
