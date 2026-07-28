@@ -17,6 +17,11 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
 - Add / edit / delete Pokémon with nickname, species, up to two types (with
   official type colors), nature (with stat up/down tooltip), gender, and a
   shiny toggle.
+- **Pokérus** status: Infected / None / Cured, set from a segmented toggle
+  in the edit form. Infected and Cured each get a badge (left of the Shiny
+  badge) on the card and in the detail view. Infected blends its color into
+  the card's own type gradient as a middle stop and tints the card border;
+  Cured keeps the border tint but drops the gradient blend.
 - **Memories** section per Pokémon: rich-text Met Location (supports
   superscript, e.g. for footnotes/ordinal marks), Met Date, Housed Poké Ball,
   Origin Game, Last Game, and rich-text Trainer Notes (bold, italic,
@@ -64,21 +69,27 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
 ### 🌐Browsing, search & filtering
 - Live search across nickname, species, nature, ball, moves, notes, and
   earned achievements (ribbons, marks, and other catalog/custom entries).
+  An inline × button clears the search box.
 - Filter by type, by Origin Game (auto-populated from the roster), shiny
-  only, Mega only, or Gigantamax only. Filters can be combined.
-- Sort by recently added, oldest added, name (A-Z), or species (A-Z).
-- Cozy (3-per-row) or dense (6-per-row) grid density toggle.
-- Card view shows type badges, ball/shiny/form icons, origin to last game
-  label, and animated sparkle particles for shiny Pokémon.
+  only, Mega only, or Gigantamax only. Filters can be combined. A "Clear
+  Filters" button appears on the no-matches empty state.
+- Sort via a compact ⇅ dropdown with three keys: Added, Species, Nickname.
+  Each key remembers its own direction independently (Oldest/Newest for
+  Added, A-Z/Z-A for Species and Nickname), so switching keys doesn't reset
+  the direction picked for the others.
+- Cozy (3-per-row) or dense (6-per-row) grid density toggle, next to Sort.
+- Card view shows type badges, ball/shiny/form/Pokérus icons, origin to last
+  game label, and animated sparkle particles for shiny Pokémon.
 - The grid loads in batches (24 at a time) and loads more automatically as
   you scroll, or via a "Load more" button, so large rosters stay responsive.
+- A scroll-to-top button appears once you've scrolled past the header.
 
 ### 🖼️Share as image
 - Each card has a Share button (grid view and detail view) that exports it
   as a PNG, including its full list of earned achievements.
 - If a Pokémon's uploaded sprite is an animated PNG or GIF, the exported
   card is itself an animated image with the sprite playing in place.
-  Settings has an Animated Sprite Format option (Animated PNG or GIF) —
+  Settings has an Animated Sprite Format option (Animated PNG or GIF):
   APNG only animates reliably in browsers, GIF plays almost everywhere
   (phone galleries, Discord, Slack).
 - On mobile, sharing uses the device's native share sheet (file sharing);
@@ -97,7 +108,10 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
   System Access API to save/reopen the same file directly (with a "Load last
   file" chip to reopen it next session), falling back to standard
   download/upload dialogs elsewhere.
-- Deleting a Pokémon shows an "Undo" action in a toast notification.
+- Deleting a Pokémon shows an "Undo" action in a toast notification. Once
+  that toast expires with the deletion still pending, a History button
+  appears above the footer to restore any pending deletion individually,
+  not just the most recent one; it stays hidden otherwise.
 - The roster, trainer name, and settings autosave to the browser's
   `localStorage` after every change and are restored automatically on the
   next visit. Export remains the way to back up a roster or move it to
@@ -119,6 +133,12 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
 - Changelog and Credits panels linked from the footer.
 - `Escape` key closes any open detail view, edit form, or changelog panel.
 - Toast notifications for import/export/save/undo feedback.
+- Micro-interactions: switches (Shiny, Mega, Gigantamax, Settings) settle
+  into place with a double-bounce; an invalid form field shakes along with
+  its red border; clearing the search box flies the old text out with a
+  directional light streak; the Roster/Shiny stat counters spin like an
+  odometer digit reel on change; the footer's autosave notice scrolls as a
+  continuous ticker. All respect `prefers-reduced-motion`.
 
 ## Project structure
 
@@ -133,14 +153,14 @@ css/
   card-effects.css       3D Hover glow effects for individual cards
   species-picker.css       Styling for the Species database
 js/
-  app.js                 Data model, state, form handling, keyboard shortcuts
-  achievements.js        Achievement catalog logic, title resolution, Memory Ribbon UI
-  renderer.js            Card/grid rendering, stats dashboard, date picker, ball/type UI
+  app.js                 Data model, state, form handling, keyboard shortcuts, deletion/undo/History
+  achievements.js        Achievement catalog logic, title resolution, Memory Ribbon UI, detail view
+  renderer.js            Card/grid rendering, stats dashboard (with digit-reel counters), sort/filter state, date picker, ball/type UI
   pokemon.js             Add/Edit form modal, import/export
   species-picker.js             The handling for the species picker
-  card-effects.js             The handling for card effects
-  filters.js             Filter and search hooks
-  utils.js               Autosave (localStorage), File System Access API helpers, toast notifications
+  card-effects.js             3D hover tilt + border glow, rAF-batched pointer tracking
+  filters.js             Filter, search, and search-clear transition
+  utils.js               Autosave (localStorage), File System Access API helpers, toast/modal-focus/scroll-to-top
   share.js               Share-as-image: single-card and full-roster PNG/APNG export
   vendor/
     pako.min.js           Deflate/inflate (UPNG.js dependency)
@@ -206,3 +226,20 @@ Access API helpers (`js/utils.js`) target Chromium-based browsers. The File
 System Access API in particular has no effect outside Chromium. On other
 browsers, saving/loading falls back to standard file download/upload
 dialogs.
+
+## Performance notes
+
+- The ambient gradient behind the app (`body::after`) is `position: fixed`
+  and sized to the viewport, not the page, so its cost stays constant
+  regardless of roster size. Animating a large gradient directly on `body`
+  scales with total page height and can outrun the compositor during a fast
+  fling, leaving unpainted tiles that read as black bars against a dark
+  theme's background.
+- Card hover tilt (`js/card-effects.js`) batches pointer input to one
+  `requestAnimationFrame` per card and re-measures `getBoundingClientRect()`
+  fresh each frame rather than caching it, so it can't go stale if the page
+  scrolls mid-hover while still avoiding a synchronous layout read on every
+  raw `pointermove` event.
+- Grid pagination (24 cards per batch via `IntersectionObserver`) keeps the
+  number of simultaneously backdrop-filtered/glow-ringed card elements
+  bounded regardless of roster size.
