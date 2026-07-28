@@ -516,6 +516,7 @@ html[data-theme="custom"]:not([data-style="neumorphic"]) .t-clear-glow{ mix-blen
 }
 
 @media (max-width: 560px){
+  .toolbar{ justify-content:center; }
   .search-wrap{ flex:1 1 100%; max-width:none; min-width:0; }
   #typeFilter, #gameFilter{ flex:1 1 calc(50% - 6px); min-width:0; }
   .game-filter-dropdown, .type-filter-dropdown{ min-width:0; }
