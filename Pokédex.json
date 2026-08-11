@@ -5,23 +5,26 @@
     "defaultTheme": "custom",
     "custom": {
       "style": "glass",
-      "bg": "#0B0F14",
-      "text": "#E8EDF2",
-      "accent": "#9B5DE5",
-      "accent2": "#F2C14E"
+      "bg": "#0b0f14",
+      "text": "#e8edf2",
+      "accent": "#9b5de5",
+      "accent2": "#f2c14e"
     },
     "bodyFont": {
-      "type": "google",
-      "googleName": "Quicksand",
+      "type": "default",
+      "googleName": "",
       "localName": "",
       "localData": ""
     },
     "nicknameFont": {
-      "type": "google",
-      "googleName": "Luxurious Roman",
+      "type": "default",
+      "googleName": "",
       "localName": "",
       "localData": ""
-    }
+    },
+    "shareFormat": "gif",
+    "cardFooterInfo": "arrow",
+    "sortBallsAlpha": false
   },
   "pokemon": [
     {
@@ -52,24 +55,26 @@
           "tag": "Pokémon Diamond",
           "ability": "Static",
           "moves": [
-            "<b>Volt Tackle</b>",
+            "Volt Tackle",
             "Iron Tail",
             "Quick Attack",
-            "<b>Thunderbolt</b>"
+            "Thunderbolt"
           ],
-          "gameKey": "diamond"
+          "gameKey": "diamond",
+          "useMegaAbility": false
         },
         {
           "id": "p_d2zqykjrmr0zo6or",
           "tag": "Pokémon Pearl",
           "ability": "Static",
           "moves": [
-            "<b>Volt Tackle</b>",
+            "Volt Tackle",
             "Iron Tail",
             "Quick Attack",
-            "<b>Thunderbolt</b>"
+            "Thunderbolt"
           ],
-          "gameKey": "pearl"
+          "gameKey": "pearl",
+          "useMegaAbility": false
         }
       ],
       "achievementKeys": [
@@ -87,7 +92,9 @@
       },
       "megaForm": "",
       "customTitleFields": {},
-      "pokerus": "infected"
+      "pokerus": "none",
+      "isTera": true,
+      "teraType": "Stellar"
     }
   ]
 }
