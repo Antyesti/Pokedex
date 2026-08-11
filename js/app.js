@@ -610,6 +610,7 @@ function shakeField(el){
 function saveForm(id){
   document.getElementById('f_species').classList.remove('field-error');
   document.getElementById('typeSwatches').classList.remove('field-error');
+  document.getElementById('teraTypeSwatches').classList.remove('field-error');
 
   const nickname = document.getElementById('f_nickname').value.trim();
   const species = document.getElementById('f_species').value.trim();
@@ -632,10 +633,23 @@ function saveForm(id){
   }
   const isMega = document.getElementById('f_isMega').checked;
   const isGigantamax = document.getElementById('f_isGigantamax').checked;
+  const isTera = document.getElementById('f_isTera').checked;
   // A disabled form's sprite slot is hidden in the UI but may still hold a stale value;
   // clear it here so re-enabling the form later starts from a clean slot.
   const spriteMega = isMega ? document.getElementById('f_spriteMega').value.trim() : '';
   const spriteGigantamax = isGigantamax ? document.getElementById('f_spriteGigantamax').value.trim() : '';
+  // Fixed-Tera-type species (Ogerpon's masks, Terapagos) can't have anything else picked,
+  // no matter what the swatches were showing at save time.
+  const fixedTeraType = getFixedTeraType(selectedSpeciesEntryId);
+  const teraType = fixedTeraType || selectedTeraType;
+  if(isTera && !teraType){
+    const el = document.getElementById('teraTypeSwatches');
+    el.classList.add('field-error');
+    shakeField(el);
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    showToast('Pick a Tera Type, or turn off Terastallization.');
+    return;
+  }
 
   const existing = id ? state.pokemon.find(x=>x.id===id) : null;
   let preferredForm = (existing && existing.preferredForm) || 'default';
@@ -664,8 +678,10 @@ function saveForm(id){
     isGigantamax,
     spriteMega,
     spriteGigantamax,
+    isTera,
+    teraType,
     preferredForm,
-    games: formMovesDraft.map(g => ({ id:g.id||cryptoId(), tag:g.tag.trim(), ability:g.ability.trim(), moves:g.moves.map(m=>m.trim()), gameKey:g.gameKey||'' }))
+    games: formMovesDraft.map(g => ({ id:g.id||cryptoId(), tag:g.tag.trim(), ability:g.ability.trim(), moves:g.moves.map(m=>m.trim()), gameKey:g.gameKey||'', useMegaAbility:!!g.useMegaAbility }))
   };
 
   if(id){
@@ -686,7 +702,7 @@ function saveForm(id){
    the one before that, instead of earlier deletions being silently overwritten/lost. */
 let pendingDeletions = [];
 // True once the deletion toast has vanished (timed out or been replaced) while deletions
-// are still pending -- that's the signal to reveal the History button as a fallback.
+// are still pending. That's the signal to reveal the History button as a fallback.
 let historyBarVisible = false;
 
 function deletePokemon(id){

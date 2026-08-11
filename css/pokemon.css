@@ -40,6 +40,7 @@
 .grid.dense .shiny-badge{ width:16px; height:16px; }
 
 .grid.dense .pokerus-badge{ width:16px; height:16px; }
+.grid.dense .tera-badge{ width:16px; height:16px; }
 
 .grid.dense .type-badge{ font-size:9px; padding:3px 7px; }
 
@@ -176,6 +177,14 @@
 }
 
 .pokerus-badge img{ width:100%; height:100%; display:block; }
+
+.tera-badge{
+  width:20px; height:20px;
+  display:block;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.35));
+}
+
+.tera-badge img{ width:100%; height:100%; display:block; }
 
 /* still used by .sparkle-particle's holographic shimmer below */
 
@@ -507,11 +516,17 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
   border-radius:10px;
 }
 
+#teraTypeSwatches.field-error{
+  outline:2px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  outline-offset:6px;
+  border-radius:10px;
+}
+
 /* Shake plays once per invalid submit attempt. JS toggles .is-shaking off, forces a
    reflow, then back on, so it replays even if the same field is still marked invalid
    from the previous attempt. */
 .field-error.is-shaking, .field input.field-error.is-shaking, .field select.field-error.is-shaking,
-.field textarea.field-error.is-shaking, #typeSwatches.field-error.is-shaking{
+.field textarea.field-error.is-shaking, #typeSwatches.field-error.is-shaking, #teraTypeSwatches.field-error.is-shaking{
   animation: field-error-shake calc(var(--shake-dur-a) * 2 + var(--shake-dur-b) * 2) linear;
 }
 
@@ -963,6 +978,15 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 
 .move-row input::placeholder{ color:var(--text-faint); font-size:11.5px; }
 
+.mega-ability-toggle-row{
+  display:flex; align-items:center; gap:6px; margin-top:6px; cursor:pointer;
+  width:fit-content; font-size:12px; color:var(--text-faint);
+  opacity:0.4; transition:opacity .15s, color .15s;
+}
+.mega-ability-toggle-row img{ width:15px; height:15px; display:block; flex:none; }
+.mega-ability-toggle-row:hover{ opacity:0.75; }
+.mega-ability-toggle-row.active{ opacity:1; color:var(--text); }
+
 /* Rich-text toolbar for moves */
 
 .rich-field{ display:flex; flex-direction:column; gap:4px; width:100%; }
@@ -1033,6 +1057,48 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 .type-badge.type-select:hover{ transform:scale(1.05); opacity:0.85; }
 
 .type-badge.type-select.active{ opacity:1; border-color:#fff; }
+
+/* Stellar has no color of its own in the games, so instead of a flat color it gets a
+   slow, softly blurred wash across a handful of representative type colors. The moving
+   gradient lives on a blurred, oversized ::before layer (clipped by overflow:hidden)
+   rather than directly on the badge, so only a color or two are visible at once instead
+   of a busy multi-color stripe, and the text on top stays crisp. */
+.type-badge.type-badge-stellar{
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.type-badge.type-badge-stellar::before{
+  content: '';
+  position: absolute;
+  inset: -60%;
+  z-index: -1;
+  background-image: linear-gradient(100deg, #F08030, #F8D030, #78C850, #6890F0, #7038F8, #F85888, #F08030);
+  background-size: 300% 300%;
+  filter: blur(9px);
+  animation: type-badge-stellar-wave 26s ease-in-out infinite;
+}
+
+@keyframes type-badge-stellar-wave{
+  0%{ background-position: 0% 50%; }
+  50%{ background-position: 100% 50%; }
+  100%{ background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .type-badge.type-badge-stellar::before{ animation: none; background-position: 30% 50%; }
+}
+
+/* The Tera type badge appended alongside a Pokémon's base types, kept translucent so
+   it reads as "added on top" rather than innate, while the type name itself stays fully
+   legible (opacity here only affects the background, not the badge's text). */
+.type-badge.type-badge-faded{
+  background-color: color-mix(in srgb, var(--type-color, #888) 55%, transparent);
+}
+.type-badge.type-badge-stellar.type-badge-faded::before{
+  opacity: 0.6;
+}
 
 .gender-toggle-group{ display:flex; gap:8px; margin-top:4px; }
 
@@ -1239,7 +1305,7 @@ footer.bottom{
 /* Scrolling ticker for the autosave notice. The text is duplicated back to back in
    `content`, and the animation travels exactly one copy's width (-50% of the doubled
    string's total width), so the moment it "restarts" the second copy is already sitting
-   exactly where the first one began -- a continuous flow with no visible seam or cut. */
+   exactly where the first one began, a continuous flow with no visible seam or cut. */
 .ld-marquee{
   display:inline-block; width:400px; max-width:90%; overflow:hidden; vertical-align:bottom;
   font-family:var(--mono); font-size:11px; font-weight:600; color:currentColor;

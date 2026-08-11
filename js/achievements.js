@@ -176,6 +176,23 @@ function normalizePokemon(p){
   if(p.preferredForm === 'gigantamax' && !p.isGigantamax) p.preferredForm = 'default';
   if(!p.isMega) p.megaForm = '';
   if(p.pokerus !== 'infected' && p.pokerus !== 'cured') p.pokerus = 'none';
+  if(typeof p.isTera !== 'boolean') p.isTera = false;
+  if(typeof p.teraType !== 'string') p.teraType = '';
+  // A fixed-Tera-type species (Ogerpon's masks, Terapagos) always Terastallizes to that
+  // one type, overriding anything else a record might have picked up, e.g. via import.
+  const fixedTeraType = getFixedTeraType(p.speciesEntryId);
+  if(fixedTeraType) p.teraType = fixedTeraType;
+
+  // Move fields used to support Bold/Italic rich text; they're plain text now. Existing
+  // records may still have that formatting saved as HTML, so strip it down to plain text
+  // here rather than leaving stray <b>/<i> tags showing up literally in the move name.
+  if(Array.isArray(p.games)){
+    p.games.forEach(g => {
+      if(Array.isArray(g.moves)){
+        g.moves = g.moves.map(m => (typeof m === 'string' && m.includes('<')) ? stripHtmlToText(m) : m);
+      }
+    });
+  }
 
   // Achievements: ribbons/marks/misc selections, Memory Ribbon sub-collections, custom
   // achievements, partner trainer name (for the dynamic Partner Ribbon title), custom
@@ -265,7 +282,7 @@ function earnedAchievementNames(p){
 // Generic prerequisite / auto-grant helpers. Any achievement can declare `requires`
 // (an array of achievement keys that must ALL be earned before this one can be manually
 // toggled) and/or `autoGrant` (an array of achievement keys that, once ALL earned,
-// automatically grant this one -- it's then never manually toggled). These replace what
+// automatically grant this one, which is then never manually toggled). These replace what
 // used to be logic hardcoded specifically for Contest Star Ribbon / Twinkling Star Ribbon.
 function isAutoGrantedAchievement(item){
   return Array.isArray(item.autoGrant) && item.autoGrant.length > 0;
@@ -303,7 +320,7 @@ function cleanupLockedAchievements(p){
 function achievementBadgeHTML(p, item, selected, readonly){
   const disabled = item.status === 'unreleased';
 
-  // Auto-granted achievements are never manually toggled -- show current state read-only.
+  // Auto-granted achievements are never manually toggled, so show current state read-only.
   if(isAutoGrantedAchievement(item)){
     const awarded = isAchievementAutoGranted(p, item);
     const reqNames = item.autoGrant.map(k => ACHIEVEMENT_INDEX[k]?.name || k).join(', ');
@@ -329,7 +346,7 @@ function achievementBadgeHTML(p, item, selected, readonly){
   }
 
   // Once force-enabled, an unreleased achievement looks and behaves like any other
-  // earned one -- the grey-out, "Unreleased" tag, and tooltip note only apply while
+  // earned one. The grey-out, "Unreleased" tag, and tooltip note only apply while
   // it's still unselected.
   const showAsDisabled = disabled && !selected;
   const title = showAsDisabled ? `${item.name} (Unreleased)` : item.name;
@@ -432,7 +449,7 @@ function isAchievementEarned(p, item){
 
 // Tracks which achievement category/subcategory headers are collapsed, per Pokémon.
 // Kept outside the render functions (not on the Pokémon data itself) since it's pure
-// view state -- achievementsSectionHTML gets outerHTML-swapped every time an achievement
+// view state, since achievementsSectionHTML gets outerHTML-swapped every time an achievement
 // is toggled, so this needs to live somewhere that survives that swap.
 const achvCollapseState = {};
 
@@ -498,7 +515,7 @@ function customAchievementsForTag(p, tag){
 // Renders the inline field for a single achievement with a generic dynamic title (control
 // panel-defined label/placeholder/template), mirroring the built-in Partner Ribbon field
 // below. One of these appears per selected dynamic achievement, in whichever subcategory
-// it actually lives in -- there's nowhere else in the UI to set its per-Pokémon value.
+// it actually lives in, since there's nowhere else in the UI to set its per-Pokémon value.
 function customTitleFieldHTML(p, item, readonly){
   const title = item.title;
   const value = (p.customTitleFields && p.customTitleFields[item.key]) || '';
@@ -612,7 +629,7 @@ function achievementsSectionHTML(p, readonly){
         ${customs.length ? `<div class="achv-badge-grid achv-custom-grid">${customs.map(c=>customAchievementBadgeHTML(p,c,readonly)).join('')}</div>` : ''}
       `;
       if(subs.length <= 1){
-        // Only one subcategory under this category (e.g. Marks) -- the category header
+        // Only one subcategory under this category (e.g. Marks). The category header
         // above already covers collapsing it, so skip a redundant second toggle here.
         return `<div class="achv-subcategory">${subContentHTML}</div>`;
       }
@@ -798,7 +815,7 @@ function toggleMemorySubRibbon(id, parentKey, subKey){
   else list.splice(idx, 1);
   if(parentKey === 'contest_memory_ribbon') applyContestTierConsistency(list, subKey, selecting);
   // A sub-ribbon change can affect a Master Ribbon-style achievement's earned state, which
-  // in turn can unlock/lock things that depend on it -- recheck everything defensively.
+  // in turn can unlock/lock things that depend on it, so recheck everything defensively.
   cleanupLockedAchievements(p);
   if(p.activeTitleKey && !getEarnedTitleKeys(p).includes(p.activeTitleKey)) p.activeTitleKey = '';
   refreshAchievementsSection(id);
@@ -933,15 +950,18 @@ function openDetail(id){
   const detailTypes = displayTypes(p);
   const primaryColor = TYPE_HEX[detailTypes[0]] || '#4FD1C5';
   const displaySprite = resolveDisplaySprite(p);
-  const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
+  const formPrefix = p.preferredForm === 'mega' ? getMegaFormDisplay(p.speciesEntryId).prefix + ' ' : p.preferredForm === 'gigantamax' ? getGigantamaxFormDisplay(p.speciesEntryId).prefix + ' ' : '';
   const formSuffix = (p.preferredForm === 'mega' && p.megaForm) ? ' ' + p.megaForm.toUpperCase() : '';
 
+  const megaVariant = p.preferredForm === 'mega' ? getMegaVariant(p.speciesEntryId, p.megaForm) : null;
   const movesRows = p.games.map(g => {
     const preset = GAME_PRESET_INDEX[g.gameKey || detectGameKeyFromTag(g.tag)];
+    const abilityOverride = (g.useMegaAbility && preset && preset.supportsMega && megaVariant && megaVariant.ability) ? megaVariant.ability : '';
+    const ability = abilityOverride || g.ability;
     return `
     <tr>
       <td><span class="game-tag">${preset ? `<img class="game-tag-icon" src="${preset.icon}" alt="${escapeAttr(preset.label)}" title="${escapeAttr(preset.label)}">` : ''}${escapeHTML(g.tag)}</span></td>
-      <td class="${g.ability? '':'empty-cell'}">${g.ability ? `<span class="ability-tag">${escapeHTML(g.ability)}</span>` : '-'}</td>
+      <td class="${ability? '':'empty-cell'}">${ability ? `<span class="ability-tag">${abilityOverride ? `<img src="${getMegaFormDisplay(p.speciesEntryId).icon}" alt="" style="width:12px;height:12px;vertical-align:-1px;margin-right:3px;">` : ''}${escapeHTML(ability)}</span>` : (preset && preset.noAbilities ? '' : '-')}</td>
       ${g.moves.map(m => `<td class="${m? '':'empty-cell'}">${m ? m : '-'}</td>`).join('')}
     </tr>
   `;
@@ -970,12 +990,13 @@ function openDetail(id){
               ${p.pokerus === 'infected' ? `<img src="${POKERUS_INFECTED_ICON}" alt="Infected" title="Infected with Pokérus" style="width:20px;height:20px;">` : ''}
               ${p.pokerus === 'cured' ? `<img src="${POKERUS_CURED_ICON}" alt="Cured" title="Recovered from Pokérus" style="width:20px;height:20px;">` : ''}
               ${p.shiny ? `<img src="${SHINY_ICON}" alt="Shiny" title="Shiny" style="width:20px;height:20px;">` : ''}
+              ${p.isTera ? `<img src="${TERASTALLIZATION_ICON}" alt="Terastallized" title="Terastallized${p.teraType ? ' (' + escapeAttr(p.teraType) + ')' : ''}" style="width:20px;height:20px;">` : ''}
               ${(p.isMega || p.isGigantamax) ? `<span class="detail-form-switcher">
-                ${p.isMega ? `<button type="button" class="detail-form-switch-btn ${p.preferredForm==='mega'?'active':''}" title="${p.preferredForm==='mega' ? 'Showing Mega Evolution, click to switch to Default' : 'Switch to Mega Evolution'}" onclick="setPreferredForm('${p.id}','mega'); closeDetail(); openDetail('${p.id}')"><img src="${MEGA_ICON}" alt="Mega Evolution"></button>` : ''}
-                ${p.isGigantamax ? `<button type="button" class="detail-form-switch-btn ${p.preferredForm==='gigantamax'?'active':''}" title="${p.preferredForm==='gigantamax' ? 'Showing Gigantamax, click to switch to Default' : 'Switch to Gigantamax'}" onclick="setPreferredForm('${p.id}','gigantamax'); closeDetail(); openDetail('${p.id}')"><img src="${GIGANTAMAX_ICON}" alt="Gigantamax"></button>` : ''}
+                ${p.isMega ? `<button type="button" class="detail-form-switch-btn ${p.preferredForm==='mega'?'active':''}" title="${p.preferredForm==='mega' ? `Showing ${escapeAttr(getMegaFormDisplay(p.speciesEntryId).term)}, click to switch to Default` : `Switch to ${escapeAttr(getMegaFormDisplay(p.speciesEntryId).term)}`}" onclick="setPreferredForm('${p.id}','mega'); closeDetail(); openDetail('${p.id}')"><img src="${getMegaFormDisplay(p.speciesEntryId).icon}" alt="${escapeAttr(getMegaFormDisplay(p.speciesEntryId).term)}"></button>` : ''}
+                ${p.isGigantamax ? `<button type="button" class="detail-form-switch-btn ${p.preferredForm==='gigantamax'?'active':''}" title="${p.preferredForm==='gigantamax' ? `Showing ${escapeAttr(getGigantamaxFormDisplay(p.speciesEntryId).term)}, click to switch to Default` : `Switch to ${escapeAttr(getGigantamaxFormDisplay(p.speciesEntryId).term)}`}" onclick="setPreferredForm('${p.id}','gigantamax'); closeDetail(); openDetail('${p.id}')"><img src="${getGigantamaxFormDisplay(p.speciesEntryId).icon}" alt="${escapeAttr(getGigantamaxFormDisplay(p.speciesEntryId).term)}"></button>` : ''}
               </span>` : ''}
             </div>
-            <div class="type-row" style="margin:6px 0 0;">${detailTypes.map(t=>`<span class="type-badge" style="background:${TYPE_HEX[t]}">${t}</span>`).join('')}</div>
+            <div class="type-row" style="margin:6px 0 0;">${typeRowHTML(p)}</div>
           </div>
         </div>
       </div>

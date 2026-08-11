@@ -51,7 +51,7 @@ body{
 }
 
 /* Ambient drifting gradient. Fixed and sized to the viewport (not the page), so it costs
-   the same to rasterize whether the roster is 5 Pokemon or 500 -- animating this directly
+   the same to rasterize whether the roster is 5 Pokemon or 500. Animating this directly
    on body previously meant its size scaled with the whole scrollable page. */
 body::after{
   content:"";
@@ -404,7 +404,7 @@ header.top{
 .dash-cell .v .row-icon{ width:20px; height:20px; flex:none; }
 
 /* Most Awarded Ribbon is the one wide cell pairing an icon with a name instead of a plain
-   number -- a big number-sized name reads oddly next to a small icon, so it gets its own
+   number. A big number-sized name reads oddly next to a small icon, so it gets its own
    smaller, centered text size and a bigger icon instead. */
 .dash-cell-wide .v{ font-size:14.5px; align-items:center; gap:10px; }
 
@@ -469,7 +469,7 @@ header.top{
    placeholder (the incoming empty state), and a glow layer (per-word streak written in by
    JS during the clear). Padding/font here match this app's actual search input so the mirror
    and placeholder sit exactly where the real text does. The per-frame tween itself lives in
-   js/filters.js -- the rise/peak/fall envelope of the streak can't be expressed as a static
+   js/filters.js, since the rise/peak/fall envelope of the streak can't be expressed as a static
    @keyframe, so it has to be driven frame by frame. */
 :root{
   --clear-dur: 1000ms;

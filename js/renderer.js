@@ -134,7 +134,7 @@ function init(){
 }
 
 // The type list is fixed (unlike Origin Game, which depends on what's in the roster), so
-// the panel only needs building once -- selecting an option just re-renders it in place to
+// the panel only needs building once. Selecting an option just re-renders it in place to
 // update which pill is marked active.
 function renderTypeFilterPanel(){
   const panel = document.getElementById('typeFilterPanel');
@@ -183,7 +183,7 @@ function populateGameFilter(){
   updateGameFilterTrigger();
 }
 
-// Rebuilds the dropdown's option rows -- each shows the game's preset icon when its typed
+// Rebuilds the dropdown's option rows. Each shows the game's preset icon when its typed
 // name resolves to one (same fuzzy matching used for the Origin/Last Game fields elsewhere),
 // and falls back to text-only for a custom-typed game name that doesn't match a preset.
 function renderGameFilterPanel(){
@@ -321,7 +321,7 @@ function applyCustomTheme(custom){
   style.setProperty('--btn-primary-text', isLightBg ? '#1a1a1a' : '#fff');
   style.setProperty('--hairline', rgbaStr(hexToRgbArr(custom.text), 0.12));
   // Native <option> elements render with the OS popup layer, which only respects
-  // background-color/color -- derive an explicit light/dark choice from luminance.
+  // background-color/color, so derive an explicit light/dark choice from luminance.
   style.setProperty('--select-option-bg', isLightBg ? '#ffffff' : '#1a1a1a');
   style.setProperty('--select-option-text', custom.text);
 
@@ -491,7 +491,7 @@ function saveTrainerName(){
 // Slot-machine style digit reel used for the two headline stat-chip counters (Roster,
 // Shiny). Spins from the previously shown value to the new one on a real change; jumps
 // straight to the final digits on first render, when the digit count changes (e.g. going
-// from 9 to 10), or when the person prefers reduced motion -- spinning "from nothing"
+// from 9 to 10), or when the person prefers reduced motion. Spinning "from nothing"
 // wouldn't mean anything in any of those cases.
 let reelFilterCounter = 0;
 let statsReelPrev = { total: null, shiny: null };
@@ -530,7 +530,7 @@ function spinReel(container, prevValue, value){
     const filterEl = document.querySelector(`#${filterId} feGaussianBlur`);
     const digit = Number(digitsStr[i]);
     // Read the actually-rendered cell height rather than assuming a fixed px value, since
-    // --reel-cell shrinks under the mobile breakpoint -- a hardcoded number here would
+    // --reel-cell shrinks under the mobile breakpoint, and a hardcoded number here would
     // desync from that and land each digit at the wrong offset inside its own window.
     const cellHeight = col.getBoundingClientRect().height;
 
@@ -757,7 +757,7 @@ function renderStatsDashboard(){
   const totalAbilitiesLogged = list.reduce((s,p)=>s+p.games.filter(g=>g.ability).length,0);
   const avgGamesPerMon = (totalGameRows/total).toFixed(1);
   // Most Pokémon repeat the same handful of moves/abilities, so the raw logged counts above
-  // barely vary roster to roster -- how many *distinct* moves/abilities show up is the
+  // barely vary roster to roster. How many *distinct* moves/abilities show up is the
   // actually interesting number, shown as the secondary stat rather than the headline one.
   const uniqueMoveNames = new Set();
   const uniqueAbilityNames = new Set();
@@ -1072,13 +1072,16 @@ function formBadgeRowHTML(p){
   if(p.pokerus === 'infected') badges.push(`<span class="pokerus-badge infected" title="Infected with Pokérus"><img src="${POKERUS_INFECTED_ICON}" alt="Infected"></span>`);
   else if(p.pokerus === 'cured') badges.push(`<span class="pokerus-badge cured" title="Recovered from Pokérus"><img src="${POKERUS_CURED_ICON}" alt="Cured"></span>`);
   if(p.shiny) badges.push(`<span class="shiny-badge" title="Shiny"><img src="${SHINY_ICON}" alt="Shiny"></span>`);
+  if(p.isTera) badges.push(`<span class="tera-badge" title="Terastallized${p.teraType ? ' (' + escapeAttr(p.teraType) + ')' : ''}"><img src="${TERASTALLIZATION_ICON}" alt="Terastallized"></span>`);
   if(p.isMega){
     const active = p.preferredForm === 'mega';
-    badges.push(`<button type="button" class="form-badge mega ${active?'active':''}" title="${active ? 'Showing Mega Evolution sprite, click to switch to Default' : 'Switch to Mega Evolution sprite'}" onclick="event.stopPropagation(); setPreferredForm('${p.id}','mega')"><img src="${MEGA_ICON}" alt="Mega Evolution"></button>`);
+    const display = getMegaFormDisplay(p.speciesEntryId);
+    badges.push(`<button type="button" class="form-badge mega ${active?'active':''}" title="${active ? `Showing ${escapeAttr(display.term)} sprite, click to switch to Default` : `Switch to ${escapeAttr(display.term)} sprite`}" onclick="event.stopPropagation(); setPreferredForm('${p.id}','mega')"><img src="${display.icon}" alt="${escapeAttr(display.term)}"></button>`);
   }
   if(p.isGigantamax){
     const active = p.preferredForm === 'gigantamax';
-    badges.push(`<button type="button" class="form-badge gigantamax ${active?'active':''}" title="${active ? 'Showing Gigantamax sprite, click to switch to Default' : 'Switch to Gigantamax sprite'}" onclick="event.stopPropagation(); setPreferredForm('${p.id}','gigantamax')"><img src="${GIGANTAMAX_ICON}" alt="Gigantamax"></button>`);
+    const display = getGigantamaxFormDisplay(p.speciesEntryId);
+    badges.push(`<button type="button" class="form-badge gigantamax ${active?'active':''}" title="${active ? `Showing ${escapeAttr(display.term)} sprite, click to switch to Default` : `Switch to ${escapeAttr(display.term)} sprite`}" onclick="event.stopPropagation(); setPreferredForm('${p.id}','gigantamax')"><img src="${display.icon}" alt="${escapeAttr(display.term)}"></button>`);
   }
   if(badges.length === 0) return '';
   return `<div class="card-badge-row">${badges.join('')}${p.shiny ? sparkleParticlesHTML(p.id) : ''}</div>`;
@@ -1175,7 +1178,7 @@ function cardHTML(p){
     borderColor = hexToRgba('#eb3cae', 0.6);
   }
   const displaySprite = resolveDisplaySprite(p);
-  const formPrefix = p.preferredForm === 'mega' ? 'MEGA ' : p.preferredForm === 'gigantamax' ? 'GIGANTAMAX ' : '';
+  const formPrefix = p.preferredForm === 'mega' ? getMegaFormDisplay(p.speciesEntryId).prefix + ' ' : p.preferredForm === 'gigantamax' ? getGigantamaxFormDisplay(p.speciesEntryId).prefix + ' ' : '';
   const formSuffix = (p.preferredForm === 'mega' && p.megaForm) ? ' ' + p.megaForm.toUpperCase() : '';
   const footerInfo = cardFooterInfoHTML(p);
   const [glowC1, glowC2, glowC3] = typeGlowColors(p);
@@ -1193,7 +1196,7 @@ function cardHTML(p){
       </div>
     </div>
     <div class="type-row">
-      ${cardTypes.map(t=>`<span class="type-badge" style="background:${TYPE_HEX[t]}">${t}</span>`).join('')}
+      ${typeRowHTML(p)}
     </div>
     <div class="card-meta">
       ${p.metLocation ? `<span>📍 ${p.metLocation}</span>` : ''}
@@ -1249,17 +1252,19 @@ function mixHex(hexA, hexB, t){
 // Picks the 3-stop gradient used by the card's border glow effect. Dual-type Pokemon use both
 // type colors plus a blended midpoint, so the gradient stays inside that Pokemon's own palette
 // instead of introducing an unrelated hue. Single-type Pokemon instead get a darker and a
-// lighter shade of their one type color -- mixing everything toward white instead would make
+// lighter shade of their one type color. Mixing everything toward white instead would make
 // all three stops nearly identical, leaving the glow looking washed out and barely visible.
 // Shiny Pokemon swap the third stop for the app's existing shiny gold accent, tying the glow
 // into the same visual language as the shiny badge and shiny card border.
 function typeGlowColors(p){
   const t = displayTypes(p);
-  const type1 = TYPE_HEX[t[0]] || '#4FD1C5';
-  const type2 = TYPE_HEX[t[1]];
+  const hexForType = (typeName) => typeName === STELLAR_TYPE ? '#40b5a5' : TYPE_HEX[typeName];
+  const type1 = hexForType(t[0]) || '#4FD1C5';
+  const type2 = hexForType(t[1]);
+  const teraColor = hexForType(t[2]); // displayTypes appends the Tera type as a third entry when Terastallized
   const c1 = type1;
   const c2 = type2 || mixHex(type1, '#000000', 0.25);
-  const c3 = p.shiny ? 'var(--accent-2)' : (type2 ? mixHex(c1, c2, 0.5) : mixHex(type1, '#ffffff', 0.4));
+  const c3 = p.shiny ? 'var(--accent-2)' : (teraColor || (type2 ? mixHex(c1, c2, 0.5) : mixHex(type1, '#ffffff', 0.4)));
   return [c1, c2, c3];
 }
 

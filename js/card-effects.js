@@ -43,7 +43,7 @@
 
   // pointermove can fire well over 100 times/sec on a fast mouse. The rect is measured once
   // per animation frame here (inside the rAF callback, right before it's used), not once per
-  // raw event -- that's the actual fix for the layout-thrashing cost, and it stays correct
+  // raw event. That's the actual fix for the layout-thrashing cost, and it stays correct
   // even if the page scrolls while the pointer holds still over the same card, since it's
   // never reused across frames.
   gridWrap.addEventListener('pointermove', (e) => {

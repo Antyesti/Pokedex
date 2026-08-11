@@ -4,9 +4,9 @@
  * Autocomplete built on top of data/pokemon-species.js. Kept as its own module (separate
  * from js/pokemon.js's existing form logic) since it's a standalone feature: the Species
  * field stays a normal free-text input, this just layers suggestions on top of it as you
- * type -- click in, type, a list of matches drops below the field, click one to fill it in.
+ * type. Click in, type, and a list of matches drops below the field; click one to fill it in.
  *
- * Nothing in here is hardcoded per-species -- every row, subtitle, and typing comes from
+ * Nothing in here is hardcoded per-species. Every row, subtitle, and typing comes from
  * POKEMON_SPECIES, so new entries (added later, eventually via the Control Panel) show up
  * automatically with no changes needed here.
  */
@@ -34,7 +34,7 @@ function speciesSubtitle(entry){
 }
 
 // The "#0052 · " prefix shown before the species name on cards and in Detail View. Only
-// shown when the Pokémon is actually linked to a database entry -- a freely-typed species
+// shown when the Pokémon is actually linked to a database entry. A freely-typed species
 // with no match has no dex number to show.
 function dexPrefixHTML(p){
   const entry = p.speciesEntryId ? findSpeciesEntry(p.speciesEntryId) : null;
@@ -46,7 +46,24 @@ function dexPrefixHTML(p){
 // falls back to the Pokémon's default typing.
 function displayTypes(p){
   if(p.preferredForm === 'mega' && Array.isArray(p.megaTypes) && p.megaTypes.length) return p.megaTypes;
+  if(p.preferredForm !== 'mega' && p.preferredForm !== 'gigantamax' && p.isTera && p.teraType) return [...p.types, p.teraType];
   return p.types;
+}
+
+// Renders the full type-badge row for a Pokémon, same priority order as displayTypes
+// above, except the Tera-added type (when applicable) renders faded so it reads as
+// "added on top" rather than innate, while its text stays fully legible. Card and Detail
+// View both use this rather than mapping displayTypes(p) through typeBadgeHTML directly,
+// since only this function knows which entry (if any) is the Tera addition.
+function typeRowHTML(p){
+  if(p.preferredForm === 'mega' && Array.isArray(p.megaTypes) && p.megaTypes.length){
+    return p.megaTypes.map(t => typeBadgeHTML(t)).join('');
+  }
+  const badges = p.types.map(t => typeBadgeHTML(t));
+  if(p.preferredForm !== 'mega' && p.preferredForm !== 'gigantamax' && p.isTera && p.teraType){
+    badges.push(typeBadgeHTML(p.teraType, { faded: true }));
+  }
+  return badges.join('');
 }
 
 /* ---------- Autocomplete dropdown ---------- */
@@ -72,7 +89,7 @@ function speciesPickerRowHTML(entry){
 }
 
 // Renders the dropdown's contents for the current search text. Nothing is shown for an
-// empty query -- with a database meant to eventually cover the full National Dex, listing
+// empty query, since with a database meant to eventually cover the full National Dex, listing
 // everything unfiltered isn't useful (or cheap to render).
 function renderSpeciesPickerPanel(filterText){
   const panel = document.getElementById('speciesPicker_panel');
@@ -99,7 +116,11 @@ function onSpeciesInput(val){
   if(trimmed) document.getElementById('f_species').classList.remove('field-error');
   if(selectedSpeciesEntryId){
     const entry = findSpeciesEntry(selectedSpeciesEntryId);
-    if(!entry || entry.species.toLowerCase() !== trimmed.toLowerCase()) selectedSpeciesEntryId = '';
+    if(!entry || entry.species.toLowerCase() !== trimmed.toLowerCase()){
+      selectedSpeciesEntryId = '';
+      refreshMegaFormLabel();
+      renderTeraTypeField();
+    }
   }
   renderSpeciesPickerPanel(trimmed);
 }
@@ -113,17 +134,19 @@ function selectSpeciesEntry(entryId){
   if(input) input.value = entry.species;
 
   // Fills the same Type swatches the Species field sits above, exactly like picking a
-  // preset game fills its tag field -- still just a starting point, freely editable after.
+  // preset game fills its tag field: still just a starting point, freely editable after.
   selectedTypes = [...entry.types];
   document.querySelectorAll('#typeSwatches .type-badge').forEach(s => {
     s.classList.toggle('active', selectedTypes.includes(s.dataset.type));
   });
 
-  // Covers the "Mega Evolution already checked, then species picked" order -- the other
+  // Covers the "Mega Evolution already checked, then species picked" order. The other
   // order (species first, then check Mega) is handled in onFormToggleChange.
   const megaCheckbox = document.getElementById('f_isMega');
   if(megaCheckbox && megaCheckbox.checked) tryAutoFillMegaTypes();
   renderMegaFormOptions();
+  refreshMegaFormLabel();
+  renderTeraTypeField();
 
   const panel = document.getElementById('speciesPicker_panel');
   if(panel){ panel.innerHTML = ''; panel.classList.remove('open'); }

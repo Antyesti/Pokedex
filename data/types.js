@@ -15,3 +15,10 @@ const TYPE_HEX = {
   Rock:"#B8A038", Ghost:"#705898", Dragon:"#7038F8", Dark:"#705848",
   Steel:"#B8B8D0", Fairy:"#EE99AC"
 };
+
+// Stellar only exists as a Tera type. It's never a species' base typing, so it's kept
+// out of TYPES/TYPE_HEX (which back the regular Type picker) and only offered in the
+// Terastallization type picker via TERA_TYPES. It has no fixed color of its own; see
+// typeBadgeHTML in js/utils.js for how its pill is actually rendered.
+const STELLAR_TYPE = "Stellar";
+const TERA_TYPES = [...TYPES, STELLAR_TYPE];

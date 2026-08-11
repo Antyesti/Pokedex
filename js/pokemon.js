@@ -6,9 +6,9 @@ function openForm(id){
   let p;
   if(id){
     p = state.pokemon.find(x=>x.id===id);
-    formMovesDraft = p.games.map(g => ({...g, moves:[...g.moves], gameKey: g.gameKey || detectGameKeyFromTag(g.tag)}));
+    formMovesDraft = p.games.map(g => ({...g, moves:[...g.moves], gameKey: g.gameKey || detectGameKeyFromTag(g.tag), useMegaAbility: !!g.useMegaAbility}));
   } else {
-    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'' };
+    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', isTera:false, teraType:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'' };
     formMovesDraft = [];
   }
 
@@ -75,6 +75,21 @@ function spriteSlotHTML(slot, label, value, enabled){
   `;
 }
 
+// Swaps the Mega toggle's label/icon (and the mega typing field's label, and the mega
+// sprite slot's label) to match whichever species is currently selected. Primal
+// Reversion for Groudon/Kyogre, Ultra Burst for Necrozma's fused forms, and plain Mega
+// Evolution for everyone else. Called whenever the selected species changes while the form is
+// open, since the toggle itself doesn't move, just what it's called and shows.
+function refreshMegaFormLabel(){
+  const display = getMegaFormDisplay(selectedSpeciesEntryId);
+  const toggleLabel = document.getElementById('megaToggleLabel');
+  if(toggleLabel) toggleLabel.innerHTML = `<img src="${display.icon}" alt="" style="width:16px;height:16px;">${escapeHTML(display.term)}`;
+  const typingFieldLabel = document.getElementById('megaTypingFieldLabel');
+  if(typingFieldLabel) typingFieldLabel.textContent = `${display.term} Type(s)`;
+  const spriteSlotLabel = document.querySelector('#spriteSlot_mega .sprite-slot-label');
+  if(spriteSlotLabel) spriteSlotLabel.textContent = display.term;
+}
+
 // Enabling/disabling Mega or Gigantamax flips the corresponding sprite slot's interactive
 // state in place, without re-rendering the whole form (which would lose focus/scroll position).
 function onFormToggleChange(slot, enabled){
@@ -82,7 +97,7 @@ function onFormToggleChange(slot, enabled){
   if(!slotEl) return;
   slotEl.classList.toggle('disabled', !enabled);
   const label = slotEl.querySelector('.sprite-slot-label');
-  const labelText = slot === 'mega' ? 'Mega Evolution' : 'Gigantamax';
+  const labelText = slot === 'mega' ? getMegaFormDisplay(selectedSpeciesEntryId).term : 'Gigantamax';
   label.textContent = labelText;
   const fileInput = document.getElementById(`f_sprite_file_${slot}`);
   const chooseLabel = slotEl.querySelector('.sprite-upload-btn');
@@ -190,7 +205,7 @@ function formBodyHTML(p){
           <button type="button" class="pokerus-toggle-btn cured ${p.pokerus==='cured'?'active':''}" data-pokerus="cured" onclick="togglePokerus('cured')" title="Cured"><img src="${POKERUS_CURED_ICON}" alt="">Cured</button>
         </div>
       </div>
-      <div class="field">
+      <div class="field span-2">
         <label>Forms</label>
         <div class="shiny-field" style="flex-wrap:wrap; gap:14px;">
           <span class="shiny-field" style="gap:10px;">
@@ -199,7 +214,7 @@ function formBodyHTML(p){
               <span class="track"></span>
               <span class="thumb"></span>
             </label>
-            <label for="f_isMega" style="font-size:13px; color:var(--text-dim); cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><img src="${MEGA_ICON}" alt="" style="width:16px;height:16px;">Mega Evolution</label>
+            <label for="f_isMega" id="megaToggleLabel" style="font-size:13px; color:var(--text-dim); cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><img src="${getMegaFormDisplay(p.speciesEntryId).icon}" alt="" style="width:16px;height:16px;">${escapeHTML(getMegaFormDisplay(p.speciesEntryId).term)}</label>
           </span>
           <span class="shiny-field" style="gap:10px;">
             <label class="switch">
@@ -207,7 +222,15 @@ function formBodyHTML(p){
               <span class="track"></span>
               <span class="thumb"></span>
             </label>
-            <label for="f_isGigantamax" style="font-size:13px; color:var(--text-dim); cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><img src="${GIGANTAMAX_ICON}" alt="" style="width:16px;height:16px;">Gigantamax</label>
+            <label for="f_isGigantamax" id="gigantamaxToggleLabel" style="font-size:13px; color:var(--text-dim); cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><img src="${getGigantamaxFormDisplay(p.speciesEntryId).icon}" alt="" style="width:16px;height:16px;">${escapeHTML(getGigantamaxFormDisplay(p.speciesEntryId).term)}</label>
+          </span>
+          <span class="shiny-field" style="gap:10px;">
+            <label class="switch">
+              <input type="checkbox" id="f_isTera" ${p.isTera ? 'checked' : ''} onchange="onTeraToggleChange(this.checked)">
+              <span class="track"></span>
+              <span class="thumb"></span>
+            </label>
+            <label for="f_isTera" style="font-size:13px; color:var(--text-dim); cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><img src="${TERASTALLIZATION_ICON}" alt="" style="width:16px;height:16px;">Terastallization</label>
           </span>
         </div>
       </div>
@@ -216,22 +239,26 @@ function formBodyHTML(p){
         <div class="btn-toggle-row" id="megaFormButtons"></div>
       </div>
       <div class="field span-2" id="megaTypingField" style="${p.isMega ? '' : 'display:none;'}">
-        <label>Mega Evolution Type(s) <span style="color:var(--text-faint); font-weight:400;">(independent of the default typing above)</span></label>
+        <label><span id="megaTypingFieldLabel">${escapeHTML(getMegaFormDisplay(p.speciesEntryId).term)} Type(s)</span> <span style="color:var(--text-faint); font-weight:400;">(independent of the default typing above)</span></label>
         <div class="type-select-row" id="megaTypeSwatches">
           ${TYPES.map(t=>`<button type="button" class="type-badge type-select ${p.megaTypes && p.megaTypes.includes(t)?'active':''}" data-type="${t}" style="background:${TYPE_HEX[t]}" onclick="toggleMegaType('${t}')">${t}</button>`).join('')}
         </div>
+      </div>
+      <div class="field span-2" id="teraTypeField" style="${p.isTera ? '' : 'display:none;'}">
+        <label>Tera Type <span style="color:var(--text-faint); font-weight:400;">(added as a third type alongside the default typing above)</span></label>
+        <div class="type-select-row" id="teraTypeSwatches">${teraTypeFieldInnerHTML(p.speciesEntryId, p.teraType)}</div>
       </div>
       <div class="field span-2">
         <label style="display:flex; align-items:center; gap:6px;">Sprite Images
           <span class="info-tooltip-trigger" tabindex="0" data-no-autofocus>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            <span class="info-tooltip">Default is required; Mega/Gigantamax are optional and only apply when that form is enabled above.</span>
+            <span class="info-tooltip">Default is required; Mega/Gigantamax are optional and only apply when that form is enabled above. Terastallization reuses the Default sprite.</span>
           </span>
         </label>
         <div class="sprite-slots-grid" id="spriteSlotsGrid">
           ${spriteSlotHTML('default', 'Default', p.sprite, true)}
-          ${spriteSlotHTML('mega', 'Mega Evolution', p.spriteMega, p.isMega)}
-          ${spriteSlotHTML('gigantamax', 'Gigantamax', p.spriteGigantamax, p.isGigantamax)}
+          ${spriteSlotHTML('mega', getMegaFormDisplay(p.speciesEntryId).term, p.spriteMega, p.isMega)}
+          ${spriteSlotHTML('gigantamax', getGigantamaxFormDisplay(p.speciesEntryId).term, p.spriteGigantamax, p.isGigantamax)}
         </div>
       </div>
     </div>
@@ -301,12 +328,12 @@ function toggleType(t){
   if(selectedTypes.length > 0) document.getElementById('typeSwatches').classList.remove('field-error');
 }
 
-// Mega Evolution's typing, edited independently of the default typing above -- selecting a
+// Mega Evolution's typing, edited independently of the default typing above. Selecting a
 // species/form from the picker never touches this, and vice versa.
 let selectedMegaTypes = [];
 // Which Mega form this is, for species with more than one (Charizard X/Y, Mewtwo X/Y, ...).
 // Empty string for species with only one Mega, or when typing was set by hand rather than
-// picked via the Mega Form toggle -- see renderMegaFormOptions/selectMegaForm below.
+// picked via the Mega Form toggle. See renderMegaFormOptions/selectMegaForm below.
 let selectedMegaForm = '';
 function toggleMegaType(t){
   if(selectedMegaTypes.includes(t)){
@@ -325,15 +352,13 @@ function toggleMegaType(t){
 
 // Auto-fills Mega Evolution Type(s) (and Mega Form, if applicable) from the MEGA_TYPES
 // reference table the moment Mega Evolution gets enabled (or the species changes while
-// it's already enabled) -- only when nothing's been picked yet, so it never overwrites a
+// it's already enabled), but only when nothing's been picked yet, so it never overwrites a
 // typing the user already set by hand. A couple of species have more than one Mega form
 // with different typing (Charizard X/Y, Mewtwo X/Y, etc.); the first listed variant is
 // used as the starting guess and can be changed via the Mega Form toggle.
 function tryAutoFillMegaTypes(){
   if(selectedMegaTypes.length > 0) return;
-  const speciesInput = document.getElementById('f_species');
-  const name = speciesInput ? speciesInput.value.trim() : '';
-  const variants = MEGA_TYPES[name];
+  const variants = MEGA_TYPES[selectedSpeciesEntryId];
   if(!variants || !variants.length) return;
   selectedMegaForm = variants[0].label;
   selectedMegaTypes = [...variants[0].types];
@@ -344,16 +369,15 @@ function tryAutoFillMegaTypes(){
 }
 
 // Shows the Mega Form toggle only for species with more than one known Mega (Charizard,
-// Mewtwo, Absol, Garchomp) -- everyone else's Mega has nothing to disambiguate, so no
+// Mewtwo, Absol, Garchomp). Everyone else's Mega has nothing to disambiguate, so no
 // field is shown and megaForm just stays empty.
 function renderMegaFormOptions(){
+  refreshAllAbilityFields();
   const field = document.getElementById('megaFormField');
   const buttons = document.getElementById('megaFormButtons');
   if(!field || !buttons) return;
   const megaCheckbox = document.getElementById('f_isMega');
-  const speciesInput = document.getElementById('f_species');
-  const name = speciesInput ? speciesInput.value.trim() : '';
-  const variants = MEGA_TYPES[name];
+  const variants = MEGA_TYPES[selectedSpeciesEntryId];
   if(!megaCheckbox || !megaCheckbox.checked || !variants || variants.length < 2){
     field.style.display = 'none';
     buttons.innerHTML = '';
@@ -368,9 +392,7 @@ function renderMegaFormOptions(){
 
 function selectMegaForm(label){
   selectedMegaForm = label;
-  const speciesInput = document.getElementById('f_species');
-  const name = speciesInput ? speciesInput.value.trim() : '';
-  const variant = (MEGA_TYPES[name] || []).find(v => v.label === label);
+  const variant = (MEGA_TYPES[selectedSpeciesEntryId] || []).find(v => v.label === label);
   if(variant){
     selectedMegaTypes = [...variant.types];
     document.querySelectorAll('#megaTypeSwatches .type-badge').forEach(s=>{
@@ -378,6 +400,34 @@ function selectMegaForm(label){
     });
   }
   renderMegaFormOptions();
+}
+
+// Tera Type, single-select like Gender rather than the up-to-2 toggle used for base/Mega
+// typing, since a Pokémon only Terastallizes to one type at a time. Species with a fixed Tera
+// type (see FIXED_TERA_TYPES) override whatever's selected here; see renderTeraTypeField.
+let selectedTeraType = '';
+function selectTeraType(t){
+  if(getFixedTeraType(selectedSpeciesEntryId)) return; // locked, not user-editable
+  selectedTeraType = (selectedTeraType === t) ? '' : t;
+  renderTeraTypeField();
+  if(selectedTeraType) document.getElementById('teraTypeSwatches').classList.remove('field-error');
+}
+
+// Rebuilds the Tera Type swatches/locked-badge to match the currently selected species,
+// and re-applies the fixed type (if any) to selectedTeraType. Called on toggle change and
+// whenever the species selection changes while the form is open.
+function renderTeraTypeField(){
+  const fixedType = getFixedTeraType(selectedSpeciesEntryId);
+  if(fixedType) selectedTeraType = fixedType;
+  const container = document.getElementById('teraTypeSwatches');
+  if(container) container.innerHTML = teraTypeFieldInnerHTML(selectedSpeciesEntryId, selectedTeraType);
+}
+
+function onTeraToggleChange(enabled){
+  const field = document.getElementById('teraTypeField');
+  if(field) field.style.display = enabled ? '' : 'none';
+  if(enabled) renderTeraTypeField();
+  else document.getElementById('teraTypeSwatches').classList.remove('field-error');
 }
 
 let selectedGender = '';
@@ -404,28 +454,80 @@ function renderMovesEditor(){
   }
   wrap.innerHTML = formMovesDraft.map(function(g, idx){
     var moveSlots = [0,1,2,3].map(function(slot){
-      return '<div class="rich-field">' +
-        '<div class="rich-toolbar">' +
-          '<button type="button" class="rich-btn" onmousedown="event.preventDefault(); richCmdOnEl(document.getElementById(\'move-' + idx + '-' + slot + '\'),\'bold\')" title="Bold"><b>B</b></button>' +
-          '<button type="button" class="rich-btn" onmousedown="event.preventDefault(); richCmdOnEl(document.getElementById(\'move-' + idx + '-' + slot + '\'),\'italic\')" title="Italic"><i>I</i></button>' +
-        '</div>' +
-        '<div class="rich-input" id="move-' + idx + '-' + slot + '" contenteditable="true" ' +
-          'data-placeholder="Move ' + (slot+1) + '" ' +
-          'onblur="updateMoveSlotRich(' + idx + ',' + slot + ',this)">' + (g.moves[slot]||'') + '</div>' +
-      '</div>';
+      return '<input placeholder="Move ' + (slot+1) + '" value="' + escapeAttr(g.moves[slot]||'') + '" oninput="updateMoveSlot(' + idx + ',' + slot + ',this.value)">';
     }).join('');
+    var abilityField = abilityFieldHTML(idx, g);
     return '<div class="move-row">' +
       '<div class="game-tag-field">' +
         gamePresetSelectHTML(String(idx), g.gameKey || '') +
         '<input placeholder="Tag (e.g. Pokémon Platinum)" value="' + escapeAttr(g.tag) + '" oninput="updateMoveField(' + idx + ',\'tag\',this.value)">' +
       '</div>' +
-      '<input placeholder="Ability" value="' + escapeAttr(g.ability) + '" oninput="updateMoveField(' + idx + ',\'ability\',this.value)">' +
+      '<div class="field" id="abilityFieldWrap-' + idx + '">' +
+        abilityField +
+      '</div>' +
       moveSlots +
       '<div class="remove-row-btn" onclick="removeMoveRow(' + idx + ')">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
       '</div>' +
     '</div>';
   }).join('');
+}
+// Mega Ability (see data/mega-types.js) only applies to a Moveset by Game row when the
+// Pokémon is currently Mega and that row's game is flagged supportsMega in GAME_PRESETS
+// (Control Panel > Games), since not every game a Pokémon has appeared in supports Mega
+// Evolution. Returns '' when nothing overrides that row's typed-in Ability.
+// Renders the whole Ability area for a game row: nothing at all for games flagged
+// noAbilities in GAME_PRESETS (Control Panel > Games), otherwise the normal input plus,
+// when eligible, a dimmed Mega icon the user can click to apply the Mega Ability to that
+// specific row, since some Megas were introduced after a given game released, so this isn't
+// automatic just because the game generally supports Mega Evolution.
+function abilityFieldHTML(idx, g){
+  const preset = GAME_PRESET_INDEX[g.gameKey];
+  if(preset && preset.noAbilities){
+    return '';
+  }
+  const eligibleAbility = getEligibleMegaAbility(g.gameKey);
+  const applied = !!g.useMegaAbility && eligibleAbility;
+  return '<input placeholder="Ability" value="' + escapeAttr(g.ability) + '" oninput="updateMoveField(' + idx + ',\'ability\',this.value)">' +
+    megaAbilityToggleRowHTML(idx, eligibleAbility, applied);
+}
+// Whether a Mega Ability even exists to offer for this row: Mega enabled, the row's
+// game generally supports Mega Evolution, and the current species/Mega Form has one set.
+// Doesn't decide whether it's actually applied; see g.useMegaAbility for that.
+function getEligibleMegaAbility(gameKey){
+  const megaCheckbox = document.getElementById('f_isMega');
+  if(!megaCheckbox || !megaCheckbox.checked) return '';
+  const preset = GAME_PRESET_INDEX[gameKey];
+  if(!preset || !preset.supportsMega) return '';
+  const variant = getMegaVariant(selectedSpeciesEntryId, selectedMegaForm);
+  return (variant && variant.ability) || '';
+}
+function megaAbilityToggleRowHTML(idx, eligibleAbility, applied){
+  if(!eligibleAbility) return '';
+  const icon = getMegaFormDisplay(selectedSpeciesEntryId).icon;
+  const title = applied ? 'Click to hide the Mega Ability for this game' : 'Click to show the Mega Ability for this game';
+  return '<div class="mega-ability-toggle-row' + (applied ? ' active' : '') + '" id="moveMegaToggle-' + idx + '" title="' + escapeAttr(title) + '" onclick="toggleRowMegaAbility(' + idx + ')">' +
+    '<img src="' + icon + '" alt="">' +
+    (applied ? '<span>' + escapeHTML(eligibleAbility) + '</span>' : '') +
+    '</div>';
+}
+function toggleRowMegaAbility(idx){
+  formMovesDraft[idx].useMegaAbility = !formMovesDraft[idx].useMegaAbility;
+  refreshAbilityField(idx);
+}
+// Rebuilds one row's whole Ability area (input, Mega toggle button if eligible, note,
+// or the noAbilities message) from scratch. A full innerHTML replacement rather than
+// tweaking existing elements' state, since the Mega toggle button itself may need to be
+// created or removed entirely. For example, it doesn't exist yet the first time Mega gets
+// enabled with a game row already present, so there'd be nothing to tweak.
+function refreshAbilityField(idx){
+  const wrap = document.getElementById('abilityFieldWrap-' + idx);
+  const g = formMovesDraft[idx];
+  if(!wrap || !g) return;
+  wrap.innerHTML = abilityFieldHTML(idx, g);
+}
+function refreshAllAbilityFields(){
+  formMovesDraft.forEach(function(g, idx){ refreshAbilityField(idx); });
 }
 function updateMoveField(idx, field, val){
   formMovesDraft[idx][field] = val;
@@ -442,13 +544,13 @@ function updateMoveField(idx, field, val){
         ? `<img src="${preset.icon}" alt="${escapeAttr(preset.label)}">`
         : `<span class="game-preset-trigger-placeholder">🎮</span>`;
     }
+    refreshAbilityField(idx);
   }
 }
-function updateMoveSlotRich(idx, slot, el){ formMovesDraft[idx].moves[slot] = el.innerHTML.trim(); }
+function updateMoveSlot(idx, slot, val){ formMovesDraft[idx].moves[slot] = val; }
 function richCmd(elId, cmd){ document.getElementById(elId).focus(); document.execCommand(cmd, false, null); }
-function richCmdOnEl(el, cmd){ if(el) el.focus(); document.execCommand(cmd, false, null); }
 function addMoveRow(){
-  formMovesDraft.push({ id: cryptoId(), tag:'', ability:'', moves:['','','',''], gameKey:'' });
+  formMovesDraft.push({ id: cryptoId(), tag:'', ability:'', moves:['','','',''], gameKey:'', useMegaAbility:false });
   renderMovesEditor();
 }
 function removeMoveRow(idx){
@@ -543,6 +645,7 @@ function closeForm(){
   selectedTypes = [];
   selectedMegaTypes = [];
   selectedMegaForm = '';
+  selectedTeraType = '';
   selectedGender = '';
   selectedPokerus = 'none';
   selectedSpeciesEntryId = '';
@@ -555,10 +658,17 @@ openForm = function(id){
   selectedTypes = existing ? [...existing.types] : [];
   selectedMegaTypes = existing ? [...(existing.megaTypes||[])] : [];
   selectedMegaForm = existing ? (existing.megaForm || '') : '';
+  selectedTeraType = existing ? (existing.teraType || '') : '';
   selectedGender = existing ? (existing.gender || '') : '';
   selectedPokerus = existing ? (existing.pokerus || 'none') : 'none';
   selectedSpeciesEntryId = existing ? (existing.speciesEntryId || '') : '';
   _origOpenForm(id);
+  // Covers "species already had Mega enabled with no typing saved, and MEGA_TYPES has
+  // since gained an entry for it". The checkbox-change and species-pick triggers for
+  // auto-fill don't fire just from opening the form, so without this an existing record
+  // would keep showing a blank Mega Type(s) picker even after adding reference data for
+  // its species. No-ops (via tryAutoFillMegaTypes's own guard) if typing is already set.
+  tryAutoFillMegaTypes();
 };
 
 document.getElementById('btnNewDex').onclick = () => openNewDexModal();

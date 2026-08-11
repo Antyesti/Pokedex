@@ -80,7 +80,7 @@ function persistState(){
       pokemon: state.pokemon
     }));
   } catch(e){
-    // Quota exceeded or storage disabled (e.g. private browsing) -- warn once per
+    // Quota exceeded or storage disabled (e.g. private browsing). Warn once per
     // session rather than repeating the toast on every debounced write attempt.
     if(!autosaveQuotaWarned){
       autosaveQuotaWarned = true;
@@ -208,7 +208,7 @@ document.getElementById('lastFileDismiss')?.addEventListener('click', (e) => {
 let toastTimer = null;
 // Only one toast is ever showing at a time, so only one "vanish" callback needs tracking.
 // A toast counts as vanished once it's no longer visible and its action (if any) wasn't
-// used to handle whatever it was offering -- either it timed out, or a newer toast replaced
+// used to handle whatever it was offering: either it timed out, or a newer toast replaced
 // it before the person acted on it.
 let toastVanishCallback = null;
 
@@ -275,4 +275,80 @@ window.addEventListener('scroll', () => {
 scrollTopBtn.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+/* ============== MEGA/GIGANTAMAX ALTERNATE FORMS ============== */
+// Groudon, Kyogre, Necrozma's Dawn Wings/Dusk Mane forms, and Eternatus all flip the same
+// isMega/isGigantamax toggle as everyone else, but the games call it something else
+// (Primal Reversion, Ultra Burst, Eternamax) and show a different icon for some of them.
+// These are the single places that decide which term/icon to show for a given species --
+// everywhere the generic label or icon would otherwise be shown for a specific Pokémon,
+// look it up through here instead.
+function resolveFormDisplay(speciesEntryId, altForms, fallback){
+  const alt = speciesEntryId && altForms[speciesEntryId];
+  if(!alt) return fallback;
+  return { term: alt.term, icon: alt.icon || fallback.icon, prefix: alt.prefix || fallback.prefix };
+}
+function getMegaFormDisplay(speciesEntryId){
+  return resolveFormDisplay(speciesEntryId, MEGA_ALT_FORMS, { term: 'Mega Evolution', icon: MEGA_ICON, prefix: 'MEGA' });
+}
+function getGigantamaxFormDisplay(speciesEntryId){
+  return resolveFormDisplay(speciesEntryId, GIGANTAMAX_ALT_FORMS, { term: 'Gigantamax', icon: GIGANTAMAX_ICON, prefix: 'GIGANTAMAX' });
+}
+
+// Finds the MEGA_TYPES variant that's currently in effect for a species: the one
+// matching megaForm's label (Charizard X/Y, Mewtwo X/Y, ...), or the only/first variant
+// for species with just one Mega. Shared by the typing auto-fill and the Mega Ability
+// display, since both need "which variant applies right now" the same way. Keyed by
+// species entry id rather than name, since only specific forms of some species can Mega
+// Evolve (Floette's Eternal Flower form, Kantonian but not Galarian Slowbro, etc.).
+function getMegaVariant(speciesEntryId, megaForm){
+  const variants = MEGA_TYPES[speciesEntryId];
+  if(!variants || !variants.length) return null;
+  return variants.find(v => v.label === megaForm) || variants[0];
+}
+
+/* ============== TERASTALLIZATION ============== */
+// A handful of species Terastallize to one specific type rather than a free choice,
+// namely Ogerpon's masks and Terapagos. See FIXED_TERA_TYPES in data/mega-types.js. Everyone
+// else picks freely from TERA_TYPES via the Tera Type swatches in the form.
+function getFixedTeraType(speciesEntryId){
+  return (speciesEntryId && FIXED_TERA_TYPES[speciesEntryId]) || null;
+}
+
+// Renders the Tera Type picker's contents: a locked single badge for species with a fixed
+// Tera type, or the full swatch row otherwise. Shared between the form's initial render
+// (js/pokemon.js) and re-renders triggered by a species change (refreshTeraAvailability).
+function teraTypeFieldInnerHTML(speciesEntryId, currentType){
+  const fixedType = getFixedTeraType(speciesEntryId);
+  if(fixedType){
+    return `${typeBadgeHTML(fixedType)}<div class="hint" style="width:100%; margin-top:6px;">Fixed by this species, can't be changed.</div>`;
+  }
+  return TERA_TYPES.map(t => `<button type="button" class="type-badge type-select ${t===STELLAR_TYPE?'type-badge-stellar':''} ${currentType===t?'active':''}" data-type="${t}" ${t===STELLAR_TYPE?'':`style="background:${TYPE_HEX[t]}"`} onclick="selectTeraType('${t}')">${t}</button>`).join('');
+}
+
+// Shared by the card and Detail View type rows. Stellar has no fixed color of its own in
+// the games, since TYPE_HEX has no entry for it, so it gets a CSS class that animates
+// through every other type's color instead of an inline background.
+function typeBadgeHTML(t, opts){
+  const faded = opts && opts.faded;
+  if(t === STELLAR_TYPE){
+    return `<span class="type-badge type-badge-stellar${faded ? ' type-badge-faded' : ''}">${t}</span>`;
+  }
+  if(faded){
+    // The inline `background` shorthand used below would reset background-image/color
+    // and override the CSS class's color-mix background, so faded badges go through the
+    // --type-color custom property + .type-badge-faded class instead.
+    return `<span class="type-badge type-badge-faded" style="--type-color:${TYPE_HEX[t]}">${t}</span>`;
+  }
+  return `<span class="type-badge" style="background:${TYPE_HEX[t]}">${t}</span>`;
+}
+
+// Strips HTML tags and decodes entities down to plain text, using the browser's own
+// parser rather than a regex (which can't reliably handle entities or nesting). Used to
+// migrate move names that were saved back when the field supported Bold/Italic.
+function stripHtmlToText(html){
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent.trim();
+}
 

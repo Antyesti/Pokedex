@@ -4,13 +4,13 @@
  * Every entry the Species field's autocomplete/picker can suggest: National Dex number,
  * species name, an optional Regional Demonym, an optional Form Name, and typing.
  *
- * A single species can have multiple entries -- one per Regional Variant or official form
+ * A single species can have multiple entries, one per Regional Variant or official form
  * that carries its own typing (Alolan Meowth, Origin Forme Giratina, Zen Mode Darmanitan,
  * and so on). Each entry has a stable `id` so a saved Pokémon can remember exactly which
  * one was picked (and have it re-highlighted if the picker is reopened), independent of
  * array order.
  *
- * Fields are kept separate on purpose -- species name, demonym, and form name are never
+ * Fields are kept separate on purpose. Species name, demonym, and form name are never
  * pre-joined into one string. The picker builds its subtitle from them at render time:
  *   - both demonym and form  -> "Demonym · Form"
  *   - demonym only           -> "Demonym"
@@ -18,7 +18,7 @@
  *   - neither                -> no subtitle
  *
  * Regional Demonym is only ever one of the fixed regional-origin labels (Kantonian Form,
- * Alolan Form, Galarian Form, etc.) -- and every entry for a species that HAS regional
+ * Alolan Form, Galarian Form, etc.), and every entry for a species that HAS regional
  * variants gets one, including that species' original form, so all of them read
  * consistently in the picker. Form Name is for official in-game alternate-forme names
  * (Origin Forme, Zen Mode, Crowned Sword, ...) unrelated to regional origin.
@@ -12485,17 +12485,7 @@ const POKEMON_SPECIES = [
     dex: 1024,
     species: "Terapagos",
     demonym: null,
-    form: "Normal Form",
-    types: [
-      "Normal"
-    ]
-  },
-  {
-    id: "terapagos-terastal",
-    dex: 1024,
-    species: "Terapagos",
-    demonym: null,
-    form: "Terastal Form",
+    form: null,
     types: [
       "Normal"
     ]
@@ -12517,6 +12507,157 @@ const POKEMON_SPECIES = [
     species: "Pichu",
     demonym: null,
     form: "Spiky-eared Pichu",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "magearna-original-color",
+    dex: 801,
+    species: "Magearna",
+    demonym: null,
+    form: "Original Color",
+    types: [
+      "Steel",
+      "Fairy"
+    ]
+  },
+  {
+    id: "pikachu-original-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Original Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-hoenn-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Hoenn Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-sinnoh-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Sinnoh Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-unova-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Unova Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-kalos-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Kalos Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-alola-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Alola Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-partner-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Partner Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-world-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "World Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-cosplay",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Cosplay",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-rock-star",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Rock Star",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-belle",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Belle",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-pop-star",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Pop Star",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-ph-d",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Ph.D.",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-libre",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Libre",
     types: [
       "Electric"
     ]

@@ -240,7 +240,7 @@ function createNoisePattern(ctx){
 
 // The card's background: a near-black base with a couple of large, soft, off-center
 // color blobs (an "aurora"/mesh-gradient look) tinted with the Pokémon's own type colors,
-// a fine grain texture over the top, and a glass-style top highlight -- read as a lot more
+// a fine grain texture over the top, and a glass-style top highlight, reading as a lot more
 // contemporary than a single flat diagonal gradient.
 function drawAuroraCardBackground(ctx, w, h, radius, primaryHex, secondaryHex){
   roundRectPath(ctx, 0, 0, w, h, radius);
@@ -287,7 +287,7 @@ function drawAuroraCardBackground(ctx, w, h, radius, primaryHex, secondaryHex){
   ctx.stroke();
 }
 
-// A small circular glass badge with an icon centered inside -- used for the ball, the
+// A small circular glass badge with an icon centered inside. Used for the ball, the
 // origin/last game, and achievements now that they're icon-only instead of icon+text chips.
 function drawIconCircleBadge(ctx, cx, cy, r, img, tintHex){
   ctx.beginPath();
@@ -326,7 +326,7 @@ function decodeAnimatedApng(dataUri){
     const delays = decoded.frames.map(f => f.delay || 100);
     return { width: decoded.width, height: decoded.height, frames: rgbaFrames, delays };
   } catch(e){
-    return null; // malformed/unsupported PNG -- fall back to a static export
+    return null; // malformed or unsupported PNG, fall back to a static export
   }
 }
 
@@ -368,7 +368,7 @@ function decodeAnimatedGif(dataUri){
     });
     return { width, height, frames: rgbaFrames, delays };
   } catch(e){
-    return null; // malformed/unsupported GIF -- fall back to a static export
+    return null; // malformed or unsupported GIF, fall back to a static export
   }
 }
 
@@ -397,7 +397,7 @@ async function prepareCardShareAssets(p){
   const ballImg = p.ball ? await loadImageAsync(BALL_LOOKUP[p.ball] || '') : null;
   const achievementIcons = await Promise.all(achievements.map(a => loadImageAsync(a.icon)));
 
-  // Origin/Last Game render as icons only now, same as the ball -- reuse the same game
+  // Origin/Last Game render as icons only now, same as the ball. Reuse the same game
   // preset lookup the live detail view uses to go from a stored game name to its icon.
   const sameGame = !!(p.originGame && p.originGame === p.lastGame);
   const originKey = p.originGame ? detectGameKeyFromTag(p.originGame) : null;
@@ -406,7 +406,7 @@ async function prepareCardShareAssets(p){
   const lastIcon = lastKey ? await loadImageAsync(GAME_PRESET_INDEX[lastKey].icon) : null;
   const hasIconRow = !!(ballImg || originIcon || lastIcon);
 
-  // Met location / Met date -- there's no natural icon for either, so these stay text chips.
+  // Met location / Met date have no natural icon for either, so these stay text chips.
   const metaItems = [];
   if(p.metLocation) metaItems.push('📍 ' + stripHTML(p.metLocation));
   if(p.metDate){
@@ -449,7 +449,7 @@ function drawCardFrame(p, assets, spriteDrawable){
   ctx.scale(scale, scale);
   ctx.translate(m, m);
 
-  // A floating drop shadow beneath the card, cast from a throwaway filled shape -- the
+  // A floating drop shadow beneath the card, cast from a throwaway filled shape. The
   // actual visible background is painted on top of this and unaffected by the shadow
   // itself, only by where it falls outside the card's own rounded rect.
   ctx.save();
@@ -542,7 +542,7 @@ function drawCardFrame(p, assets, spriteDrawable){
 
   y += headerHeight;
 
-  // Ball / Origin Game / Last Game -- icons only, no labels.
+  // Ball / Origin Game / Last Game: icons only, no labels.
   if(hasIconRow){
     const r = SHARE_ICON_BADGE_D/2;
     const cy = y + r;
@@ -587,7 +587,7 @@ function drawCardFrame(p, assets, spriteDrawable){
     y += metaBlockHeight;
   }
 
-  // Achievements -- icons only, no names.
+  // Achievements: icons only, no names.
   ctx.font = '700 16px "Outfit", sans-serif';
   ctx.fillStyle = '#ffffff';
   ctx.fillText(`Achievements (${achievements.length})`, x, y + 16);

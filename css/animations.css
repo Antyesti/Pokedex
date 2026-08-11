@@ -57,7 +57,7 @@
 .collapsible > .collapsible-inner{ overflow:hidden; min-height:0; }
 
 /* Once fully open, stop clipping. Browsers can be off by a sub-pixel when resolving the 1fr
-   track above, which otherwise shaves a sliver off the first/last row permanently -- since
+   track above, which otherwise shaves a sliver off the first/last row permanently. Since
    sections often render already-open (no transition ever runs to mask it), this has to be
    an unconditional style, not something only applied after a transition finishes. */
 .collapsible.open > .collapsible-inner{ overflow:visible; }

@@ -6,7 +6,7 @@ const searchGlow = document.getElementById('searchGlow');
 const searchClearBtn = document.getElementById('searchClearBtn');
 
 // Keeps the mirror showing exactly what's in the real input (which has its own glyphs
-// hidden via -webkit-text-fill-color while .has-value is set -- see the .t-clear CSS).
+// hidden via -webkit-text-fill-color while .has-value is set, see the .t-clear CSS).
 // This has to run on every keystroke, not just during a clear, so the mirror never falls
 // out of sync with what the person is actually typing.
 function syncSearchMirror(){
@@ -80,7 +80,7 @@ searchClearBtn.addEventListener('click', () => {
   const easeIn = t => t * t * t;
 
   // Per-word streak positions, measured off the actual rendered spans rather than
-  // estimated -- exact regardless of font, kerning, or which characters the word contains.
+  // estimated, so it stays exact regardless of font, kerning, or which characters the word contains.
   const wordEls = Array.from(searchMirror.querySelectorAll('.t-clear-word'));
   const wrapRect = searchWrap.getBoundingClientRect();
   const wordBoxes = wordEls.map(el => {

@@ -14,6 +14,7 @@ const CREDITS = [
     title: "Icons & Artwork",
     items: [
       "Poké Ball, Ribbon, and Mega Evolution / Gigantamax icons are provided by <a href=\"https://github.com/msikma/pokesprite\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-github-link\">msikma/pokesprite</a> and <a class=\"species-link\"><b>Bulbapedia</b></a>.",
+      "The Ultra Burst icon is by <a href=\"https://www.deviantart.com/jormxdos\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-github-link\">JorMxDos</a>.",
       "Game version icons until Gen 3 are by <a href=\"https://steamcommunity.com/id/WildCh1mera/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-discord-link\">WildCh1mera</a> and sourced from <b>steamgriddb</b>."
     ]
   },
@@ -32,6 +33,30 @@ const CREDITS = [
 ];
 
 const CHANGELOG = [
+  {
+    version: "v27",
+    entries: [
+      {
+        title: "New",
+        items: [
+          "Added Terastallization as a new Forms toggle alongside Mega Evolution and Gigantamax. When enabled, choose a Tera Type to add as a third type alongside a Pokémon's default typing, reusing its existing Default sprite rather than requiring a separate one.",
+          "Added the Stellar type as a Tera Type option, available only through Terastallization.",
+          "Each of Ogerpon's masks and Terapagos now Terastallize to one fixed type rather than a free choice. Terapagos always goes Stellar.",
+          "Groudon, Kyogre, and both of Necrozma's fused forms now display their proper name and icon, Primal Reversion or Ultra Burst, instead of the generic Mega Evolution label wherever the Mega toggle appears. Eternatus receives the same treatment for Gigantamax, appearing as Eternamax.",
+          "The Moveset by Game section now shows a Mega Ability in place of the normal Ability for species whose Mega Evolution has a fixed ability of its own, for any game that supports Mega Evolution.",
+          "Added all of Pikachu's forms.",
+          "<b>Pokémon GO</b>, <b>Pokémon Colosseum</b> and <b>Pokémon XD: Gale of Darkness</b> has been added as preset game."
+        ]
+      },
+      {
+        title: "Fixed",
+        items: [
+          "Removed the separate Terapagos Terastal Form species entry now that Terastallization is handled by the Forms toggle.",
+          "Moveset by Game Move fields no longer support rich text formatting. Existing entries with Bold or Italic formatting are cleaned up to plain text automatically when a save loads or is imported. This is done so that support for STAB moves which are signified by Bold text and Mega Moves which are signified by Italicized text can be added later."
+        ]
+      }
+    ]
+  },
   {
     version: "v26",
     entries: [
