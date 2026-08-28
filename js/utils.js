@@ -166,8 +166,7 @@ async function applyFileToState(file){
   const text = await file.text();
   const data = normalizeImportedData(JSON.parse(text));
   state = data;
-  pendingDeletions = [];
-  historyBarVisible = false;
+  changeHistory = [];
   updateHistoryBar();
   applySettings();
   render();
@@ -293,6 +292,75 @@ function getMegaFormDisplay(speciesEntryId){
 }
 function getGigantamaxFormDisplay(speciesEntryId){
   return resolveFormDisplay(speciesEntryId, GIGANTAMAX_ALT_FORMS, { term: 'Gigantamax', icon: GIGANTAMAX_ICON, prefix: 'GIGANTAMAX' });
+}
+
+// Matches the ALT_FORMS prefix values above to the word the Sprite List and Special
+// Z-Move/G-Max Move Pokémon lists name a form's alternate identity with.
+const MEGA_GMAX_PREFIX_WORD = { MEGA:'Mega', PRIMAL:'Primal', ULTRA:'Ultra', GIGANTAMAX:'Gigantamax', ETERNAMAX:'Eternamax' };
+
+// Builds the alternate-form display name for whichever of Mega Evolution (including
+// Primal Reversion/Ultra Burst) or Gigantamax (including Eternamax) is currently the
+// Pokémon's shown form, e.g. "Mega Charizard X", "Ultra Necrozma", "Gigantamax Charizard".
+// A species that also has its own distinct Species Database form (Magearna's Original
+// Color, Toxtricity's Amped/Low Key Form, Urshifu's Single/Rapid Strike Style, and so on)
+// folds that in as a plain trailing suffix, "<Prefix> <Species> <Form>" -- same as
+// megaForm's Charizard X/Y suffix, and matching how the Sprite List names these (e.g.
+// "Gigantamax Toxtricity Amped Form" in data/sprites.js). Never parenthesized -- forms
+// are never shown in brackets anywhere in this app (see speciesSubtitle in
+// js/species-picker.js). Returns '' when neither Mega nor Gigantamax is currently shown.
+// Shared by the Sprite List lookup (findPlaceholderSprite, js/renderer.js) and Special
+// Z-Move/G-Max Move eligibility (pokemonEligible, js/moves.js), so a Pokémon that's
+// actually Ultra Necrozma or a Mega Evolution can be targeted by name in the Control
+// Panel the same way it's found a sprite.
+// Builds the alternate-form display name for whichever of Mega Evolution (including
+// Primal Reversion/Ultra Burst) or Gigantamax (including Eternamax) is currently the
+// Pokémon's shown form, e.g. "Mega Charizard X", "Ultra Necrozma", "Gigantamax Charizard".
+// Follows the same rule as everywhere else a species name combines with a modifier --
+// never parenthesized or otherwise punctuated. Only one modifier slot sits directly in
+// front of the species name; the Mega/Gigantamax word always claims it, so a species
+// that also has an actual regional variant (not just an origin-region label) has that
+// demonym folded in right after, e.g. "Gigantamax Galarian Meowth". A standard Mega
+// Evolution or Gigantamax (but not a total transformation like Ultra Burst or Primal
+// Reversion, which replaces the Pokémon's prior identity outright and so doesn't carry a
+// pre-transformation form along with it) also trails the species' own distinct form
+// after, e.g. "Gigantamax Toxtricity Amped Form", "Mega Zygarde Complete Forme".
+// Returns '' when neither Mega nor Gigantamax is currently shown. Shared by the Sprite
+// List lookup (findPlaceholderSprite, js/renderer.js) and Special Z-Move/G-Max Move
+// eligibility (pokemonEligible, js/moves.js), so a Pokémon that's actually Ultra Necrozma
+// or a Mega Evolution can be targeted by name in the Control Panel the same way it's
+// found a sprite.
+function megaOrGigantamaxDisplayName(p){
+  const entry = (typeof findSpeciesEntry === 'function') ? findSpeciesEntry(p.speciesEntryId) : null;
+
+  let display, defaultWord;
+  if(p.preferredForm === 'mega' && p.isMega){
+    display = getMegaFormDisplay(p.speciesEntryId);
+    defaultWord = 'Mega';
+  } else if(p.preferredForm === 'gigantamax' && p.isGigantamax){
+    display = getGigantamaxFormDisplay(p.speciesEntryId);
+    defaultWord = 'Gigantamax';
+  } else {
+    return '';
+  }
+  const word = MEGA_GMAX_PREFIX_WORD[display.prefix] || defaultWord;
+
+  // Alcremie is the one exception: its Gigantamax has a single unified look regardless
+  // of which Cream/Sweet combination it started as, the same way Necrozma's Ultra Burst
+  // doesn't carry its pre-burst form along (see "Gigantamax Alcremie" in data/sprites.js).
+  const preservesForm = (display.prefix === 'MEGA' || display.prefix === 'GIGANTAMAX') && p.species !== 'Alcremie';
+
+  let regionalPrefix = '';
+  if(preservesForm && entry && entry.demonym && !/kantonian/i.test(entry.demonym)){
+    regionalPrefix = entry.demonym.replace(/ Form$/i, '').trim();
+  }
+
+  const suffix = preservesForm && entry && entry.form
+    ? entry.form
+    : (display.prefix === 'MEGA' && p.megaForm) ? p.megaForm : '';
+
+  let name = word + ' ' + (regionalPrefix ? regionalPrefix + ' ' : '') + p.species;
+  if(suffix) name += ' ' + suffix;
+  return name;
 }
 
 // Finds the MEGA_TYPES variant that's currently in effect for a species: the one

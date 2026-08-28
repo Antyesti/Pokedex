@@ -1,9 +1,9 @@
 # ✨Pokédex
 
-A single-page web app for tracking a personal Pokémon collection: nicknames,
-species, types, natures, met info, sprites, move/ability logs per game, and
-an achievements/ribbons system. Runs entirely client-side and can be opened
-directly from disk (`index.html`) with no build step or server required.
+A single-page web app for keeping track of a personal Pokémon collection. It stores
+nicknames, species, types, natures, met information, sprites, per-game moves and
+abilities, and achievements and ribbons. Everything runs in the browser, so
+`index.html` can be opened directly from disk without a build step or server.
 
 <img width="1487" height="743" alt="image" src="https://github.com/user-attachments/assets/2f7ccb24-cfdb-46c8-a647-a51602549409" />
 
@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
 ## 🔖Features
 
 ### 🧬Roster & Pokémon records
-- Add / edit / delete Pokémon with nickname, species, up to two types (with
+- Add, edit, or delete Pokémon with a nickname, species, up to two types (with
   official type colors), nature (with stat up/down tooltip), gender, and a
   shiny toggle.
 - **Pokérus** status: Infected / None / Cured, set from a segmented toggle
@@ -41,12 +41,12 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
 - Log per-game playthrough data: an icon-picker dropdown of every mainline
   game (grouped by generation) plus a free-text Tag field, an Ability field,
   and 4 rich-text move slots (bold/italic) per row.
-- Add or remove as many game rows as needed. Typing a full game name into the
+- Add or remove as many game rows as you need. Typing a full game name into the
   Tag field auto-links it to that game's badge, just like the Origin/Last Game
   fields.
 
 ### 🧮Achievements (Ribbons, Marks, Misc)
-- Full catalog of official Ribbons (League, Contest, Tower/Battle, and more),
+- Includes the full catalog of official Ribbons (League, Contest, Tower/Battle, and more),
   Marks, and miscellaneous achievements, each togglable per Pokémon with its
   own icon.
 - **Memory Ribbons**: Contest Memory Ribbon (40 sub-ribbons split across
@@ -57,30 +57,30 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
   (Coolness/Beauty/Cuteness/Cleverness/Toughness) are earned, and Twinkling
   Star Ribbon unlocks only after that. Both stay in sync automatically if
   prerequisites are removed.
-- Custom, user-defined achievements can be added per tag/category alongside
+- You can also add your own achievements by tag or category alongside
   the official catalog.
 - An active title can be selected from any earned title-granting achievement
   and is shown next to the Pokémon's name (e.g. "Champion Pikachu" or
   "Ash's Pikachu").
 - Read-only detail view only shows sub-ribbons actually earned (plus a region
-  header only when that region has ribbons). The edit form always shows the
+  header only when that region has ribbons). The edit form shows the
   full picker grid for toggling.
 
 ### 🌐Browsing, search & filtering
-- Live search across nickname, species, nature, ball, moves, notes, and
+- Search nickname, species, nature, ball, moves, notes, and
   earned achievements (ribbons, marks, and other catalog/custom entries).
   An inline × button clears the search box.
-- Filter by type, by Origin Game (auto-populated from the roster), shiny
+- Filter by type, Origin Game (auto-populated from the roster), shiny
   only, Mega only, or Gigantamax only. Filters can be combined. A "Clear
   Filters" button appears on the no-matches empty state.
-- Sort via a compact ⇅ dropdown with three keys: Added, Species, Nickname.
+- Sort from the compact ⇅ menu using three options: Added, Species, Nickname.
   Each key remembers its own direction independently (Oldest/Newest for
   Added, A-Z/Z-A for Species and Nickname), so switching keys doesn't reset
   the direction picked for the others.
-- Cozy (3-per-row) or dense (6-per-row) grid density toggle, next to Sort.
+- Switch between a cozy 3-per-row grid and a denser 6-per-row grid with the toggle next to Sort.
 - Card view shows type badges, ball/shiny/form/Pokérus icons, origin to last
   game label, and animated sparkle particles for shiny Pokémon.
-- The grid loads in batches (24 at a time) and loads more automatically as
+- The grid loads 24 cards at a time and automatically loads more as
   you scroll, or via a "Load more" button, so large rosters stay responsive.
 - A scroll-to-top button appears once you've scrolled past the header.
 
@@ -94,17 +94,17 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
   (phone galleries, Discord, Slack).
 - On mobile, sharing uses the device's native share sheet (file sharing);
   on desktop it downloads directly.
-- A header Share button exports the entire roster as a single image: a
+- The header Share button exports the entire roster as a single image: a
   grid of every Pokémon with its sprite, name, and types.
 
 ### 📊Stats dashboard
-- Roster-wide summary bar plus an expandable dashboard with: top Origin
+- A summary bar and expandable dashboard show: top Origin
   Games, top Natures (with a "no nature set" count), top Poké Balls (with
   icons), and completeness metrics (Met Location / Sprite / Notes / ≥1 game
   logged, each as an "X of Y" count).
 
 ### 🧭Data & file handling
-- Import/Export as JSON. On Chromium-based browsers this uses the File
+- Import and export the roster as JSON. On Chromium-based browsers this uses the File
   System Access API to save/reopen the same file directly (with a "Load last
   file" chip to reopen it next session), falling back to standard
   download/upload dialogs elsewhere.
@@ -112,7 +112,7 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
   that toast expires with the deletion still pending, a History button
   appears above the footer to restore any pending deletion individually,
   not just the most recent one; it stays hidden otherwise.
-- The roster, trainer name, and settings autosave to the browser's
+- The roster, trainer name, and settings are saved automatically to the browser's
   `localStorage` after every change and are restored automatically on the
   next visit. Export remains the way to back up a roster or move it to
   another browser/device.
@@ -120,19 +120,19 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
 ### 🔰Appearance & customization
 - Poké Ball (light) and Beast Ball (dark) built-in themes, toggleable from
   the header.
-- Master Ball custom theme: pick your own background, text, and two accent
+- Master Ball custom theme: choose your own background, text, and two accent
   colors (glassmorphic or neumorphic surface style), applied live as you
   edit them in Settings.
-- Settings modal lets you set the default theme for future visits.
+- Settings lets you choose the default theme for future visits.
 
 ### ⚙️Other UI conveniences
 - Custom date picker (met date) with typed-date parsing and formatted
   display (e.g. "March 3rd, 2024").
 - Custom searchable/icon dropdowns for Poké Ball selection, sharing the same
   dropdown component styling as the game pickers.
-- Changelog and Credits panels linked from the footer.
+- Changelog and Credits panels are available from the footer.
 - `Escape` key closes any open detail view, edit form, or changelog panel.
-- Toast notifications for import/export/save/undo feedback.
+- Toast notifications provide feedback for imports, exports, saves, and undos.
 - Micro-interactions: switches (Shiny, Mega, Gigantamax, Settings) settle
   into place with a double-bounce; an invalid form field shakes along with
   its red border; clearing the search box flies the old text out with a
@@ -150,16 +150,19 @@ css/
   achievements.css       Achievements section styling
   animations.css         Shared keyframe animations
   themes.css             Theme variables (including the Master Ball custom theme)
-  card-effects.css       3D Hover glow effects for individual cards
+  card-effects.css       3D hover glow effects for cards
   species-picker.css       Styling for the Species database
 js/
-  app.js                 Data model, state, form handling, keyboard shortcuts, deletion/undo/History
-  achievements.js        Achievement catalog logic, title resolution, Memory Ribbon UI, detail view
+  state.js               Roster state, Pokémon record normalization, seed data
+  app.js                 Type/stat color tables, changelog/credits modals, deletion/undo/History, keyboard shortcuts
+  settings.js            Settings modal: theme, custom colors, fonts, share format
+  achievements.js        Achievement catalog logic, title resolution, Memory Ribbon UI
+  detail-view.js         Pokémon detail modal
   renderer.js            Card/grid rendering, stats dashboard (with digit-reel counters), sort/filter state, date picker, ball/type UI
-  pokemon.js             Add/Edit form modal, import/export
-  species-picker.js             The handling for the species picker
+  pokemon.js             Add/Edit form modal, form save/validation, import/export
+  species-picker.js             Species picker logic
   card-effects.js             3D hover tilt + border glow, rAF-batched pointer tracking
-  filters.js             Filter, search, and search-clear transition
+  filters.js             Filtering, search, and search-clear transition
   utils.js               Autosave (localStorage), File System Access API helpers, toast/modal-focus/scroll-to-top
   share.js               Share-as-image: single-card and full-roster PNG/APNG export
   vendor/
@@ -180,14 +183,14 @@ icons/
   game-icons.js          Icons for official games
 ```
 
-All artwork in the app is Base64 icon data stored in `icons/`; there are no
+All artwork in the app is stored as Base64 icon data in `icons/`; there are no
 plain image files, so there's no separate `images/` folder.
 
-Data and icon files are loaded as plain `<script>` tags (not `fetch`ed as
-JSON) so the app keeps working when opened directly from `file://`, where
+Data and icon files are loaded as plain `<script>` tags rather than being
+fetched as JSON, so the app keeps working when opened directly from `file://`, where
 `fetch()` of local JSON is blocked by browser CORS policy. Load order is
 icons → data → app → achievements → renderer → utils → pokemon → filters →
-`init()`, so every module sees the globals it depends on already defined.
+`init()`, so each module has the globals it needs when it loads.
 
 ## Notes on data files
 

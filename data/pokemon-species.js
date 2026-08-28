@@ -315,6 +315,146 @@ const POKEMON_SPECIES = [
     ]
   },
   {
+    id: "pikachu-original-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Original Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-hoenn-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Hoenn Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-sinnoh-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Sinnoh Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-unova-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Unova Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-kalos-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Kalos Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-alola-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Alola Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-partner-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Partner Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-world-cap",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "World Cap",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-cosplay",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Cosplay",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-rock-star",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Rock Star",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-belle",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Belle",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-pop-star",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Pop Star",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-ph-d",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Ph.D.",
+    types: [
+      "Electric"
+    ]
+  },
+  {
+    id: "pikachu-libre",
+    dex: 25,
+    species: "Pikachu",
+    demonym: null,
+    form: "Libre",
+    types: [
+      "Electric"
+    ]
+  },
+  {
     id: "raichu-kantonian",
     dex: 26,
     species: "Raichu",
@@ -2225,6 +2365,16 @@ const POKEMON_SPECIES = [
     ]
   },
   {
+    id: "pichu-spiky-eared-pichu",
+    dex: 172,
+    species: "Pichu",
+    demonym: null,
+    form: "Spiky-eared Pichu",
+    types: [
+      "Electric"
+    ]
+  },
+  {
     id: "cleffa",
     dex: 173,
     species: "Cleffa",
@@ -2541,11 +2691,281 @@ const POKEMON_SPECIES = [
     ]
   },
   {
-    id: "unown-one",
+    id: "unown-a",
     dex: 201,
     species: "Unown",
     demonym: null,
-    form: null,
+    form: "A",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-b",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "B",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-c",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "C",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-d",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "D",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-e",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "E",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-f",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "F",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-g",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "G",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-h",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "H",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-i",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "I",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-j",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "J",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-k",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "K",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-l",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "L",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-m",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "M",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-n",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "N",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-o",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "O",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-p",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "P",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-q",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "Q",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-r",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "R",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-s",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "S",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-t",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "T",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-u",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "U",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-v",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "V",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-w",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "W",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-x",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "X",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-y",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "Y",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-z",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "Z",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-exclamation",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "!",
+    types: [
+      "Psychic"
+    ]
+  },
+  {
+    id: "unown-question",
+    dex: 201,
+    species: "Unown",
+    demonym: null,
+    form: "?",
     types: [
       "Psychic"
     ]
@@ -7900,6 +8320,17 @@ const POKEMON_SPECIES = [
     ]
   },
   {
+    id: "greninja-ash-greninja",
+    dex: 658,
+    species: "Greninja",
+    demonym: null,
+    form: "Ash-Greninja",
+    types: [
+      "Water",
+      "Dark"
+    ]
+  },
+  {
     id: "bunnelby",
     dex: 659,
     species: "Bunnelby",
@@ -7979,6 +8410,215 @@ const POKEMON_SPECIES = [
     species: "Vivillon",
     demonym: null,
     form: "Meadow Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-icy-snow-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Icy Snow Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-polar-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Polar Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-tundra-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Tundra Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-continental-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Continental Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-garden-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Garden Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-elegant-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Elegant Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-modern-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Modern Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-marine-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Marine Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-archipelago-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Archipelago Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-high-plains-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "High Plains Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-sandstorm-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Sandstorm Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-river-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "River Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-monsoon-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Monsoon Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-savanna-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Savanna Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-sun-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Sun Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-ocean-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Ocean Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-jungle-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Jungle Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-fancy-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Fancy Pattern",
+    types: [
+      "Bug",
+      "Flying"
+    ]
+  },
+  {
+    id: "vivillon-pok-ball-pattern",
+    dex: 666,
+    species: "Vivillon",
+    demonym: null,
+    form: "Pokéball Pattern",
     types: [
       "Bug",
       "Flying"
@@ -8218,6 +8858,96 @@ const POKEMON_SPECIES = [
     ]
   },
   {
+    id: "furfrou-heart-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "Heart Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
+    id: "furfrou-star-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "Star Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
+    id: "furfrou-diamond-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "Diamond Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
+    id: "furfrou-debutante-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "Debutante Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
+    id: "furfrou-matron-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "Matron Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
+    id: "furfrou-dandy-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "Dandy Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
+    id: "furfrou-la-reine-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "La Reine Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
+    id: "furfrou-kabuki-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "Kabuki Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
+    id: "furfrou-pharaoh-trim",
+    dex: 676,
+    species: "Furfrou",
+    demonym: null,
+    form: "Pharaoh Trim",
+    types: [
+      "Normal"
+    ]
+  },
+  {
     id: "espurr",
     dex: 677,
     species: "Espurr",
@@ -8228,21 +8958,11 @@ const POKEMON_SPECIES = [
     ]
   },
   {
-    id: "meowstic-female",
+    id: "meowstic",
     dex: 678,
     species: "Meowstic",
     demonym: null,
-    form: "Female",
-    types: [
-      "Psychic"
-    ]
-  },
-  {
-    id: "meowstic-male",
-    dex: 678,
-    species: "Meowstic",
-    demonym: null,
-    form: "Male",
+    form: null,
     types: [
       "Psychic"
     ]
@@ -8605,7 +9325,40 @@ const POKEMON_SPECIES = [
     dex: 710,
     species: "Pumpkaboo",
     demonym: null,
-    form: null,
+    form: "Small Variety",
+    types: [
+      "Ghost",
+      "Grass"
+    ]
+  },
+  {
+    id: "pumpkaboo-medium",
+    dex: 710,
+    species: "Pumpkaboo",
+    demonym: null,
+    form: "Medium Variety",
+    types: [
+      "Ghost",
+      "Grass"
+    ]
+  },
+  {
+    id: "pumpkaboo-large",
+    dex: 710,
+    species: "Pumpkaboo",
+    demonym: null,
+    form: "Large Variety",
+    types: [
+      "Ghost",
+      "Grass"
+    ]
+  },
+  {
+    id: "pumpkaboo-jumbo",
+    dex: 710,
+    species: "Pumpkaboo",
+    demonym: null,
+    form: "Jumbo Variety",
     types: [
       "Ghost",
       "Grass"
@@ -8616,7 +9369,40 @@ const POKEMON_SPECIES = [
     dex: 711,
     species: "Gourgeist",
     demonym: null,
-    form: null,
+    form: "Small Variety",
+    types: [
+      "Ghost",
+      "Grass"
+    ]
+  },
+  {
+    id: "gourgeist-medium",
+    dex: 711,
+    species: "Gourgeist",
+    demonym: null,
+    form: "Medium Variety",
+    types: [
+      "Ghost",
+      "Grass"
+    ]
+  },
+  {
+    id: "gourgeist-large",
+    dex: 711,
+    species: "Gourgeist",
+    demonym: null,
+    form: "Large Variety",
+    types: [
+      "Ghost",
+      "Grass"
+    ]
+  },
+  {
+    id: "gourgeist-jumbo",
+    dex: 711,
+    species: "Gourgeist",
+    demonym: null,
+    form: "Jumbo Variety",
     types: [
       "Ghost",
       "Grass"
@@ -9788,6 +10574,17 @@ const POKEMON_SPECIES = [
     ]
   },
   {
+    id: "magearna-original-color",
+    dex: 801,
+    species: "Magearna",
+    demonym: null,
+    form: "Original Color",
+    types: [
+      "Steel",
+      "Fairy"
+    ]
+  },
+  {
     id: "marshadow",
     dex: 802,
     species: "Marshadow",
@@ -10341,7 +11138,17 @@ const POKEMON_SPECIES = [
     dex: 854,
     species: "Sinistea",
     demonym: null,
-    form: null,
+    form: "Phony Form",
+    types: [
+      "Ghost"
+    ]
+  },
+  {
+    id: "sinistea-antique",
+    dex: 854,
+    species: "Sinistea",
+    demonym: null,
+    form: "Antique Form",
     types: [
       "Ghost"
     ]
@@ -10351,7 +11158,17 @@ const POKEMON_SPECIES = [
     dex: 855,
     species: "Polteageist",
     demonym: null,
-    form: null,
+    form: "Phony Form",
+    types: [
+      "Ghost"
+    ]
+  },
+  {
+    id: "polteageist-antique",
+    dex: 855,
+    species: "Polteageist",
+    demonym: null,
+    form: "Antique Form",
     types: [
       "Ghost"
     ]
@@ -10494,91 +11311,631 @@ const POKEMON_SPECIES = [
     ]
   },
   {
-    id: "alcremie-vanilla-cream",
+    id: "alcremie-vanilla-cream-strawberry-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Vanilla Cream",
+    form: "Vanilla Cream · Strawberry Sweet",
     types: [
       "Fairy"
     ]
   },
   {
-    id: "alcremie-ruby-cream",
+    id: "alcremie-vanilla-cream-love-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Ruby Cream",
+    form: "Vanilla Cream · Love Sweet",
     types: [
       "Fairy"
     ]
   },
   {
-    id: "alcremie-matcha-cream",
+    id: "alcremie-vanilla-cream-berry-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Matcha Cream",
+    form: "Vanilla Cream · Berry Sweet",
     types: [
       "Fairy"
     ]
   },
   {
-    id: "alcremie-mint-cream",
+    id: "alcremie-vanilla-cream-clover-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Mint Cream",
+    form: "Vanilla Cream · Clover Sweet",
     types: [
       "Fairy"
     ]
   },
   {
-    id: "alcremie-lemon-cream",
+    id: "alcremie-vanilla-cream-flower-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Lemon Cream",
+    form: "Vanilla Cream · Flower Sweet",
     types: [
       "Fairy"
     ]
   },
   {
-    id: "alcremie-salted-cream",
+    id: "alcremie-vanilla-cream-star-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Salted Cream",
+    form: "Vanilla Cream · Star Sweet",
     types: [
       "Fairy"
     ]
   },
   {
-    id: "alcremie-ruby-swirl",
+    id: "alcremie-vanilla-cream-ribbon-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Ruby Swirl",
+    form: "Vanilla Cream · Ribbon Sweet",
     types: [
       "Fairy"
     ]
   },
   {
-    id: "alcremie-caramel-swirl",
+    id: "alcremie-ruby-cream-strawberry-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Caramel Swirl",
+    form: "Ruby Cream · Strawberry Sweet",
     types: [
       "Fairy"
     ]
   },
   {
-    id: "alcremie-rainbow-swirl",
+    id: "alcremie-ruby-cream-love-sweet",
     dex: 869,
     species: "Alcremie",
     demonym: null,
-    form: "Rainbow Swirl",
+    form: "Ruby Cream · Love Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-cream-berry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Cream · Berry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-cream-clover-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Cream · Clover Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-cream-flower-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Cream · Flower Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-cream-star-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Cream · Star Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-cream-ribbon-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Cream · Ribbon Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-matcha-cream-strawberry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Matcha Cream · Strawberry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-matcha-cream-love-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Matcha Cream · Love Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-matcha-cream-berry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Matcha Cream · Berry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-matcha-cream-clover-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Matcha Cream · Clover Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-matcha-cream-flower-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Matcha Cream · Flower Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-matcha-cream-star-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Matcha Cream · Star Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-matcha-cream-ribbon-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Matcha Cream · Ribbon Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-mint-cream-strawberry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Mint Cream · Strawberry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-mint-cream-love-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Mint Cream · Love Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-mint-cream-berry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Mint Cream · Berry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-mint-cream-clover-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Mint Cream · Clover Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-mint-cream-flower-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Mint Cream · Flower Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-mint-cream-star-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Mint Cream · Star Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-mint-cream-ribbon-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Mint Cream · Ribbon Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-lemon-cream-strawberry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Lemon Cream · Strawberry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-lemon-cream-love-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Lemon Cream · Love Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-lemon-cream-berry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Lemon Cream · Berry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-lemon-cream-clover-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Lemon Cream · Clover Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-lemon-cream-flower-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Lemon Cream · Flower Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-lemon-cream-star-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Lemon Cream · Star Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-lemon-cream-ribbon-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Lemon Cream · Ribbon Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-salted-cream-strawberry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Salted Cream · Strawberry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-salted-cream-love-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Salted Cream · Love Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-salted-cream-berry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Salted Cream · Berry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-salted-cream-clover-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Salted Cream · Clover Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-salted-cream-flower-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Salted Cream · Flower Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-salted-cream-star-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Salted Cream · Star Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-salted-cream-ribbon-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Salted Cream · Ribbon Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-swirl-strawberry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Swirl · Strawberry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-swirl-love-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Swirl · Love Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-swirl-berry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Swirl · Berry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-swirl-clover-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Swirl · Clover Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-swirl-flower-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Swirl · Flower Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-swirl-star-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Swirl · Star Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-ruby-swirl-ribbon-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Ruby Swirl · Ribbon Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-caramel-swirl-strawberry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Caramel Swirl · Strawberry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-caramel-swirl-love-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Caramel Swirl · Love Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-caramel-swirl-berry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Caramel Swirl · Berry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-caramel-swirl-clover-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Caramel Swirl · Clover Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-caramel-swirl-flower-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Caramel Swirl · Flower Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-caramel-swirl-star-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Caramel Swirl · Star Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-caramel-swirl-ribbon-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Caramel Swirl · Ribbon Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-rainbow-swirl-strawberry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Rainbow Swirl · Strawberry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-rainbow-swirl-love-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Rainbow Swirl · Love Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-rainbow-swirl-berry-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Rainbow Swirl · Berry Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-rainbow-swirl-clover-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Rainbow Swirl · Clover Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-rainbow-swirl-flower-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Rainbow Swirl · Flower Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-rainbow-swirl-star-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Rainbow Swirl · Star Sweet",
+    types: [
+      "Fairy"
+    ]
+  },
+  {
+    id: "alcremie-rainbow-swirl-ribbon-sweet",
+    dex: 869,
+    species: "Alcremie",
+    demonym: null,
+    form: "Rainbow Swirl · Ribbon Sweet",
     types: [
       "Fairy"
     ]
@@ -10656,22 +12013,11 @@ const POKEMON_SPECIES = [
     ]
   },
   {
-    id: "indeedee-female",
+    id: "indeedee",
     dex: 876,
     species: "Indeedee",
     demonym: null,
-    form: "Female",
-    types: [
-      "Psychic",
-      "Normal"
-    ]
-  },
-  {
-    id: "indeedee-male",
-    dex: 876,
-    species: "Indeedee",
-    demonym: null,
-    form: "Male",
+    form: null,
     types: [
       "Psychic",
       "Normal"
@@ -10904,6 +12250,17 @@ const POKEMON_SPECIES = [
     ]
   },
   {
+    id: "zarude-dada",
+    dex: 893,
+    species: "Zarude",
+    demonym: null,
+    form: "Dada",
+    types: [
+      "Dark",
+      "Grass"
+    ]
+  },
+  {
     id: "regieleki",
     dex: 894,
     species: "Regieleki",
@@ -11021,22 +12378,11 @@ const POKEMON_SPECIES = [
     ]
   },
   {
-    id: "basculegion-female",
+    id: "basculegion",
     dex: 902,
     species: "Basculegion",
     demonym: null,
-    form: "Female",
-    types: [
-      "Water",
-      "Ghost"
-    ]
-  },
-  {
-    id: "basculegion-male",
-    dex: 902,
-    species: "Basculegion",
-    demonym: null,
-    form: "Male",
+    form: null,
     types: [
       "Water",
       "Ghost"
@@ -11190,21 +12536,11 @@ const POKEMON_SPECIES = [
     ]
   },
   {
-    id: "oinkologne-female",
+    id: "oinkologne",
     dex: 916,
     species: "Oinkologne",
     demonym: null,
-    form: "Female",
-    types: [
-      "Normal"
-    ]
-  },
-  {
-    id: "oinkologne-male",
-    dex: 916,
-    species: "Oinkologne",
-    demonym: null,
-    form: "Male",
+    form: null,
     types: [
       "Normal"
     ]
@@ -12321,7 +13657,18 @@ const POKEMON_SPECIES = [
     dex: 1012,
     species: "Poltchageist",
     demonym: null,
-    form: null,
+    form: "Counterfeit Form",
+    types: [
+      "Grass",
+      "Ghost"
+    ]
+  },
+  {
+    id: "poltchageist-artisan",
+    dex: 1012,
+    species: "Poltchageist",
+    demonym: null,
+    form: "Artisan Form",
     types: [
       "Grass",
       "Ghost"
@@ -12332,7 +13679,18 @@ const POKEMON_SPECIES = [
     dex: 1013,
     species: "Sinistcha",
     demonym: null,
-    form: null,
+    form: "Unremarkable Form",
+    types: [
+      "Grass",
+      "Ghost"
+    ]
+  },
+  {
+    id: "sinistcha-masterpiece",
+    dex: 1013,
+    species: "Sinistcha",
+    demonym: null,
+    form: "Masterpiece Form",
     types: [
       "Grass",
       "Ghost"
@@ -12499,167 +13857,6 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Ghost"
-    ]
-  },
-  {
-    id: "pichu-spiky-eared-pichu",
-    dex: 172,
-    species: "Pichu",
-    demonym: null,
-    form: "Spiky-eared Pichu",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "magearna-original-color",
-    dex: 801,
-    species: "Magearna",
-    demonym: null,
-    form: "Original Color",
-    types: [
-      "Steel",
-      "Fairy"
-    ]
-  },
-  {
-    id: "pikachu-original-cap",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Original Cap",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-hoenn-cap",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Hoenn Cap",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-sinnoh-cap",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Sinnoh Cap",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-unova-cap",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Unova Cap",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-kalos-cap",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Kalos Cap",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-alola-cap",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Alola Cap",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-partner-cap",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Partner Cap",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-world-cap",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "World Cap",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-cosplay",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Cosplay",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-rock-star",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Rock Star",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-belle",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Belle",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-pop-star",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Pop Star",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-ph-d",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Ph.D.",
-    types: [
-      "Electric"
-    ]
-  },
-  {
-    id: "pikachu-libre",
-    dex: 25,
-    species: "Pikachu",
-    demonym: null,
-    form: "Libre",
-    types: [
-      "Electric"
     ]
   }
 ];

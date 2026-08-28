@@ -1,15 +1,34 @@
 /* ============== FORM MODAL (Add/Edit) ============== */
+let editingId = null; // id of the pokemon being edited, or null when adding
 let formMovesDraft = [];
+// preferredForm isn't editable from this form (see setPreferredForm in renderer.js), so
+// it's captured once when the form opens and used to preview Z-Move/Max Move/G-Max Move
+// display in the Moveset by Game editor.
+let formPreferredForm = 'default';
 
 function openForm(id){
   editingId = id || null;
   let p;
   if(id){
     p = state.pokemon.find(x=>x.id===id);
-    formMovesDraft = p.games.map(g => ({...g, moves:[...g.moves], gameKey: g.gameKey || detectGameKeyFromTag(g.tag), useMegaAbility: !!g.useMegaAbility}));
+    formMovesDraft = p.games.map(g => ({
+      ...g,
+      moves: [...g.moves],
+      // Older records won't have moveIds yet, and imported/hand-edited ones may have it
+      // only partially filled in; link anything that matches a Move List entry by name so
+      // its pill/Z-Move/Max Move display works right away.
+      moveIds: normalizeMoveIds(g.moves, g.moveIds),
+      zMoveSlot: typeof g.zMoveSlot === 'number' ? g.zMoveSlot : -1,
+      zMoveMode: g.zMoveMode || 'basic',
+      maxMoveModes: normalizeMaxMoveModes(g),
+      gameKey: g.gameKey || detectGameKeyFromTag(g.tag),
+      useMegaAbility: !!g.useMegaAbility
+    }));
+    formPreferredForm = p.preferredForm || 'default';
   } else {
-    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', isTera:false, teraType:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'' };
+    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', characteristic:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', isTera:false, teraType:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'' };
     formMovesDraft = [];
+    formPreferredForm = 'default';
   }
 
   const overlay = document.createElement('div');
@@ -92,6 +111,13 @@ function refreshMegaFormLabel(){
 
 // Enabling/disabling Mega or Gigantamax flips the corresponding sprite slot's interactive
 // state in place, without re-rendering the whole form (which would lose focus/scroll position).
+// Re-renders the Moveset by Game editor when something that affects how a linked move
+// displays has changed (base types, Mega typing/form, Gigantamax, Tera). Guarded since
+// several of these can fire before the editor's container exists yet during form setup.
+function refreshMovePreview(){
+  if(document.getElementById('movesEditor')) renderMovesEditor();
+}
+
 function onFormToggleChange(slot, enabled){
   const slotEl = document.getElementById(`spriteSlot_${slot}`);
   if(!slotEl) return;
@@ -113,6 +139,7 @@ function onFormToggleChange(slot, enabled){
     if(enabled) tryAutoFillMegaTypes();
     renderMegaFormOptions();
   }
+  if(slot === 'gigantamax') refreshMovePreview();
 }
 
 function setupSpriteUpload(slot){
@@ -249,10 +276,10 @@ function formBodyHTML(p){
         <div class="type-select-row" id="teraTypeSwatches">${teraTypeFieldInnerHTML(p.speciesEntryId, p.teraType)}</div>
       </div>
       <div class="field span-2">
-        <label style="display:flex; align-items:center; gap:6px;">Sprite Images
+        <label style="display:flex; align-items:center; gap:6px;">Avatar
           <span class="info-tooltip-trigger" tabindex="0" data-no-autofocus>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            <span class="info-tooltip">Default is required; Mega/Gigantamax are optional and only apply when that form is enabled above. Terastallization reuses the Default sprite.</span>
+            <span class="info-tooltip">All avatars are optional. If none are uploaded, the default sprites are shown. Mega and Gigantamax avatars only apply when their forms are enabled above. Terastallization reuses the default avatar or sprite.</span>
           </span>
         </label>
         <div class="sprite-slots-grid" id="spriteSlotsGrid">
@@ -287,6 +314,10 @@ function formBodyHTML(p){
           ${gamePresetSelectHTML('lastGame', detectGameKeyFromTag(p.lastGame))}
           <input id="f_lastGame" value="${escapeAttr(p.lastGame)}" placeholder="e.g. Pokémon Legends: Z-A" oninput="updateGameFieldIcon('lastGame', this.value)">
         </div>
+      </div>
+      <div class="field">
+        <label>Characteristic</label>
+        ${characteristicSelectHTML('f_characteristic', p.characteristic || '')}
       </div>
       <div class="field span-2">
         <label>Trainer Notes</label>
@@ -326,6 +357,7 @@ function toggleType(t){
     s.classList.toggle('active', selectedTypes.includes(s.dataset.type));
   });
   if(selectedTypes.length > 0) document.getElementById('typeSwatches').classList.remove('field-error');
+  refreshMovePreview();
 }
 
 // Mega Evolution's typing, edited independently of the default typing above. Selecting a
@@ -373,6 +405,7 @@ function tryAutoFillMegaTypes(){
 // field is shown and megaForm just stays empty.
 function renderMegaFormOptions(){
   refreshAllAbilityFields();
+  refreshMovePreview();
   const field = document.getElementById('megaFormField');
   const buttons = document.getElementById('megaFormButtons');
   if(!field || !buttons) return;
@@ -411,6 +444,7 @@ function selectTeraType(t){
   selectedTeraType = (selectedTeraType === t) ? '' : t;
   renderTeraTypeField();
   if(selectedTeraType) document.getElementById('teraTypeSwatches').classList.remove('field-error');
+  refreshMovePreview();
 }
 
 // Rebuilds the Tera Type swatches/locked-badge to match the currently selected species,
@@ -428,6 +462,7 @@ function onTeraToggleChange(enabled){
   if(field) field.style.display = enabled ? '' : 'none';
   if(enabled) renderTeraTypeField();
   else document.getElementById('teraTypeSwatches').classList.remove('field-error');
+  refreshMovePreview();
 }
 
 let selectedGender = '';
@@ -446,31 +481,287 @@ function togglePokerus(status){
   });
 }
 
+// Tracks which single move slot (if any) is currently expanded into its editable
+// input+dropdown state, as "rowIdx:slot". Every other resolved slot shows as a pill;
+// unresolved/empty slots are always shown as a plain input, so they're never in this set.
+let editingMoveSlotKey = null;
+function moveSlotKey(idx, slot){ return idx + ':' + slot; }
+
 function renderMovesEditor(){
   const wrap = document.getElementById('movesEditor');
+  editingMoveSlotKey = null; // a full re-render settles every slot back into its resting state
   if(formMovesDraft.length === 0){
     wrap.innerHTML = '<div class="hint">No game rows yet, click "Add Game Row" to log a playthrough.</div>';
     return;
   }
-  wrap.innerHTML = formMovesDraft.map(function(g, idx){
-    var moveSlots = [0,1,2,3].map(function(slot){
-      return '<input placeholder="Move ' + (slot+1) + '" value="' + escapeAttr(g.moves[slot]||'') + '" oninput="updateMoveSlot(' + idx + ',' + slot + ',this.value)">';
-    }).join('');
-    var abilityField = abilityFieldHTML(idx, g);
-    return '<div class="move-row">' +
-      '<div class="game-tag-field">' +
-        gamePresetSelectHTML(String(idx), g.gameKey || '') +
-        '<input placeholder="Tag (e.g. Pokémon Platinum)" value="' + escapeAttr(g.tag) + '" oninput="updateMoveField(' + idx + ',\'tag\',this.value)">' +
-      '</div>' +
-      '<div class="field" id="abilityFieldWrap-' + idx + '">' +
-        abilityField +
-      '</div>' +
-      moveSlots +
-      '<div class="remove-row-btn" onclick="removeMoveRow(' + idx + ')">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
-      '</div>' +
+  wrap.innerHTML = formMovesDraft.map(function(g, idx){ return moveRowHTML(g, idx); }).join('');
+  wireMoveRowDragReorder(wrap);
+}
+// Native HTML5 drag-and-drop reordering for Moveset by Game rows, same pattern as the
+// Control Panel's wireDragReorder (control-panel/js/panel-core.js) but kept local to this
+// app rather than shared, since the two tools don't otherwise share a script. Re-renders
+// the whole editor on drop so every row's idx-bound handlers stay correct.
+function wireMoveRowDragReorder(container){
+  let dragIndex = null;
+  container.querySelectorAll('.move-row').forEach(row => {
+    row.addEventListener('dragstart', (e) => {
+      dragIndex = Number(row.dataset.index);
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      try{ e.dataTransfer.setData('text/plain', String(dragIndex)); } catch(err){}
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('dragging');
+      container.querySelectorAll('.move-row').forEach(r => r.classList.remove('drag-over-before', 'drag-over-after'));
+    });
+    row.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if(dragIndex === null) return;
+      const rect = row.getBoundingClientRect();
+      const before = (e.clientY - rect.top) < rect.height / 2;
+      row.classList.toggle('drag-over-before', before);
+      row.classList.toggle('drag-over-after', !before);
+    });
+    row.addEventListener('dragleave', () => {
+      row.classList.remove('drag-over-before', 'drag-over-after');
+    });
+    row.addEventListener('drop', (e) => {
+      e.preventDefault();
+      row.classList.remove('drag-over-before', 'drag-over-after');
+      if(dragIndex === null) return;
+      const targetIndex = Number(row.dataset.index);
+      const rect = row.getBoundingClientRect();
+      const before = (e.clientY - rect.top) < rect.height / 2;
+      let insertAt = before ? targetIndex : targetIndex + 1;
+      if(dragIndex === targetIndex){ dragIndex = null; return; }
+      const [moved] = formMovesDraft.splice(dragIndex, 1);
+      if(dragIndex < insertAt) insertAt -= 1;
+      formMovesDraft.splice(insertAt, 0, moved);
+      dragIndex = null;
+      renderMovesEditor();
+    });
+  });
+}
+function refreshMoveRow(idx){
+  const rowEl = document.getElementById('moveRow-' + idx);
+  const g = formMovesDraft[idx];
+  if(!rowEl || !g) return;
+  rowEl.outerHTML = moveRowHTML(g, idx);
+  wireMoveRowDragReorder(document.getElementById('movesEditor'));
+}
+function moveRowHTML(g, idx){
+  const abilityField = abilityFieldHTML(idx, g);
+  const moveSlots = [0,1,2,3].map(function(slot){ return moveSlotHTML(idx, slot, g); }).join('');
+  return '<div class="move-row" id="moveRow-' + idx + '" draggable="true" data-index="' + idx + '">' +
+    '<span class="move-row-drag-handle" title="Drag to reorder">\u2820\u283f</span>' +
+    '<div class="game-tag-field">' +
+      gamePresetSelectHTML(String(idx), g.gameKey || '') +
+      '<input placeholder="Tag (e.g. Pokémon Platinum)" value="' + escapeAttr(g.tag) + '" oninput="updateMoveField(' + idx + ',\'tag\',this.value)">' +
+    '</div>' +
+    '<div class="field" id="abilityFieldWrap-' + idx + '">' +
+      abilityField +
+    '</div>' +
+    moveSlots +
+    '<div class="remove-row-btn" onclick="removeMoveRow(' + idx + ')">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+    '</div>' +
+  '</div>';
+}
+// A live preview of the Pokémon being edited, built from the form's current (unsaved)
+// selections, for working out Z-Move/Max Move/G-Max Move and bold/italic typing while
+// editing. preferredForm isn't editable from this form (see setPreferredForm in
+// renderer.js), so it's frozen at whatever the record had when the form opened.
+function currentFormPreviewPokemon(){
+  const speciesInput = document.getElementById('f_species');
+  const megaCheckbox = document.getElementById('f_isMega');
+  const gigaCheckbox = document.getElementById('f_isGigantamax');
+  const teraCheckbox = document.getElementById('f_isTera');
+  return {
+    species: speciesInput ? speciesInput.value.trim() : '',
+    speciesEntryId: selectedSpeciesEntryId || '',
+    types: selectedTypes,
+    megaTypes: selectedMegaTypes,
+    isMega: !!(megaCheckbox && megaCheckbox.checked),
+    isGigantamax: !!(gigaCheckbox && gigaCheckbox.checked),
+    isTera: !!(teraCheckbox && teraCheckbox.checked),
+    teraType: selectedTeraType,
+    preferredForm: formPreferredForm
+  };
+}
+// A single move slot: a resolved move rests as a type-colored pill (click to edit);
+// everything else -- empty, freeform/unmatched text, or the slot currently being edited
+// -- is a plain input with a search dropdown, same idea as the Species picker.
+function moveSlotHTML(idx, slot, g){
+  const key = moveSlotKey(idx, slot);
+  const moveName = g.moves[slot] || '';
+  const moveId = (g.moveIds && g.moveIds[slot]) || '';
+  const isEditing = editingMoveSlotKey === key;
+  const showPill = !!moveId && !isEditing;
+
+  const field = showPill
+    ? '<button type="button" class="move-slot-pill-btn" onclick="openMoveSlotEditor(' + idx + ',' + slot + ')">' +
+        movePillHTML(resolveMoveSlotDisplay(g, slot)) +
+      '</button>'
+    : '<input id="moveSlotInput-' + idx + '-' + slot + '" placeholder="Move ' + (slot+1) + '" value="' + escapeAttr(moveName) + '"' +
+        ' oninput="onMoveSlotInput(' + idx + ',' + slot + ',this.value)"' +
+        ' onfocus="onMoveSlotInput(' + idx + ',' + slot + ',this.value)"' +
+        ' onblur="closeMoveSlotEditor(' + idx + ',' + slot + ')">';
+
+  const dropdown = isEditing
+    ? '<div class="species-picker-panel move-picker-panel open" id="movePicker_' + idx + '_' + slot + '_panel">' + moveDropdownRowsHTML(idx, slot, moveName) + '</div>'
+    : '<div class="species-picker-panel move-picker-panel" id="movePicker_' + idx + '_' + slot + '_panel"></div>';
+
+  return '<div class="move-slot" id="moveSlotWrap-' + idx + '-' + slot + '">' +
+    '<div class="move-slot-field">' + field + dropdown + '</div>' +
+    moveSlotTogglesHTML(idx, slot, g, moveId) +
+  '</div>';
+}
+function resolveMoveSlotDisplay(g, slot){
+  const moveName = g.moves[slot] || '';
+  const moveId = (g.moveIds && g.moveIds[slot]) || '';
+  const zMoveMode = g.zMoveSlot === slot ? ((g.zMoveMode) || 'basic') : '';
+  const maxMoveMode = (g.maxMoveModes && g.maxMoveModes[slot]) || '';
+  return resolveDisplayedMove(currentFormPreviewPokemon(), moveName, moveId, zMoveMode, maxMoveMode, GAME_PRESET_INDEX[g.gameKey]);
+}
+// Z-Move toggle: offered per slot (only one per row, like a real Z-Ring) whenever the
+// row's game is flagged supportsZMove in GAME_PRESETS (Control Panel > Games); clicking it
+// cycles no Z-Move -> Basic Z-Move -> Special Z-Move (only when one actually applies to
+// this move) -> back to no Z-Move, in zMoveCycleStates' order (js/moves.js). Only one slot
+// per row can be the Z-Move, so taking over from another slot resets to Basic. Gigantamax
+// toggle: a single icon offered once Gigantamax is enabled on the Pokémon AND the row's
+// game is flagged supportsGigantamax AND this move actually has more than one possible
+// Max Move outcome (a G-Max Move and/or Max Guard, alongside its type's normal Max Move)
+// -- clicking it cycles through whichever of those apply, in cycleMaxMoveMode's order.
+// Both are icon-only to stay compact; the resolved move name on the pill itself already
+// shows the result.
+function moveSlotTogglesHTML(idx, slot, g, moveId){
+  const entry = moveId ? findMoveEntry(moveId) : null;
+  if(!entry) return '';
+  let buttons = '';
+  const preset = GAME_PRESET_INDEX[g.gameKey];
+  if(preset && preset.supportsZMove){
+    const active = g.zMoveSlot === slot;
+    const zLabels = { basic: 'Basic Z-Move', special: 'Special Z-Move' };
+    const title = active
+      ? 'Showing the ' + escapeAttr(zLabels[g.zMoveMode] || zLabels.basic) + ' -- click to cycle'
+      : 'Click to mark this as the Z-Move for this game';
+    buttons += '<button type="button" class="move-icon-toggle zmove-toggle' + (active ? ' active' : '') + '" title="' + title + '" onclick="cycleZMoveSlot(' + idx + ',' + slot + ')">' +
+      '<img src="' + ZMOVE_ICON + '" alt="Z-Move">' +
+    '</button>';
+  }
+  const gigaCheckbox = document.getElementById('f_isGigantamax');
+  const gigaEnabled = !!(gigaCheckbox && gigaCheckbox.checked) && !!(preset && preset.supportsGigantamax);
+  if(gigaEnabled){
+    const states = maxMoveCycleStates(entry.type, currentFormPreviewPokemon());
+    if(states.length > 1){
+      const mode = (g.maxMoveModes && g.maxMoveModes[slot]) || '';
+      const at = states.includes(mode) ? mode : states[0];
+      const labels = { gmax: 'G-Max Move', max: 'Max Move', guard: 'Max Guard' };
+      buttons += '<button type="button" class="move-icon-toggle gigantamax-toggle active" title="Showing ' + escapeAttr(labels[at]) + ' -- click to cycle" onclick="cycleMoveSlotMaxMode(' + idx + ',' + slot + ')">' +
+        '<img src="' + GIGANTAMAX_ICON + '" alt="Gigantamax">' +
+      '</button>';
+    }
+  }
+  return buttons ? '<div class="move-slot-toggles">' + buttons + '</div>' : '';
+}
+function moveDropdownRowsHTML(idx, slot, query){
+  const q = String(query || '').trim().toLowerCase();
+  const matches = (q ? MOVE_LIST.filter(function(m){ return m.name.toLowerCase().includes(q); }) : MOVE_LIST.slice())
+    .sort(function(a, b){ return a.name.localeCompare(b.name); })
+    .slice(0, q ? 50 : Infinity);
+  if(!matches.length){
+    return '<div class="species-picker-empty">No matches in the Move List. <b>' + escapeHTML(query.trim()) + '</b> will be saved as typed.</div>';
+  }
+  return matches.map(function(m){
+    return '<div class="species-picker-row move-picker-row" onmousedown="event.preventDefault(); selectMoveEntry(' + idx + ',' + slot + ',\'' + m.id + '\')">' +
+      '<div class="species-picker-name"><div class="species-picker-name-main">' + escapeHTML(m.name) + '</div></div>' +
+      '<div class="species-picker-types"><span class="type-badge" style="background:' + TYPE_HEX[m.type] + '">' + m.type + '</span></div>' +
     '</div>';
   }).join('');
+}
+function openMoveSlotEditor(idx, slot){
+  editingMoveSlotKey = moveSlotKey(idx, slot);
+  refreshMoveSlot(idx, slot);
+  const input = document.getElementById('moveSlotInput-' + idx + '-' + slot);
+  if(!input) return;
+  input.focus();
+  input.select();
+}
+function closeMoveSlotEditor(idx, slot){
+  if(editingMoveSlotKey === moveSlotKey(idx, slot)) editingMoveSlotKey = null;
+  refreshMoveSlot(idx, slot);
+}
+function refreshMoveSlot(idx, slot){
+  const wrap = document.getElementById('moveSlotWrap-' + idx + '-' + slot);
+  const g = formMovesDraft[idx];
+  if(!wrap || !g) return;
+  wrap.outerHTML = moveSlotHTML(idx, slot, g);
+}
+function onMoveSlotInput(idx, slot, val){
+  const g = formMovesDraft[idx];
+  g.moves[slot] = val;
+  // Typing an exact move name links it to the Move List the same way a typed game name
+  // auto-links its preset icon. Anything that stops matching detaches the link (and any
+  // Z-Move/Max Move cycle state that only makes sense for a linked move).
+  const detected = detectMoveIdFromName(val);
+  g.moveIds[slot] = detected;
+  if(!detected){
+    if(g.zMoveSlot === slot){ g.zMoveSlot = -1; g.zMoveMode = ''; }
+    if(g.maxMoveModes) g.maxMoveModes[slot] = '';
+  }
+  const panel = document.getElementById('movePicker_' + idx + '_' + slot + '_panel');
+  if(panel){
+    panel.innerHTML = moveDropdownRowsHTML(idx, slot, val);
+    panel.classList.add('open');
+  }
+  const togglesEl = document.getElementById('moveSlotWrap-' + idx + '-' + slot);
+  if(togglesEl){
+    const existing = togglesEl.querySelector('.move-slot-toggles');
+    if(existing) existing.remove();
+    togglesEl.insertAdjacentHTML('beforeend', moveSlotTogglesHTML(idx, slot, g, g.moveIds[slot]));
+  }
+}
+function selectMoveEntry(idx, slot, moveId){
+  const entry = findMoveEntry(moveId);
+  const g = formMovesDraft[idx];
+  if(!entry || !g) return;
+  g.moves[slot] = entry.name;
+  g.moveIds[slot] = moveId;
+  if(g.maxMoveModes) g.maxMoveModes[slot] = ''; // a different move may not support its old mode
+  if(g.zMoveSlot === slot) g.zMoveMode = 'basic'; // a different move may not have the same Special Z-Move
+  editingMoveSlotKey = null;
+  refreshMoveSlot(idx, slot);
+}
+function cycleZMoveSlot(idx, slot){
+  const g = formMovesDraft[idx];
+  const moveId = (g.moveIds && g.moveIds[slot]) || '';
+  const entry = moveId ? findMoveEntry(moveId) : null;
+  if(!entry) return;
+  if(g.zMoveSlot !== slot){
+    // Taking over as this row's Z-Move from whichever slot (if any) had it before.
+    g.zMoveSlot = slot;
+    g.zMoveMode = 'basic';
+    refreshMoveRow(idx);
+    return;
+  }
+  const states = zMoveCycleStates(g.moves[slot], entry.type, currentFormPreviewPokemon());
+  const at = states.indexOf(g.zMoveMode);
+  if(at === -1 || at + 1 >= states.length){
+    g.zMoveSlot = -1;
+    g.zMoveMode = '';
+  } else {
+    g.zMoveMode = states[at + 1];
+  }
+  refreshMoveSlot(idx, slot);
+}
+function cycleMoveSlotMaxMode(idx, slot){
+  const g = formMovesDraft[idx];
+  const moveId = (g.moveIds && g.moveIds[slot]) || '';
+  const entry = moveId ? findMoveEntry(moveId) : null;
+  if(!entry) return;
+  if(!g.maxMoveModes) g.maxMoveModes = ['','','',''];
+  g.maxMoveModes[slot] = cycleMaxMoveMode(g.maxMoveModes[slot], entry.type, currentFormPreviewPokemon());
+  refreshMoveSlot(idx, slot);
 }
 // Mega Ability (see data/mega-types.js) only applies to a Moveset by Game row when the
 // Pokémon is currently Mega and that row's game is flagged supportsMega in GAME_PRESETS
@@ -547,10 +838,9 @@ function updateMoveField(idx, field, val){
     refreshAbilityField(idx);
   }
 }
-function updateMoveSlot(idx, slot, val){ formMovesDraft[idx].moves[slot] = val; }
 function richCmd(elId, cmd){ document.getElementById(elId).focus(); document.execCommand(cmd, false, null); }
 function addMoveRow(){
-  formMovesDraft.push({ id: cryptoId(), tag:'', ability:'', moves:['','','',''], gameKey:'', useMegaAbility:false });
+  formMovesDraft.push({ id: cryptoId(), tag:'', ability:'', moves:['','','',''], moveIds:['','','',''], zMoveSlot:-1, zMoveMode:'', maxMoveModes:['','','',''], gameKey:'', useMegaAbility:false });
   renderMovesEditor();
 }
 function removeMoveRow(idx){
@@ -563,17 +853,27 @@ function removeMoveRow(idx){
    as well as the single Origin Game / Last Game fields (target = "originGame" / "lastGame"). */
 function gamePresetSelectHTML(target, gameKey){
   const selected = GAME_PRESET_INDEX[gameKey];
-  const grouped = {};
-  GAME_PRESETS.forEach(g => { (grouped[g.gen] = grouped[g.gen] || []).push(g); });
-  const panelHTML = Object.keys(grouped).sort((a,b)=>a-b).map(gen => `
-    <div class="game-dropdown-gen-label">${escapeHTML(gamePresetGenLabel(gen))}</div>
-    ${grouped[gen].map(g => `
+  let panelHTML;
+  if(state.settings && state.settings.sortGamesAlpha){
+    panelHTML = [...GAME_PRESETS].sort((a, b) => a.label.localeCompare(b.label)).map(g => `
       <div class="ball-option game-preset-option ${gameKey===g.key?'active':''}" onclick="selectGamePreset('${target}','${g.key}')">
         <img src="${g.icon}" alt="">
         <span>${escapeHTML(g.label)}</span>
       </div>
-    `).join('')}
-  `).join('');
+    `).join('');
+  } else {
+    const grouped = {};
+    GAME_PRESETS.forEach(g => { (grouped[g.gen] = grouped[g.gen] || []).push(g); });
+    panelHTML = Object.keys(grouped).sort((a,b)=>a-b).map(gen => `
+      <div class="game-dropdown-gen-label">${escapeHTML(gamePresetGenLabel(gen))}</div>
+      ${grouped[gen].map(g => `
+        <div class="ball-option game-preset-option ${gameKey===g.key?'active':''}" onclick="selectGamePreset('${target}','${g.key}')">
+          <img src="${g.icon}" alt="">
+          <span>${escapeHTML(g.label)}</span>
+        </div>
+      `).join('')}
+    `).join('');
+  }
   return `
     <div class="ball-dropdown game-preset-dropdown" id="gamePreset_${target}_wrap">
       <button type="button" class="game-preset-trigger" onclick="toggleGamePresetDropdown('${target}')" title="Pick a preset game">
@@ -652,6 +952,120 @@ function closeForm(){
   formMovesDraft = [];
 }
 
+// Restarts the shake even if the field is still marked invalid from the previous
+// attempt: removing the class, forcing a reflow, then re-adding it is what makes the
+// CSS animation replay instead of silently no-op'ing on an unchanged class list.
+function shakeField(el){
+  el.classList.remove('is-shaking');
+  void el.offsetWidth;
+  el.classList.add('is-shaking');
+}
+
+function saveForm(id){
+  document.getElementById('f_species').classList.remove('field-error');
+  document.getElementById('typeSwatches').classList.remove('field-error');
+  document.getElementById('teraTypeSwatches').classList.remove('field-error');
+
+  const nickname = document.getElementById('f_nickname').value.trim();
+  const species = document.getElementById('f_species').value.trim();
+  if(!species){
+    const el = document.getElementById('f_species');
+    el.classList.add('field-error');
+    shakeField(el);
+    el.focus();
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    showToast('Species is required.');
+    return;
+  }
+  if(selectedTypes.length === 0){
+    const el = document.getElementById('typeSwatches');
+    el.classList.add('field-error');
+    shakeField(el);
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    showToast('At least one Type is required.');
+    return;
+  }
+  const isMega = document.getElementById('f_isMega').checked;
+  const isGigantamax = document.getElementById('f_isGigantamax').checked;
+  const isTera = document.getElementById('f_isTera').checked;
+  // A disabled form's sprite slot is hidden in the UI but may still hold a stale value;
+  // clear it here so re-enabling the form later starts from a clean slot.
+  const spriteMega = isMega ? document.getElementById('f_spriteMega').value.trim() : '';
+  const spriteGigantamax = isGigantamax ? document.getElementById('f_spriteGigantamax').value.trim() : '';
+  // Fixed-Tera-type species (Ogerpon's masks, Terapagos) can't have anything else picked,
+  // no matter what the swatches were showing at save time.
+  const fixedTeraType = getFixedTeraType(selectedSpeciesEntryId);
+  const teraType = fixedTeraType || selectedTeraType;
+  if(isTera && !teraType){
+    const el = document.getElementById('teraTypeSwatches');
+    el.classList.add('field-error');
+    shakeField(el);
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    showToast('Pick a Tera Type, or turn off Terastallization.');
+    return;
+  }
+
+  const existing = id ? state.pokemon.find(x=>x.id===id) : null;
+  let preferredForm = (existing && existing.preferredForm) || 'default';
+  if(preferredForm === 'mega' && !isMega) preferredForm = 'default';
+  if(preferredForm === 'gigantamax' && !isGigantamax) preferredForm = 'default';
+
+  const payload = {
+    nickname: nickname || species,
+    species,
+    speciesEntryId: selectedSpeciesEntryId || '',
+    types: [...selectedTypes],
+    megaTypes: [...selectedMegaTypes],
+    megaForm: isMega ? selectedMegaForm : '',
+    nature: document.getElementById('f_nature').value.trim(),
+    characteristic: document.getElementById('f_characteristic').value.trim(),
+    gender: selectedGender,
+    shiny: document.getElementById('f_shiny').checked,
+    pokerus: selectedPokerus,
+    metLocation: document.getElementById('metLocEdit').innerHTML.trim(),
+    metDate: document.getElementById('f_metDate').value,
+    ball: document.getElementById('f_ball').value.trim(),
+    originGame: document.getElementById('f_originGame').value.trim(),
+    lastGame: document.getElementById('f_lastGame').value.trim(),
+    notes: document.getElementById('notesEdit').innerHTML.trim(),
+    sprite: document.getElementById('f_sprite').value.trim(),
+    isMega,
+    isGigantamax,
+    spriteMega,
+    spriteGigantamax,
+    isTera,
+    teraType,
+    preferredForm,
+    games: formMovesDraft.map(g => ({
+      id: g.id || cryptoId(),
+      tag: g.tag.trim(),
+      ability: g.ability.trim(),
+      moves: g.moves.map(m => m.trim()),
+      moveIds: (g.moveIds || ['','','','']).slice(),
+      zMoveSlot: typeof g.zMoveSlot === 'number' ? g.zMoveSlot : -1,
+      zMoveMode: g.zMoveMode || 'basic',
+      maxMoveModes: (g.maxMoveModes || ['','','','']).slice(),
+      gameKey: g.gameKey || '',
+      useMegaAbility: !!g.useMegaAbility
+    }))
+  };
+
+  if(id){
+    const idx = state.pokemon.findIndex(x=>x.id===id);
+    const before = state.pokemon[idx];
+    state.pokemon[idx] = { ...state.pokemon[idx], ...payload };
+    logHistoryEntry('edited', before, { after: state.pokemon[idx] });
+    showToast(`${nickname} updated.`);
+  } else {
+    const newPokemon = normalizePokemon({ id: cryptoId(), ...payload });
+    state.pokemon.push(newPokemon);
+    logHistoryEntry('added', newPokemon);
+    showToast(`${nickname} added to your dex.`);
+  }
+  closeForm();
+  render();
+}
+
 const _origOpenForm = openForm;
 openForm = function(id){
   const existing = id ? state.pokemon.find(x=>x.id===id) : null;
@@ -706,8 +1120,7 @@ function closeNewDexModal(){
 function confirmNewDex(){
   const previous = state;
   state = { pokemon: [], trainer: '', settings: previous.settings };
-  pendingDeletions = [];
-  historyBarVisible = false;
+  changeHistory = [];
   updateHistoryBar();
   closeNewDexModal();
   applySettings();
@@ -781,8 +1194,7 @@ document.getElementById('fileInput').onchange = (e) => {
     try{
       const data = normalizeImportedData(JSON.parse(ev.target.result));
       state = data;
-      pendingDeletions = [];
-      historyBarVisible = false;
+      changeHistory = [];
       updateHistoryBar();
       applySettings();
       render();

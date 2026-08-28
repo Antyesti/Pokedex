@@ -634,15 +634,6 @@ const MEGA_TYPES = {
       ability: "Fire Mane"
     }
   ],
-  "floette-eternal-flower": [
-    {
-      label: "",
-      types: [
-        "Fairy"
-      ],
-      ability: "Fairy Aura"
-    }
-  ],
   malamar: [
     {
       label: "",
@@ -683,7 +674,7 @@ const MEGA_TYPES = {
       ability: "No Guard"
     }
   ],
-  "zygarde-50": [
+  "zygarde-complete": [
     {
       label: "",
       types: [
@@ -772,15 +763,6 @@ const MEGA_TYPES = {
         "Ghost"
       ],
       ability: "Unseen Fist"
-    }
-  ],
-  "meowstic-male": [
-    {
-      label: "",
-      types: [
-        "Psychic"
-      ],
-      ability: "Trace"
     }
   ],
   crabominable: [
@@ -976,15 +958,6 @@ const MEGA_TYPES = {
       ability: ""
     }
   ],
-  "meowstic-female": [
-    {
-      label: "",
-      types: [
-        "Psychic"
-      ],
-      ability: "Trace"
-    }
-  ],
   "magearna-original-color": [
     {
       label: "",
@@ -993,6 +966,24 @@ const MEGA_TYPES = {
         "Fairy"
       ],
       ability: ""
+    }
+  ],
+  "floette-eternal-flower": [
+    {
+      label: "",
+      types: [
+        "Fairy"
+      ],
+      ability: "Fairy Aura"
+    }
+  ],
+  meowstic: [
+    {
+      label: "",
+      types: [
+        "Psychic"
+      ],
+      ability: "Trace"
     }
   ]
 };

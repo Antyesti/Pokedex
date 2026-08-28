@@ -13,7 +13,8 @@ const CREDITS = [
   {
     title: "Icons & Artwork",
     items: [
-      "Poké Ball, Ribbon, and Mega Evolution / Gigantamax icons are provided by <a href=\"https://github.com/msikma/pokesprite\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-github-link\">msikma/pokesprite</a> and <a class=\"species-link\"><b>Bulbapedia</b></a>.",
+      "Poké Ball, Ribbon, and Mega Evolution / Gigantamax icons are provided by <a href=\"https://github.com/msikma/pokesprite\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-github-link\">msikma/pokesprite</a> and <b class=\"species-link-static\">Bulbapedia</b>.",
+      "Pokémon Sprites are taken from the <a href=\"https://docs.google.com/spreadsheets/d/11arweTtnP9eygbLsQp7Kzdafqy7OBg8YrdCK7FeKEoA/edit?usp=sharing\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-github-link\">Ribbon Master Progress Tracking Spreadsheet</a> by Reddit user <a href=\"https://www.reddit.com/user/Tatertot74/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-discord-link\">u/Tatertot74</a>. It uses sprites hosted at <b class=\"species-link-static\">Pokémon Database</b>.",
       "The Ultra Burst icon is by <a href=\"https://www.deviantart.com/jormxdos\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-github-link\">JorMxDos</a>.",
       "Game version icons until Gen 3 are by <a href=\"https://steamcommunity.com/id/WildCh1mera/\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"footer-discord-link\">WildCh1mera</a> and sourced from <b>steamgriddb</b>."
     ]
@@ -33,6 +34,90 @@ const CREDITS = [
 ];
 
 const CHANGELOG = [
+  {
+    version: "v28",
+    entries: [
+      {
+        title: "Added Moves",
+        items: [
+          "Added a searchable <b>Move List</b>. Moves in Moveset by Game can now be selected from a list, similar to the Species picker, displaying each move's name and type. Selected moves are displayed as type-colored pills, while unmatched typed names continue to be saved as custom moves.",
+          "Moves are displayed in bold when they share a type with the Pokémon's currently displayed typing, including its Stellar or Tera type.",
+          "Moves are displayed in italic when they share a type with the Pokémon's Mega Evolution typing while Mega Evolution is not the currently displayed form, and in bold when Mega Evolution is currently displayed.",
+          "Added support for Z-Moves, including a toggle that allows one move per row to be designated as the Z-Move.",
+          "Max Moves and G-Max Moves now automatically replace Normal Moves when Gigantamax is enabled and the Gigantamax form is currently displayed, with species-specific G-Max Moves taking precedence over generic Max Moves.",
+          "Added Max Guard/Max Strike and G-Max Move/Max Move swap controls where applicable."
+        ]
+      },
+      {
+        title: "Added built-in Pokémon sprites",
+        items: [
+          "Pokémon sprites are now provided automatically instead of requiring users to upload their own artwork. The new sprite system includes comprehensive species and form coverage, with automatic selection of the appropriate artwork. This is in contrary to v25's changelog that said placeholder sprites will never be added. The decision was changed so it is easier to the eyes.",
+          "Added Species Database entries for Unown's 26 letters plus ! and ?, all 19 remaining Vivillon patterns, all 9 remaining Furfrou trims, Medium/Large/Jumbo Pumpkaboo and Gourgeist, Antique Form Sinistea and Polteageist, Masterpiece Form Sinistcha, Artisan Form Poltchageist, Ash-Greninja, Dada Zarude, and all 63 Alcremie forms.",
+          "Added form-specific sprite selection for species with distinct artwork for different forms, including Necrozma, Giratina, Castform, Rotom, Dialga and Palkia's Origin Formes, Kyurem Black and White, Calyrex's Riders, Bloodmoon Ursaluna, and Pikachu's cap and costume forms.",
+          "Added automatic gender-aware sprite selection for Meowstic, Indeedee, Basculegion, and Oinkologne.",
+          "Mega Evolution and Gigantamax forms now use distinct form names where required, correctly identifying forms such as Mega Magearna Original Color and Gigantamax Toxtricity Amped Form."
+        ]
+      },
+      {
+        title: "Added Characterstic selection",
+        items: [
+          "The Detail View's Profile section now displays Characteristic instead of Games Logged. Games Logged has been moved alongside the Moveset by Game heading."
+        ]
+      },
+      {
+        title: "History now tracks every change",
+        items: [
+          "Previously limited to deletions, History now records Pokémon additions and edits as well, allowing any roster change to be reviewed or undone from the History panel.",
+          "Adding or editing a Pokémon is recorded directly in History without displaying a toast, since there is no time-sensitive action requiring confirmation. Deletions continue to display the Undo toast first, with the deletion also being recorded in History as before.",
+          "History entries now provide an action appropriate to the change: Restore for deletions, Revert for edits to return the Pokémon to its previous saved state, and Remove for additions."
+        ]
+      },
+      {
+        title: "Shiny, Mega, and Gigantamax filters now match the rest of the toolbar",
+        items: [
+          "The three filters are grouped into a single control, matching the grid density and Pokérus toggles instead of appearing as separate buttons.",
+          "On narrow screens, the filters now show icons only, matching the grid density toggle and preventing their text labels from becoming cramped."
+        ]
+      },
+      {
+        title: "Origin Games now sort by Generation",
+        items: [
+          "Origin Games are now grouped and ordered by Generation instead of alphabetically.",
+          "Alphabetical sorting is still available. The Poké Ball Order setting has been renamed to Sort Alphabetically and now controls the sorting of both Poké Balls and Origin Games."
+        ]
+      },
+      {
+        title: "Added the GO Safari Ball",
+        items: [
+          "<b>Pokémon GO</b>'s Safari Ball is now available as a separate Poké Ball, using its in-game name and artwork. The GO Safari Ball is an event-exclusive ball used during GO Wild Area events."
+        ]
+      },
+      {
+        title: "Added a Monospace Font setting",
+        items: [
+          "Users can now choose their preferred monospace font for stat labels, tags, Pokédex numbers, and other monospace text throughout the app."
+        ]
+      },
+      {
+        title: "Fixed",
+        items: [
+          "Fixed Mega Evolution typing not updating when the species was changed after a Mega Type had already been selected.",
+          "Fixed the Stellar type pill on mobile so that its rounded corners render correctly without color bleeding beyond its edges.",
+          "Special Z-Moves and G-Max Moves can now correctly apply to Mega Evolution, Primal Reversion, Ultra Burst, and Gigantamax forms by matching their alternate form names, such as \"Ultra Necrozma\" and \"Mega Charizard X\", when no separate Species Database entry exists for the form.",
+          "Fixed Mega Zygarde being associated with Zygarde's 50% Forme instead of its Complete Forme in the Mega Types data.",
+          "Fixed the hover glow on Shiny cards losing its distinct color when the Pokémon was also marked as Infected or Cured of Pokérus."
+        ]
+      },
+      {
+        title: "Under the hood",
+        items: [
+          "Reorganized the app's internal code for clarity. No user-facing changes.",
+          "Identified several bugs that are currently being investigated and addressed."
+        ],
+        knownIssue: true
+      }
+    ]
+  },
   {
     version: "v27",
     entries: [

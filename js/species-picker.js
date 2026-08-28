@@ -43,10 +43,15 @@ function dexPrefixHTML(p){
 
 // Which typing to actually display: Mega Evolution shows its own independently-stored
 // typing when one's been set; Gigantamax never changes typing (sprite only); anything else
-// falls back to the Pokémon's default typing.
-function displayTypes(p){
+// falls back to the Pokémon's default typing. `gameSupportsTera`, when explicitly passed
+// (true/false), additionally gates the Tera type on a specific game supporting
+// Terastallization -- used by the Moveset by Game move resolver in js/moves.js, since Tera
+// itself is a Pokémon-wide toggle but doesn't apply to every game a Pokémon's been played
+// in. Omitted (the card/Detail View's own type badges), it's unrestricted as before.
+function displayTypes(p, gameSupportsTera){
   if(p.preferredForm === 'mega' && Array.isArray(p.megaTypes) && p.megaTypes.length) return p.megaTypes;
-  if(p.preferredForm !== 'mega' && p.preferredForm !== 'gigantamax' && p.isTera && p.teraType) return [...p.types, p.teraType];
+  const teraGateOk = gameSupportsTera === undefined ? true : gameSupportsTera;
+  if(p.preferredForm !== 'mega' && p.preferredForm !== 'gigantamax' && p.isTera && p.teraType && teraGateOk) return [...p.types, p.teraType];
   return p.types;
 }
 
@@ -88,19 +93,16 @@ function speciesPickerRowHTML(entry){
   `;
 }
 
-// Renders the dropdown's contents for the current search text. Nothing is shown for an
-// empty query, since with a database meant to eventually cover the full National Dex, listing
-// everything unfiltered isn't useful (or cheap to render).
+// Renders the dropdown's contents for the current search text. An empty query (the field
+// was just clicked into) shows every species, so browsing without typing works; a typed
+// query filters down to matches, capped since the full list isn't useful once narrowed.
 function renderSpeciesPickerPanel(filterText){
   const panel = document.getElementById('speciesPicker_panel');
   if(!panel) return;
   const q = (filterText || '').trim().toLowerCase();
-  if(!q){
-    panel.innerHTML = '';
-    panel.classList.remove('open');
-    return;
-  }
-  const matches = POKEMON_SPECIES.filter(e => e.species.toLowerCase().includes(q)).slice(0, 50);
+  const matches = (q ? POKEMON_SPECIES.filter(e => e.species.toLowerCase().includes(q)) : POKEMON_SPECIES.slice())
+    .sort((a, b) => a.dex - b.dex)
+    .slice(0, q ? 50 : Infinity);
   panel.innerHTML = matches.length
     ? matches.map(speciesPickerRowHTML).join('')
     : `<div class="species-picker-empty">No matches in the database. <b>${escapeHTML(filterText.trim())}</b> will be saved as typed.</div>`;
@@ -142,6 +144,12 @@ function selectSpeciesEntry(entryId){
 
   // Covers the "Mega Evolution already checked, then species picked" order. The other
   // order (species first, then check Mega) is handled in onFormToggleChange.
+  // Mega typing is species-specific, so anything carried over from the previous species
+  // is stale here; clear it before re-running the auto-fill, otherwise its "don't
+  // overwrite a value that's already set" guard would leave the old species' typing in place.
+  selectedMegaTypes = [];
+  selectedMegaForm = '';
+  document.querySelectorAll('#megaTypeSwatches .type-badge').forEach(s => s.classList.remove('active'));
   const megaCheckbox = document.getElementById('f_isMega');
   if(megaCheckbox && megaCheckbox.checked) tryAutoFillMegaTypes();
   renderMegaFormOptions();

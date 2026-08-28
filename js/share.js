@@ -8,10 +8,17 @@
  * the same regardless of Poké Ball / Beast Ball / Master Ball selection.
  */
 
+// Placeholder sprites are hosted on img.pokemondb.net, a different origin than a user's
+// own uploaded (data URI) sprite. Drawing a cross-origin image onto a canvas without
+// requesting it with CORS taints the canvas, and exporting a tainted canvas throws --
+// which is why sharing used to fail outright for any Pokémon still on its placeholder
+// sprite. crossOrigin='anonymous' asks pokemondb.net's image for CORS-cleared bytes, so
+// the exported canvas stays readable.
 function loadImageAsync(src){
   return new Promise(resolve => {
     if(!src){ resolve(null); return; }
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.onload = () => resolve(img);
     img.onerror = () => resolve(null);
     img.src = src;
@@ -50,7 +57,24 @@ function truncateToWidth(ctx, text, maxWidth){
 
 async function canvasToPngFile(canvas, filename){
   const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  // toBlob resolves null (it doesn't throw) when the canvas is tainted by a cross-origin
+  // image drawn onto it without CORS clearance -- surface that as a real failure instead
+  // of silently packaging the null into a broken, unopenable "file".
+  if(!blob) return null;
   return new File([blob], filename, { type: 'image/png' });
+}
+
+async function shareOrDownloadFile(file){
+  if(isMobileDevice() && navigator.canShare && navigator.canShare({ files: [file] })){
+    try{
+      await navigator.share({ files: [file] });
+      return;
+    } catch(e){
+      if(e.name === 'AbortError') return; // user closed the share sheet
+      // any other share failure falls through to a direct download
+    }
+  }
+  downloadFile(file);
 }
 
 // Coarse pointer + touch support is a reasonable proxy for "mobile" without relying on
@@ -72,16 +96,8 @@ function downloadFile(file){
 
 async function shareOrDownloadCanvas(canvas, filename){
   const file = await canvasToPngFile(canvas, filename);
-  if(isMobileDevice() && navigator.canShare && navigator.canShare({ files: [file] })){
-    try{
-      await navigator.share({ files: [file] });
-      return;
-    } catch(e){
-      if(e.name === 'AbortError') return; // user closed the share sheet
-      // any other share failure falls through to a direct download
-    }
-  }
-  downloadFile(file);
+  if(!file) throw new Error('Canvas export failed (tainted canvas).');
+  await shareOrDownloadFile(file);
 }
 
 /* ---------- Single-card share ---------- */
@@ -658,7 +674,17 @@ async function shareCardAsImage(id){
     if(!animated){
       const spriteImg = await loadImageAsync(spriteSrc);
       const canvas = drawCardFrame(p, assets, spriteImg);
-      await shareOrDownloadCanvas(canvas, `${baseName}.png`);
+      try{
+        await shareOrDownloadCanvas(canvas, `${baseName}.png`);
+      } catch(e){
+        // A placeholder sprite is hotlinked from img.pokemondb.net; if that host doesn't
+        // hand back CORS-cleared image data, the canvas comes out tainted and export
+        // fails. Redraw without the sprite rather than losing the share entirely -- the
+        // rest of the card (name, types, ribbons, etc.) doesn't depend on it.
+        if(!spriteImg) throw e;
+        const fallbackCanvas = drawCardFrame(p, assets, null);
+        await shareOrDownloadCanvas(fallbackCanvas, `${baseName}.png`);
+      }
       return;
     }
 
@@ -691,7 +717,7 @@ const ROSTER_CELL_H = 210;
 const ROSTER_PAD = 36;
 const ROSTER_GAP = 16;
 
-async function buildRosterShareCanvas(){
+async function buildRosterShareCanvas(skipPlaceholderSprites){
   const list = state.pokemon;
   const columns = Math.max(1, Math.min(6, Math.floor((1180 - ROSTER_PAD*2 + ROSTER_GAP) / (ROSTER_CELL_W + ROSTER_GAP))));
   const width = ROSTER_PAD*2 + columns*ROSTER_CELL_W + (columns-1)*ROSTER_GAP;
@@ -731,7 +757,9 @@ async function buildRosterShareCanvas(){
   ctx.fillStyle = '#9aa3b8';
   ctx.fillText(`${list.length} Pok\u00e9mon  ·  ${shinyCount} shiny  ·  As on ${new Date().toLocaleDateString()}`, ROSTER_PAD + 40, 76);
 
-  const sprites = await Promise.all(list.map(p => loadImageAsync(resolveDisplaySprite(p))));
+  const sprites = await Promise.all(list.map(p =>
+    skipPlaceholderSprites && usingPlaceholderSprite(p) ? null : loadImageAsync(resolveDisplaySprite(p))
+  ));
 
   list.forEach((p, i) => {
     const col = i % columns, row = Math.floor(i / columns);
@@ -808,7 +836,16 @@ async function shareRosterAsImage(){
   showToast('Preparing image…');
   try{
     const canvas = await buildRosterShareCanvas();
-    await shareOrDownloadCanvas(canvas, 'pokedex-roster.png');
+    try{
+      await shareOrDownloadCanvas(canvas, 'pokedex-roster.png');
+    } catch(e){
+      // Same tainted-canvas situation as a single card's placeholder sprite, just
+      // possibly from any Pokémon in the roster rather than one specific card.
+      const hasPlaceholder = state.pokemon.some(usingPlaceholderSprite);
+      if(!hasPlaceholder) throw e;
+      const fallbackCanvas = await buildRosterShareCanvas(true);
+      await shareOrDownloadCanvas(fallbackCanvas, 'pokedex-roster.png');
+    }
   } catch(e){
     showToast('Could not generate the share image.');
   }

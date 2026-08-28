@@ -5,6 +5,7 @@ const searchInput = document.getElementById('searchInput');
 let typeFilterValue = '';
 let gameFilterValue = '';
 let gameFilterOptions = [];
+let gameFilterCustomCount = 0;
 let gridDensity = 'cozy'; // 'cozy' (3/row, default) or 'dense' (6/row)
 let shinyOnly = false;
 let megaOnly = false;
@@ -177,32 +178,73 @@ function toggleTypeFilterDropdown(){
 function populateGameFilter(){
   const games = new Set();
   state.pokemon.forEach(p => { if(p.originGame) games.add(p.originGame); });
-  gameFilterOptions = [...games].sort((a,b)=>a.localeCompare(b));
+  if(state.settings && state.settings.sortGamesAlpha){
+    gameFilterOptions = [...games].sort((a, b) => a.localeCompare(b));
+    gameFilterCustomCount = 0; // alphabetical mode doesn't separate custom entries out
+    if(!gameFilterOptions.includes(gameFilterValue)) gameFilterValue = '';
+    renderGameFilterPanel();
+    updateGameFilterTrigger();
+    return;
+  }
+  // Same grouping/ordering as the Origin Game picker in the Add/Edit form (gamePresetSelectHTML
+  // in js/pokemon.js): by generation, in GAME_PRESETS' own (already chronological) order.
+  // A typed game name that doesn't match any preset is "custom" and sorts alphabetically,
+  // after every recognized game rather than interleaved with them.
+  const matched = [];
+  const custom = [];
+  games.forEach(g => {
+    const key = detectGameKeyFromTag(g);
+    const presetIndex = key ? GAME_PRESETS.findIndex(gp => gp.key === key) : -1;
+    if(presetIndex === -1) custom.push(g);
+    else matched.push({ g, presetIndex });
+  });
+  matched.sort((a, b) => a.presetIndex - b.presetIndex);
+  custom.sort((a, b) => a.localeCompare(b));
+  gameFilterOptions = matched.map(m => m.g).concat(custom);
+  gameFilterCustomCount = custom.length;
   if(!gameFilterOptions.includes(gameFilterValue)) gameFilterValue = '';
   renderGameFilterPanel();
   updateGameFilterTrigger();
 }
 
-// Rebuilds the dropdown's option rows. Each shows the game's preset icon when its typed
-// name resolves to one (same fuzzy matching used for the Origin/Last Game fields elsewhere),
-// and falls back to text-only for a custom-typed game name that doesn't match a preset.
+// Rebuilds the dropdown's option rows. In alphabetical mode (Settings > Sort Alphabetically
+// > Origin Game) it's just a flat sorted list, no grouping. Otherwise each shows the game's
+// preset icon when its typed name resolves to one (same fuzzy matching used for the
+// Origin/Last Game fields elsewhere), grouped the same way as that same picker: a
+// "Generation N" label per gen, then a "Custom" label for any typed names that didn't match
+// a preset.
 function renderGameFilterPanel(){
   const panel = document.getElementById('gameFilterPanel');
   if(!panel) return;
+  const alphaMode = !!(state.settings && state.settings.sortGamesAlpha);
+  const matchedCount = gameFilterOptions.length - gameFilterCustomCount;
+  let lastGen = null;
+  const optionsHTML = gameFilterOptions.map((g, i) => {
+    const key = detectGameKeyFromTag(g);
+    const preset = key ? GAME_PRESET_INDEX[key] : null;
+    const isCustom = !alphaMode && i >= matchedCount;
+    let label = '';
+    if(!alphaMode){
+      if(isCustom && i === matchedCount){
+        label = `<div class="game-dropdown-gen-label">Custom</div>`;
+      } else if(!isCustom && preset && preset.gen !== lastGen){
+        lastGen = preset.gen;
+        label = `<div class="game-dropdown-gen-label">${escapeHTML(gamePresetGenLabel(preset.gen))}</div>`;
+      }
+    }
+    return `
+      ${label}
+      <div class="ball-option game-preset-option ${gameFilterValue===g?'active':''}" onclick="selectGameFilterValue(${i})">
+        ${preset ? `<img src="${preset.icon}" alt="">` : `<span class="game-preset-option-blank"></span>`}
+        <span>${escapeHTML(g)}</span>
+      </div>
+    `;
+  }).join('');
   panel.innerHTML = `
     <div class="ball-option game-preset-option ${!gameFilterValue?'active':''}" onclick="selectGameFilterValue(-1)">
       <span class="game-preset-option-blank"></span><span>All Origin Games</span>
     </div>
-    ${gameFilterOptions.map((g,i) => {
-      const key = detectGameKeyFromTag(g);
-      const preset = key ? GAME_PRESET_INDEX[key] : null;
-      return `
-        <div class="ball-option game-preset-option ${gameFilterValue===g?'active':''}" onclick="selectGameFilterValue(${i})">
-          ${preset ? `<img src="${preset.icon}" alt="">` : `<span class="game-preset-option-blank"></span>`}
-          <span>${escapeHTML(g)}</span>
-        </div>
-      `;
-    }).join('')}
+    ${optionsHTML}
   `;
 }
 
@@ -362,9 +404,9 @@ function applyCustomTheme(custom){
 /* ---- Custom fonts (Google Fonts or a font file from the local device) ----
    Two independent slots: "body" (--sans, everything except nicknames) and
    "nickname" (--nickname-font, Pokémon nicknames only). */
-const FONT_SLOT_VAR = { body:'--sans', nickname:'--nickname-font' };
-const ACTIVE_LOCAL_FONT_FAMILY = { body:'PokedexActiveLocalFontBody', nickname:'PokedexActiveLocalFontNickname' };
-let activeLocalFontFaces = { body:null, nickname:null };
+const FONT_SLOT_VAR = { body:'--sans', nickname:'--nickname-font', mono:'--mono' };
+const ACTIVE_LOCAL_FONT_FAMILY = { body:'PokedexActiveLocalFontBody', nickname:'PokedexActiveLocalFontNickname', mono:'PokedexActiveLocalFontMono' };
+let activeLocalFontFaces = { body:null, nickname:null, mono:null };
 
 function ensureGoogleFontLink(slot, name){
   if(!name) return;
@@ -399,24 +441,24 @@ async function applyLocalFont(slot, dataUrl){
 function applyFontSlot(slot, font){
   const html = document.documentElement;
   const cssVar = FONT_SLOT_VAR[slot];
-  if(!font || font.type === 'google' && !font.googleName || font.type === 'local' && !font.localData){
+  const isOverridden = !!font && ((font.type === 'google' && font.googleName) || (font.type === 'local' && font.localData));
+  if(!isOverridden){
+    if(slot === 'mono') ensureGoogleFontLink('mono', 'Kode Mono'); // "Default" for Mono is Kode Mono itself
     html.style.removeProperty(cssVar);
     return;
   }
   if(font.type === 'google'){
     ensureGoogleFontLink(slot, font.googleName);
     html.style.setProperty(cssVar, `'${font.googleName}', sans-serif`);
-  } else if(font.type === 'local'){
+  } else {
     applyLocalFont(slot, font.localData).then(ok => {
       if(ok) html.style.setProperty(cssVar, `'${ACTIVE_LOCAL_FONT_FAMILY[slot]}', sans-serif`);
     });
-  } else {
-    html.style.removeProperty(cssVar);
   }
 }
 
 function applySettings(){
-  const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting() };
+  const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), monoFont: defaultFontSetting() };
   if(s.defaultTheme === 'custom'){
     applyCustomTheme(s.custom || defaultCustomTheme());
   } else {
@@ -426,12 +468,13 @@ function applySettings(){
   updateSortTrigger();
   applyFontSlot('body', s.bodyFont || defaultFontSetting());
   applyFontSlot('nickname', s.nicknameFont || defaultFontSetting());
+  applyFontSlot('mono', s.monoFont || defaultFontSetting());
 }
 
 document.getElementById('themeToggleBtn').addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme');
   const next = current === 'light' ? 'dark' : current === 'dark' ? 'custom' : 'light';
-  if(!state.settings) state.settings = { defaultSort:'oldest', defaultTheme:'light', custom: null, bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting() };
+  if(!state.settings) state.settings = { defaultSort:'oldest', defaultTheme:'light', custom: null, bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), monoFont: defaultFontSetting() };
   state.settings.defaultTheme = next;
   if(next === 'custom'){
     if(!state.settings.custom) state.settings.custom = defaultCustomTheme();
@@ -968,6 +1011,7 @@ function renderGrid(){
     <div class="grid-status">Showing ${visible.length} of ${list.length}</div>
     ${hasMore ? `<div class="grid-load-more" id="gridLoadMore"><button type="button" class="btn ghost" id="gridLoadMoreBtn">Load more</button></div>` : ''}
   `;
+  if(sortMode === 'oldest') wireGridDragReorder(gridWrap);
 
   if(hasMore){
     document.getElementById('gridLoadMoreBtn').addEventListener('click', () => {
@@ -996,6 +1040,63 @@ function observeGridLoadMore(){
     }
   }, { rootMargin: '600px' });
   gridLoadMoreObserver.observe(sentinel);
+}
+
+// Native HTML5 drag-and-drop reordering for individual cards, same pattern as the
+// Moveset by Game rows (js/pokemon.js) and the Control Panel's list reordering, but keyed
+// by Pokémon id rather than array index so it stays correct even though the grid might
+// only be showing a filtered/searched subset of state.pokemon. Only wired up when sorted
+// Added/oldest-first (see cardHTML's dragEnabled), since that's the only view where a
+// card's position directly reflects the array order being reordered.
+function wireGridDragReorder(container){
+  let dragId = null;
+  container.querySelectorAll('.card[data-pid]').forEach(card => {
+    const handle = card.querySelector('.card-drag-handle');
+    if(handle){
+      handle.addEventListener('dragstart', (e) => {
+        dragId = card.dataset.pid;
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try{ e.dataTransfer.setData('text/plain', dragId); } catch(err){}
+      });
+      handle.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+        container.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over-before', 'drag-over-after'));
+      });
+    }
+    card.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if(dragId === null || card.dataset.pid === dragId) return;
+      const rect = card.getBoundingClientRect();
+      const before = (e.clientX - rect.left) < rect.width / 2;
+      card.classList.toggle('drag-over-before', before);
+      card.classList.toggle('drag-over-after', !before);
+    });
+    card.addEventListener('dragleave', () => {
+      card.classList.remove('drag-over-before', 'drag-over-after');
+    });
+    card.addEventListener('drop', (e) => {
+      e.preventDefault();
+      card.classList.remove('drag-over-before', 'drag-over-after');
+      if(dragId === null || card.dataset.pid === dragId){ dragId = null; return; }
+      const rect = card.getBoundingClientRect();
+      const before = (e.clientX - rect.left) < rect.width / 2;
+      reorderPokemon(dragId, card.dataset.pid, before);
+      dragId = null;
+    });
+  });
+}
+// Moves a Pokémon to sit just before/after another within state.pokemon (the array
+// Added/oldest-first sort reflects directly).
+function reorderPokemon(dragId, targetId, before){
+  const fromIndex = state.pokemon.findIndex(p => p.id === dragId);
+  if(fromIndex === -1) return;
+  const [moved] = state.pokemon.splice(fromIndex, 1);
+  let toIndex = state.pokemon.findIndex(p => p.id === targetId);
+  if(toIndex === -1){ state.pokemon.splice(fromIndex, 0, moved); return; }
+  if(!before) toIndex += 1;
+  state.pokemon.splice(toIndex, 0, moved);
+  renderGrid();
 }
 
 function emptyStateHTML(title, body, showClearFilters){
@@ -1061,10 +1162,148 @@ function sparkleParticlesHTML(seed){
 // resolved at render time (not baked into preferredForm) because an uploaded Mega/Gigantamax
 // sprite can be removed independently of its toggle, and the card should degrade gracefully
 // rather than show a broken/empty image.
+/* ============== PLACEHOLDER SPRITES ============== */
+// A handful of species have only one Species Database entry despite the games having
+// multiple visually distinct forms (Cherrim's weather forms, Genesect's Drives, Aegislash's
+// Shield/Blade, Pumpkaboo/Gourgeist's sizes, Xerneas's Active Mode, Wishiwashi's School
+// Form, Mimikyu's Busted Form, Sinistea/Polteageist's Antique Form, Poltchageist/Sinistcha's
+// Masterpiece Form, Terapagos's Terastal/Stellar Forms, and Unown's 28 letters) -- there's
+// no way for a saved Pokémon to record which one it actually is, so this just falls back to
+// a sensible default sprite for that species rather than showing nothing.
+const SPRITE_NAME_ALIAS = {
+  cherrim: 'Overcast Form Cherrim',
+  genesect: 'Normal Genesect',
+  aegislash: 'Shield Forme Aegislash',
+  pumpkaboo: 'Small Variety Pumpkaboo',
+  gourgeist: 'Small Variety Gourgeist',
+  xerneas: 'Neutral Mode Xerneas',
+  wishiwashi: 'School Form Wishiwashi',
+  mimikyu: 'Disguised Form Mimikyu',
+  sinistea: 'Phony Form Sinistea',
+  polteageist: 'Phony Form Polteageist',
+  poltchageist: 'Counterfeit Form Poltchageist',
+  sinistcha: 'Unremarkable Form Sinistcha',
+  terapagos: 'Normal Form Terapagos',
+  unown: 'Unown A'
+};
+function normalizeSpriteNameForMatch(name){
+  return String(name || '').trim().toLowerCase().replace(/[\u2018\u2019]/g, "'");
+}
+
+let SPRITE_NAME_LOOKUP = null;
+function spriteNameLookup(){
+  if(!SPRITE_NAME_LOOKUP){
+    SPRITE_NAME_LOOKUP = {};
+    (typeof SPRITE_LIST !== 'undefined' ? SPRITE_LIST : []).forEach(s => {
+      SPRITE_NAME_LOOKUP[normalizeSpriteNameForMatch(s.name)] = s;
+    });
+  }
+  return SPRITE_NAME_LOOKUP;
+}
+
+// Works out which Sprite List entry (see data/sprites.js) matches a given Pokémon, by
+// reconstructing the same display name the Sprite List uses. Mega Evolution (including
+// Primal Reversion/Ultra Burst) and Gigantamax (including Eternamax) take priority since
+// they change the sprite entirely. Otherwise, a species name is never combined with a
+// regional demonym or form using punctuation of any kind (no parentheses, no dashes) --
+// whichever one comes first (a demonym, if the species has an actual regional variant)
+// goes directly in front of the species name, and the other (a form, if any) trails
+// after, e.g. "Alolan Rattata", "Dawn Wings Necrozma", "Galarian Darmanitan Zen Mode".
+function findPlaceholderSprite(p){
+  const lookup = spriteNameLookup();
+  const entry = (typeof findSpeciesEntry === 'function') ? findSpeciesEntry(p.speciesEntryId) : null;
+
+  const altName = megaOrGigantamaxDisplayName(p);
+  if(altName){
+    const hit = lookup[normalizeSpriteNameForMatch(altName)];
+    if(hit) return hit;
+  }
+
+  // Alcremie's Species Database form combines its Cream flavor and Sweet topping as
+  // "<Cream> · <Sweet>" (see data/pokemon-species.js), since the Sprite List names each
+  // of the 63 combinations "<Cream> Alcremie <Sweet>" rather than the usual
+  // "<form> <species>"/"<species> <form>" pattern below.
+  if(entry && entry.species === 'Alcremie' && entry.form && entry.form.includes('·')){
+    const [cream, sweet] = entry.form.split('·').map(s => s.trim());
+    const alcremieHit = lookup[normalizeSpriteNameForMatch(cream + ' Alcremie ' + sweet)];
+    if(alcremieHit) return alcremieHit;
+  }
+
+  let prefix = '';
+  if(entry && entry.demonym && !/kantonian/i.test(entry.demonym)){
+    prefix = entry.demonym.replace(/ Form$/i, '').trim();
+  }
+  const form = entry && entry.form ? entry.form : '';
+
+  // A demonym slot is only ever filled once -- a real regional variant (Alolan, Galarian,
+  // and so on) takes it, trailing the form after the species if there is one (Galarian
+  // Darmanitan Zen Mode). With no demonym, the species and its own form could go in
+  // either order depending on the individual Pokémon's real name -- most go form-first
+  // (Dawn Wings Necrozma, Origin Forme Giratina), but some go species-first (Pikachu Rock
+  // Star, Hoopa Unbound), so both are tried.
+  const candidates = [];
+  if(prefix){
+    candidates.push(prefix + ' ' + p.species + (form ? ' ' + form : ''));
+  } else if(form){
+    candidates.push(form + ' ' + p.species, p.species + ' ' + form);
+  } else {
+    candidates.push(p.species);
+  }
+  for(const name of candidates){
+    const hit = lookup[normalizeSpriteNameForMatch(name)];
+    if(hit) return hit;
+  }
+
+  // A demonym that just labels a species' region of origin isn't a distinct look, so
+  // falls back to the plain species name -- with its form trailing (in either order), if
+  // it has one -- rather than needing its own "<Region> <Species>" sprite entry. A form
+  // with no demonym that still didn't match either order above (Altered Forme Giratina,
+  // Koraidon's Apex Build, Miraidon's Ultimate Mode, and so on -- these just don't have
+  // their own sprite) falls back the same way, to whatever the plain species has.
+  if(prefix || form){
+    if(form){
+      const bareHit = lookup[normalizeSpriteNameForMatch(form + ' ' + p.species)]
+        || lookup[normalizeSpriteNameForMatch(p.species + ' ' + form)];
+      if(bareHit) return bareHit;
+    }
+    const bareHit = lookup[normalizeSpriteNameForMatch(p.species)];
+    if(bareHit) return bareHit;
+  }
+
+  const aliasKey = (entry ? entry.species : p.species).toLowerCase();
+  if(SPRITE_NAME_ALIAS[aliasKey]){
+    const aliasHit = lookup[normalizeSpriteNameForMatch(SPRITE_NAME_ALIAS[aliasKey])];
+    if(aliasHit) return aliasHit;
+  }
+
+  return null;
+}
+
+// Picks the right one of a placeholder sprite's 4 images for a Pokémon's recorded gender
+// and shininess.
+function placeholderSpriteURL(p){
+  const sprite = findPlaceholderSprite(p);
+  if(!sprite) return '';
+  const female = p.gender === 'Female';
+  if(p.shiny) return female ? sprite.spriteShinyF : sprite.spriteShinyM;
+  return female ? sprite.spriteF : sprite.spriteM;
+}
+
 function resolveDisplaySprite(p){
   if(p.preferredForm === 'mega' && p.isMega && p.spriteMega) return p.spriteMega;
   if(p.preferredForm === 'gigantamax' && p.isGigantamax && p.spriteGigantamax) return p.spriteGigantamax;
-  return p.sprite || '';
+  return p.sprite || placeholderSpriteURL(p);
+}
+
+// Whether resolveDisplaySprite fell through to a built-in placeholder sprite (from the
+// Sprite List) rather than an image actually uploaded for this Pokémon. The card-sprite
+// box's glass-gradient background is meant to dress up a plain custom image; a placeholder
+// sprite already reads fine on its own and looks better without it (see .card-sprite.
+// is-placeholder-sprite in css/pokemon.css).
+function usingPlaceholderSprite(p){
+  if(p.preferredForm === 'mega' && p.isMega && p.spriteMega) return false;
+  if(p.preferredForm === 'gigantamax' && p.isGigantamax && p.spriteGigantamax) return false;
+  return !p.sprite;
 }
 
 function formBadgeRowHTML(p){
@@ -1126,12 +1365,18 @@ function cardFooterInfoHTML(p){
       const age = formatAge(p.metDate);
       if(!age) return '';
       const met = formatMetDate(p.metDate);
-      return `<span class="origin-label">${age} old${met ? ` · Met ${met}` : ''}</span>`;
+      if(!met) return `<span class="origin-label">${age} old</span>`;
+      return `<span class="origin-label footer-age-with-met">
+        <span class="footer-age-line">${age} old</span>
+        <span class="footer-met-line"><svg class="age-clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>Met ${met}</span>
+      </span>`;
     }
     case 'notes': {
       const notes = stripHTML(p.notes).trim();
       return notes ? `<span class="origin-label">${escapeHTML(notes)}</span>` : '';
     }
+    case 'characteristic':
+      return p.characteristic ? `<span class="origin-label">${escapeHTML(p.characteristic)}</span>` : '';
     case 'origin':
       return p.originGame ? `<span class="origin-label" style="display:inline-flex; align-items:center; gap:4px;">${gameTagHTML(p.originGame)}</span>` : '';
     case 'last':
@@ -1182,13 +1427,17 @@ function cardHTML(p){
   const formSuffix = (p.preferredForm === 'mega' && p.megaForm) ? ' ' + p.megaForm.toUpperCase() : '';
   const footerInfo = cardFooterInfoHTML(p);
   const [glowC1, glowC2, glowC3] = typeGlowColors(p);
+  // Card position only reflects state.pokemon's actual order (what dragging reorders)
+  // when sorted Added/oldest-first; any other sort would just resort a drag right back,
+  // so the handle only shows up there.
+  const dragEnabled = currentSortValue() === 'oldest';
   return `
-  <div class="card ${p.shiny ? 'is-shiny' : ''} ${p.pokerus === 'infected' ? 'pokerus-infected' : ''} ${p.pokerus === 'cured' ? 'pokerus-cured' : ''}" style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; ${midTintStyle} border-color:${borderColor}; --glow-c1:${glowC1}; --glow-c2:${glowC2}; --glow-c3:${glowC3}" onclick="openDetail('${p.id}')">
+  <div class="card ${p.shiny ? 'is-shiny' : ''} ${p.pokerus === 'infected' ? 'pokerus-infected' : ''} ${p.pokerus === 'cured' ? 'pokerus-cured' : ''}" ${dragEnabled ? `data-pid="${p.id}"` : ''} style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; ${midTintStyle} border-color:${borderColor}; --glow-c1:${glowC1}; --glow-c2:${glowC2}; --glow-c3:${glowC3}" onclick="openDetail('${p.id}')">
     <span class="card-glow-ring" aria-hidden="true"></span>
     <span class="card-glow-halo" aria-hidden="true"></span>
     ${formBadgeRowHTML(p)}
     <div class="card-top">
-      <div class="card-sprite">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '<div class="brand-mark mini"></div>'}</div>
+      <div class="card-sprite${displaySprite && usingPlaceholderSprite(p) ? ' is-placeholder-sprite' : ''}${p.preferredForm === 'mega' ? ' is-mega-sprite' : p.preferredForm === 'gigantamax' ? ' is-gmax-sprite' : ''}">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '<div class="brand-mark mini"></div>'}</div>
       <div>
         <div class="card-id">${dexPrefixHTML(p)}${formPrefix}${p.species.toUpperCase()}${formSuffix}</div>
         <div class="card-name">${titledNicknameHTML(p)}</div>
@@ -1217,6 +1466,7 @@ function cardHTML(p){
         </div>
       </div>
     </div>
+    ${dragEnabled ? '<span class="card-drag-handle" title="Drag to reorder" aria-hidden="true" draggable="true" onclick="event.stopPropagation()">•••</span>' : ''}
   </div>`;
 }
 
@@ -1351,8 +1601,8 @@ function genderSymbolHTML(gender){
 function natureTooltipHTML(name){
   const n = NATURE_DATA[name];
   if(!n) return '';
-  if(!n.up && !n.down){
-    return `<div class="nature-tip-row neutral">No stat change</div>`;
+  if(!n.up || !n.down || n.up === n.down){
+    return `<div class="nature-tip-row neutral">No Stat Change</div>`;
   }
   return `
     <div class="nature-tip-row"><span class="nature-tip-arrow up">▲</span> <span style="color:${STAT_COLOR[n.up]}">${n.up}</span></div>
@@ -1373,6 +1623,12 @@ function natureSelectHTML(id, selected){
       </div>
     </div>
   `;
+}
+function characteristicSelectHTML(id, selected){
+  const opts = ['<option value="">-</option>'].concat(
+    CHARACTERISTICS.map(c => `<option value="${escapeAttr(c)}" ${selected===c?'selected':''}>${escapeHTML(c)}</option>`)
+  ).join('');
+  return `<select id="${id}">${opts}</select>`;
 }
 function updateNatureTooltip(id){
   const val = document.getElementById(id).value;
@@ -1448,7 +1704,7 @@ document.addEventListener('click', (e) => {
   if(!e.target.closest('.type-filter-dropdown')){
     document.querySelectorAll('.type-filter-panel.open').forEach(p => p.classList.remove('open'));
   }
-  if(!e.target.closest('.species-field')){
+  if(!e.target.closest('.species-field') && !e.target.closest('.move-slot-field')){
     document.querySelectorAll('.species-picker-panel.open').forEach(p => p.classList.remove('open'));
   }
   // Date panels are now appended to body (not inside .date-field) so check both the
