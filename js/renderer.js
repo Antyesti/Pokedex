@@ -1671,7 +1671,7 @@ function ballSelectHTML(id, selected){
       </button>
       <div class="ball-dropdown-panel" id="${id}_panel">
         <div class="ball-option ${!selected?'active':''}" onclick="selectBall('${id}','')">
-          <span style="width:24px;height:24px;flex:none;"></span><span style="color:var(--text-faint);">- None -</span>
+          <span style="width:24px;height:24px;flex:none;"></span><span style="color:var(--text-faint);">None</span>
         </div>
         ${rows}
       </div>

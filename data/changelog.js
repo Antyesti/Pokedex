@@ -35,6 +35,26 @@ const CREDITS = [
 
 const CHANGELOG = [
   {
+    version: "v29",
+    entries: [
+      {
+        title: "Toolbar layout",
+        items: [
+          "The Grid density and Sort controls now stay pinned to the right edge of the toolbar, with the Type, Game, and Form filters sitting to their left. Search grows to fill whatever room is left, and will shrink automatically as more filters are added in the future."
+        ]
+      },
+      {
+        title: "Fixes",
+        items: [
+          "Fixed sharing a card or roster as an image dropping the sprite for any Pokémon still on its placeholder artwork.",
+          "Reduced the font size of tooltip text.",
+          "The History icon now appears to the left of the History heading when the panel is opened.",
+          "Cleaned up the label for the empty option in the Poké Ball dropdown."
+        ]
+      }
+    ]
+  },
+  {
     version: "v28",
     entries: [
       {

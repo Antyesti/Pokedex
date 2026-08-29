@@ -832,7 +832,7 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
 }
 
 .nature-tip-row{
-  display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;
+  display:flex; align-items:center; gap:6px; font-size:10.5px; font-weight:600;
   font-family:var(--sans); white-space:nowrap; padding:2px 0;
 }
 
@@ -866,7 +866,7 @@ table.movetable tr:hover td{ background:rgba(255,255,255,0.025); }
   opacity:0; visibility:hidden;
   transition: opacity .15s ease, transform .15s ease, visibility .15s;
   pointer-events:none;
-  font-family:var(--sans); font-size:12px; font-weight:500; line-height:1.5; color:var(--text-dim);
+  font-family:var(--sans); font-size:10.5px; font-weight:500; line-height:1.5; color:var(--text-dim);
   white-space:normal; text-align:left;
 }
 
@@ -1364,7 +1364,7 @@ footer.bottom{
   text-align:center; margin-top:50px; color:var(--text-faint); font-family:var(--mono); font-size:11px;
 }
 
-.footer-credit-name{
+.antyesti{
   background: linear-gradient(90deg, #ff6ec4, #7873f5, #4adede, #ff6ec4, #f7971e);
   background-size: 300% 100%;
   background-clip: text; -webkit-background-clip: text;
@@ -1391,16 +1391,34 @@ footer.bottom{
   box-shadow:0 4px 14px -4px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
+/* Same pill shape as .footer-pill-btn, but each keeps its own brand gradient instead of
+   the site accent -- the border and hover fill are pulled from that gradient's first
+   stop rather than var(--accent). */
 .footer-discord-link, .footer-github-link{
   text-decoration:none; font-weight:700;
   background-size: 200% 100%; background-position: 0% 50%;
   background-clip: text; -webkit-background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
-  transition: background-position .3s ease;
+  transition: background-position .3s ease, background-color .15s ease, box-shadow .15s ease;
 }
 .footer-discord-link{ background-image: linear-gradient(90deg, #5865F2, #7289DA); }
 .footer-github-link{ background-image: linear-gradient(90deg, #0FBF3E, #9EECFF); }
 .footer-discord-link:hover, .footer-github-link:hover{ background-position: 100% 50%; }
+
+/* Pill-shaped variants (footer's own Discord/Github links) keep the gradient text above
+   but swap the accent border/hover fill from .footer-pill-btn for their own brand color. */
+.footer-pill-btn.footer-discord-link{ border-color:#5865F2; }
+.footer-pill-btn.footer-github-link{ border-color:#0FBF3E; }
+.footer-pill-btn.footer-discord-link:hover{
+  background-clip:border-box; -webkit-background-clip:border-box;
+  background-color:#5865F2; color:#fff; -webkit-text-fill-color:#fff;
+  box-shadow:0 4px 14px -4px rgba(88,101,242,0.4);
+}
+.footer-pill-btn.footer-github-link:hover{
+  background-clip:border-box; -webkit-background-clip:border-box;
+  background-color:#0FBF3E; color:#fff; -webkit-text-fill-color:#fff;
+  box-shadow:0 4px 14px -4px rgba(15,191,62,0.4);
+}
 
 .footer-legal-note{
   display:inline-block; margin-top:8px; max-width:640px; color:var(--text-faint); font-size:10px; line-height:1.6;

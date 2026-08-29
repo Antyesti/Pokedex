@@ -9,11 +9,17 @@
  */
 
 // Placeholder sprites are hosted on img.pokemondb.net, a different origin than a user's
-// own uploaded (data URI) sprite. Drawing a cross-origin image onto a canvas without
-// requesting it with CORS taints the canvas, and exporting a tainted canvas throws --
-// which is why sharing used to fail outright for any Pokémon still on its placeholder
-// sprite. crossOrigin='anonymous' asks pokemondb.net's image for CORS-cleared bytes, so
-// the exported canvas stays readable.
+// own uploaded (data URI) sprite, and that host doesn't send back an
+// Access-Control-Allow-Origin header. Requesting it with crossOrigin='anonymous' (needed
+// to keep the canvas export-able) makes the browser refuse the image outright instead of
+// just tainting the canvas, so the sprite never showed up on a shared card. Routing those
+// requests through images.weserv.nl, an image proxy that does send CORS headers, gets us
+// the actual pixels back while leaving a user's own uploaded (data URI) sprite untouched.
+function corsSafeSrc(src){
+  const match = /^https:\/\/img\.pokemondb\.net\/(.+)$/.exec(src);
+  return match ? `https://images.weserv.nl/?url=img.pokemondb.net/${match[1]}` : src;
+}
+
 function loadImageAsync(src){
   return new Promise(resolve => {
     if(!src){ resolve(null); return; }
@@ -21,7 +27,7 @@ function loadImageAsync(src){
     img.crossOrigin = 'anonymous';
     img.onload = () => resolve(img);
     img.onerror = () => resolve(null);
-    img.src = src;
+    img.src = corsSafeSrc(src);
   });
 }
 

@@ -346,7 +346,7 @@ function openHistory(){
     <div class="modal" style="max-width:480px;">
       <div class="modal-head">
         <div>
-          <h2 style="font-family:var(--sans); font-size:22px; font-weight:800; letter-spacing:-0.01em; margin:0;">History</h2>
+          <h2 style="display:flex; align-items:center; gap:8px; font-family:var(--sans); font-size:22px; font-weight:800; letter-spacing:-0.01em; margin:0;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px; height:20px; flex:none;"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/><polyline points="12 7 12 12 16 14"/></svg>History</h2>
           <div class="hint" style="margin-top:4px;">Recent changes to your roster.</div>
         </div>
         <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeHistory()">
