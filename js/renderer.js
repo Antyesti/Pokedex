@@ -94,7 +94,6 @@ function init(){
   document.getElementById('megaFilterIcon').src = MEGA_ICON;
   document.getElementById('gigantamaxFilterIcon').src = GIGANTAMAX_ICON;
   setupDexTitleCaseToggle();
-  startFooterEasterEgg();
   setupEasterEggSecretToggle();
   const autosaved = loadAutosavedState();
   if(autosaved){
@@ -105,6 +104,10 @@ function init(){
     seedData();
   }
   applySettings();
+  // Needs state.settings already loaded above -- it reads easterEggPreferred on its
+  // very first paint, so starting it any earlier would draw Pikachu regardless of what
+  // was actually saved.
+  startFooterEasterEgg();
   renderTypeFilterPanel();
   document.querySelectorAll('#viewToggle .view-toggle-btn[data-density]').forEach(btn=>{
     btn.addEventListener('click', () => {
