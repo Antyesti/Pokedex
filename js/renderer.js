@@ -93,6 +93,9 @@ function init(){
   document.documentElement.style.setProperty('--shiny-icon-url', `url("${SHINY_ICON}")`);
   document.getElementById('megaFilterIcon').src = MEGA_ICON;
   document.getElementById('gigantamaxFilterIcon').src = GIGANTAMAX_ICON;
+  setupDexTitleCaseToggle();
+  startFooterEasterEgg();
+  setupEasterEggSecretToggle();
   const autosaved = loadAutosavedState();
   if(autosaved){
     state.trainer = typeof autosaved.trainer === 'string' ? autosaved.trainer : '';
@@ -132,6 +135,79 @@ function init(){
     renderGrid();
   });
   render();
+}
+
+// dexTitle starts in ALL CAPS (case-upper). Clicking toggles it to Sentence Case (the
+// underlying "Ash's Pokédex" text as typed) and back. Title Case was dropped -- for a
+// title that's already just "Pokédex" or "<Name>'s Pokédex", capitalize() renders
+// identically to the sentence-case text, so it wasn't a distinct third state. No title
+// attribute is set anywhere here, so there's no hover tooltip giving away that it's
+// clickable.
+function setupDexTitleCaseToggle(){
+  const titleEl = document.getElementById('dexTitle');
+  if(!titleEl) return;
+  const caseClasses = ['case-upper', 'case-sentence'];
+  let caseIndex = 0;
+  titleEl.addEventListener('click', () => {
+    caseIndex = (caseIndex + 1) % caseClasses.length;
+    titleEl.classList.remove(...caseClasses);
+    titleEl.classList.add(caseClasses[caseIndex]);
+  });
+}
+
+// Footer easter egg: a little Pikachu runs across above the "Made by" line
+// permanently. Every 30 seconds there's a 1-in-10 chance it swaps to a Shiny Suicune
+// for 10 seconds before switching back to Pikachu. Clicking "Antyesti" five times in
+// rapid succession (secret, no visible hint) unlocks a Settings section to choose which
+// one is the permanent runner, and immediately flips it. The choice lives in
+// state.settings so it's part of the savefile, not just an in-memory toggle.
+let easterEggShowBase = null;
+
+function easterEggPreferSuicune(){
+  return !!(state.settings && state.settings.easterEggPreferred === 'suicune');
+}
+
+function startFooterEasterEgg(){
+  const el = document.getElementById('footerEasterEgg');
+  if(!el) return;
+  const CHECK_INTERVAL_MS = 30000;
+  const RARE_DURATION_MS = 10000;
+  function showBase(){
+    el.innerHTML = `<img src="${easterEggPreferSuicune() ? SUICUNE_RUNNING_ICON : PIKACHU_RUNNING_ICON}" alt="">`;
+  }
+  function maybeShowRare(){
+    if(Math.random() < 0.1){
+      el.innerHTML = `<img src="${easterEggPreferSuicune() ? PIKACHU_RUNNING_ICON : SUICUNE_RUNNING_ICON}" alt="">`;
+      setTimeout(showBase, RARE_DURATION_MS);
+    }
+  }
+  easterEggShowBase = showBase;
+  showBase();
+  setInterval(maybeShowRare, CHECK_INTERVAL_MS);
+}
+
+// Five clicks on "Antyesti" within a couple seconds of each other flips the odds and
+// (the first time) unlocks the Easter Egg picker at the bottom of Settings. Deliberately
+// undocumented anywhere in the UI -- no tooltip, no hint.
+function setupEasterEggSecretToggle(){
+  const trigger = document.getElementById('footerCreditName');
+  if(!trigger) return;
+  const RAPID_CLICK_WINDOW_MS = 1500;
+  const CLICKS_NEEDED = 5;
+  let clickCount = 0;
+  let resetTimer = null;
+  trigger.addEventListener('click', () => {
+    clickCount++;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => { clickCount = 0; }, RAPID_CLICK_WINDOW_MS);
+    if(clickCount >= CLICKS_NEEDED){
+      clickCount = 0;
+      state.settings.easterEggUnlocked = true;
+      state.settings.easterEggPreferred = easterEggPreferSuicune() ? 'pikachu' : 'suicune';
+      scheduleAutosave();
+      if(easterEggShowBase) easterEggShowBase();
+    }
+  });
 }
 
 // The type list is fixed (unlike Origin Game, which depends on what's in the roster), so
@@ -788,9 +864,11 @@ function renderStatsDashboard(){
   const topNatures = Object.entries(natureCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const noNatureCount = list.filter(p=>!p.nature).length;
 
-  // Balls
+  // Balls -- counted by what's actually displayed (Strange Ball where that applies),
+  // so the breakdown matches what the grid/detail view show, per-Pokémon overrides
+  // included.
   const ballCounts = {};
-  list.forEach(p => { if(p.ball) ballCounts[p.ball] = (ballCounts[p.ball]||0)+1; });
+  list.forEach(p => { if(p.ball) ballCounts[effectiveBallName(p)] = (ballCounts[effectiveBallName(p)]||0)+1; });
   const topBalls = Object.entries(ballCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const noBallCount = list.filter(p=>!p.ball).length;
 
@@ -1449,7 +1527,7 @@ function cardHTML(p){
     </div>
     <div class="card-meta">
       ${p.metLocation ? `<span>📍 ${p.metLocation}</span>` : ''}
-      ${p.ball ? `<span style="display:inline-flex; align-items:center; gap:4px;">${ballIconHTML(p.ball,18)}${escapeHTML(p.ball)}</span>` : ''}
+      ${p.ball ? `<span style="display:inline-flex; align-items:center; gap:4px;">${ballIconHTML(effectiveBallName(p),18)}${escapeHTML(effectiveBallName(p))}</span>` : ''}
       <span>${p.games.length} game${p.games.length===1?'':'s'}</span>
     </div>
     <div class="card-foot ${footerInfo ? '' : 'centered'}">
@@ -1647,10 +1725,34 @@ function ballIconHTML(ballName, size){
 }
 
 function orderedBallData(){
+  // Strange Ball is a derived display state, not a real caught ball, so it never
+  // shows up as something a user can pick from this list.
+  const assignable = BALL_DATA.filter(b => !b.isStrangeBall);
   if(state.settings && state.settings.sortBallsAlpha){
-    return [...BALL_DATA].sort((a,b) => a.name.localeCompare(b.name));
+    return [...assignable].sort((a,b) => a.name.localeCompare(b.name));
   }
-  return BALL_DATA;
+  return assignable;
+}
+
+// Whether a given (real, caught) ball name is one the administrator has marked as
+// eligible to be shown as a Strange Ball, in Control Panel → Poké Balls.
+function ballIsStrangeEligible(ballName){
+  const b = BALL_DATA.find(x => x.name === ballName);
+  return !!(b && b.strangeEligible);
+}
+
+// The Poké Ball name to actually show for a Pokémon. Only a ball marked eligible in
+// Control Panel → Poké Balls can ever show as Strange Ball. p.strangeOverride, once a
+// Pokémon has one, pins the display that way regardless of what the global setting is
+// doing or later changes to -- true always shows Strange Ball, false always shows the
+// real ball. With no override set, it just follows the global setting.
+function effectiveBallName(p){
+  if(!p || !p.ball) return p ? p.ball : undefined;
+  if(!ballIsStrangeEligible(p.ball)) return p.ball;
+  if(p.strangeOverride === true) return 'Strange Ball';
+  if(p.strangeOverride === false) return p.ball;
+  const globalOn = !!(state.settings && state.settings.strangeBallDisplay);
+  return globalOn ? 'Strange Ball' : p.ball;
 }
 
 function ballSelectHTML(id, selected){

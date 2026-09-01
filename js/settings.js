@@ -30,7 +30,7 @@ function fontPickerFieldHTML(slot, labelText, hintText, font){
 }
 
 function openSettings(){
-  const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), monoFont: defaultFontSetting(), shareFormat:'apng', cardFooterInfo:'arrow', sortBallsAlpha:false, sortGamesAlpha:false };
+  const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), monoFont: defaultFontSetting(), shareFormat:'apng', cardFooterInfo:'arrow', sortBallsAlpha:false, sortGamesAlpha:false, strangeBallDisplay:false, easterEggUnlocked:false, easterEggPreferred:'pikachu' };
   const custom = s.custom || defaultCustomTheme();
   const bodyFont = s.bodyFont || defaultFontSetting();
   const nicknameFont = s.nicknameFont || defaultFontSetting();
@@ -38,6 +38,7 @@ function openSettings(){
   const cardFooterInfo = s.cardFooterInfo || 'arrow';
   const sortBallsAlpha = !!s.sortBallsAlpha;
   const sortGamesAlpha = !!s.sortGamesAlpha;
+  const strangeBallDisplay = !!s.strangeBallDisplay;
   const previewMon = { types:['Fire','Flying'], preferredForm:'default', shiny:false };
   const previewIsLight = isNeumorphicActive();
   const previewA1 = previewIsLight ? 0.30 : 0.22;
@@ -63,6 +64,21 @@ function openSettings(){
       </div>
       <div class="modal-body">
         <div class="field">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="${BALL_LOOKUP['Strange Ball'] || ''}" alt="" style="width:22px; height:22px; flex:none;">
+            <label style="margin:0;">Strange Ball</label>
+            <span class="info-tooltip-trigger" tabindex="0" data-no-autofocus>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span class="info-tooltip">This is a global setting. It can be overridden individually for specific Pokémon from their Edit screen.</span>
+            </span>
+            <label class="switch" style="margin-left:auto;">
+              <input type="checkbox" id="settingsStrangeBallDisplay" ${strangeBallDisplay ? 'checked' : ''}>
+              <span class="track"></span>
+              <span class="thumb"></span>
+            </label>
+          </div>
+        </div>
+        <div class="field" style="margin-top:16px;">
           <label>Default Card Sort</label>
           <select id="settingsDefaultSort">
             <option value="recent" ${s.defaultSort==='recent'?'selected':''}>Sort by Recently Added</option>
@@ -200,6 +216,20 @@ function openSettings(){
             </div>
           </div>
         </div>
+        ${s.easterEggUnlocked ? `
+        <div class="field" style="margin-top:16px; padding-top:16px; border-top:1px solid var(--panel-border);">
+          <label style="display:flex; align-items:center; gap:6px;">Easter Egg
+            <span class="info-tooltip-trigger" tabindex="0" data-no-autofocus>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span class="info-tooltip">Selecting Shiny Suicune makes Pikachu the rare one. Selecting Pikachu makes Shiny Suicune the rare one.</span>
+            </span>
+          </label>
+          <div class="hint" style="margin-top:2px; margin-bottom:10px;">Pick which one runs across the footer permanently.</div>
+          <div class="btn-toggle-row">
+            <button type="button" class="btn ${s.easterEggPreferred!=='suicune'?'primary':'ghost'}" id="settingsEasterEggPikachu" style="flex:1; width:auto; height:auto; padding:10px 10px; border-radius:10px; font-size:13px;" onclick="setSettingsEasterEggChoice('pikachu')">Pikachu</button>
+            <button type="button" class="btn ${s.easterEggPreferred==='suicune'?'primary':'ghost'}" id="settingsEasterEggSuicune" style="flex:1; width:auto; height:auto; padding:10px 10px; border-radius:10px; font-size:13px;" onclick="setSettingsEasterEggChoice('suicune')">Shiny Suicune</button>
+          </div>
+        </div>` : ''}
       </div>
       <div class="modal-foot">
         <button type="button" class="btn ghost" style="color:#F4A6BA;" onclick="resetAllPreferencesToDefault()">Reset to Default</button>
@@ -223,7 +253,7 @@ function openSettings(){
   fontDrafts.nickname = { type: nicknameFont.type || 'default', googleName: nicknameFont.googleName || '', localName: nicknameFont.localName || '', localData: nicknameFont.localData || '' };
   fontDrafts.mono = { type: monoFont.type || 'default', googleName: monoFont.googleName || '', localName: monoFont.localName || '', localData: monoFont.localData || '' };
   settingsShareFormatDraft = s.shareFormat === 'gif' ? 'gif' : 'apng';
-  document.getElementById('fontGoogleNameBody').addEventListener('input', () => handleGoogleFontNameInput('body'));
+  settingsEasterEggDraft = s.easterEggPreferred === 'suicune' ? 'suicune' : 'pikachu';  document.getElementById('fontGoogleNameBody').addEventListener('input', () => handleGoogleFontNameInput('body'));
   document.getElementById('fontGoogleNameNickname').addEventListener('input', () => handleGoogleFontNameInput('nickname'));
   updateFontPreview();
 }
@@ -239,6 +269,7 @@ function defaultFontSetting(){
 let settingsThemeDraft = 'light';
 let customStyleDraft = 'glass';
 let settingsShareFormatDraft = 'apng';
+let settingsEasterEggDraft = 'pikachu';
 let fontDrafts = {
   body: { type:'default', googleName:'', localName:'', localData:'' },
   nickname: { type:'default', googleName:'', localName:'', localData:'' },
@@ -370,8 +401,14 @@ function resetAllPreferencesToDefault(){
     shareFormat: 'apng',
     cardFooterInfo: 'arrow',
     sortBallsAlpha: false,
-    sortGamesAlpha: false
+    sortGamesAlpha: false,
+    strangeBallDisplay: false,
+    // Not a display preference in the same sense as the rest of this -- it's a hidden
+    // unlock, so "Reset to Default" doesn't re-lock it or clear the chosen ball.
+    easterEggUnlocked: !!(previous && previous.easterEggUnlocked),
+    easterEggPreferred: (previous && previous.easterEggPreferred) || 'pikachu'
   };
+  scheduleAutosave();
   applySettings();
   renderGrid();
   refreshAllOpenAchievementsSections();
@@ -410,6 +447,14 @@ function setSettingsShareFormatChoice(format){
   document.getElementById('settingsShareFormatApng').classList.toggle('ghost', format==='gif');
   document.getElementById('settingsShareFormatGif').classList.toggle('primary', format==='gif');
   document.getElementById('settingsShareFormatGif').classList.toggle('ghost', format!=='gif');
+}
+
+function setSettingsEasterEggChoice(choice){
+  settingsEasterEggDraft = choice;
+  document.getElementById('settingsEasterEggPikachu').classList.toggle('primary', choice!=='suicune');
+  document.getElementById('settingsEasterEggPikachu').classList.toggle('ghost', choice==='suicune');
+  document.getElementById('settingsEasterEggSuicune').classList.toggle('primary', choice==='suicune');
+  document.getElementById('settingsEasterEggSuicune').classList.toggle('ghost', choice!=='suicune');
 }
 
 function setCustomStyleChoice(style){
@@ -453,11 +498,21 @@ function saveSettings(){
   const cardFooterInfo = document.getElementById('settingsCardFooterInfo').value;
   const sortBallsAlpha = document.getElementById('settingsSortBallsAlpha').checked;
   const sortGamesAlpha = document.getElementById('settingsSortGamesAlpha').checked;
+  const strangeBallDisplay = document.getElementById('settingsStrangeBallDisplay').checked;
+  // Not editable here -- easterEggUnlocked only flips via the secret click sequence in
+  // the footer, and this rebuild would otherwise silently drop it back to its default.
+  const easterEggUnlocked = !!(state.settings && state.settings.easterEggUnlocked);
+  const easterEggPreferred = settingsEasterEggDraft;
   const custom = settingsThemeDraft === 'custom' ? readCustomColorsFromInputs() : (state.settings && state.settings.custom) || defaultCustomTheme();
   const bodyFont = { ...fontDrafts.body };
   const nicknameFont = { ...fontDrafts.nickname };
   const monoFont = { ...fontDrafts.mono };
-  state.settings = { defaultSort, defaultTheme: settingsThemeDraft, custom, bodyFont, nicknameFont, monoFont, shareFormat: settingsShareFormatDraft, cardFooterInfo, sortBallsAlpha, sortGamesAlpha };
+  state.settings = { defaultSort, defaultTheme: settingsThemeDraft, custom, bodyFont, nicknameFont, monoFont, shareFormat: settingsShareFormatDraft, cardFooterInfo, sortBallsAlpha, sortGamesAlpha, strangeBallDisplay, easterEggUnlocked, easterEggPreferred };
+  scheduleAutosave();
+  // The footer runner only re-reads this preference the next time it happens to
+  // redraw itself (on the next rare appearance/revert cycle), which could be minutes
+  // away -- refresh it now so picking a new one in Settings takes effect immediately.
+  if(typeof easterEggShowBase === 'function') easterEggShowBase();
   applySettings();
   populateGameFilter();
   renderGrid();

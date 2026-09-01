@@ -388,7 +388,7 @@ const MEGA_TYPES = {
         "Dark",
         "Ghost"
       ],
-      ability: ""
+      ability: "Sharpness"
     }
   ],
   glalie: [
@@ -464,7 +464,7 @@ const MEGA_TYPES = {
       types: [
         "Dragon"
       ],
-      ability: ""
+      ability: "Levitate"
     }
   ],
   lucario: [
@@ -482,7 +482,7 @@ const MEGA_TYPES = {
         "Fighting",
         "Steel"
       ],
-      ability: ""
+      ability: "Aura Break"
     }
   ],
   lopunny: [

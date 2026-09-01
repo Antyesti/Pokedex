@@ -16,8 +16,9 @@
 // requests through images.weserv.nl, an image proxy that does send CORS headers, gets us
 // the actual pixels back while leaving a user's own uploaded (data URI) sprite untouched.
 function corsSafeSrc(src){
-  const match = /^https:\/\/img\.pokemondb\.net\/(.+)$/.exec(src);
-  return match ? `https://images.weserv.nl/?url=img.pokemondb.net/${match[1]}` : src;
+  return /^https:\/\/img\.pokemondb\.net\//.test(src)
+    ? `https://images.weserv.nl/?url=${encodeURIComponent(src)}`
+    : src;
 }
 
 function loadImageAsync(src){
@@ -416,7 +417,7 @@ async function prepareCardShareAssets(p){
   const mctx = measureCanvas.getContext('2d');
   const contentWidth = SHARE_CARD_WIDTH - SHARE_PAD*2;
 
-  const ballImg = p.ball ? await loadImageAsync(BALL_LOOKUP[p.ball] || '') : null;
+  const ballImg = p.ball ? await loadImageAsync(BALL_LOOKUP[effectiveBallName(p)] || '') : null;
   const achievementIcons = await Promise.all(achievements.map(a => loadImageAsync(a.icon)));
 
   // Origin/Last Game render as icons only now, same as the ball. Reuse the same game

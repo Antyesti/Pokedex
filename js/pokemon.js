@@ -26,7 +26,7 @@ function openForm(id){
     }));
     formPreferredForm = p.preferredForm || 'default';
   } else {
-    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', characteristic:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', isTera:false, teraType:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'' };
+    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', characteristic:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', strangeOverride:null, originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', isTera:false, teraType:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'' };
     formMovesDraft = [];
     formPreferredForm = 'default';
   }
@@ -299,7 +299,14 @@ function formBodyHTML(p){
         </div>
         <div class="rich-input" id="metLocEdit" contenteditable="true" data-placeholder="e.g. Pallet Town">${p.metLocation||''}</div>
       </div>
-      <div class="field"><label>Housed Poké Ball</label>${ballSelectHTML('f_ball', p.ball)}</div>
+      <div class="field">
+        <label style="display:flex; align-items:center; gap:6px;">Poké Ball
+          <button type="button" id="strangeOverrideBtn" onclick="toggleStrangeOverride()" title="Click to switch between the Strange Ball and the actual ball" style="display:none; width:20px; height:20px; padding:0; border:none; background:none; cursor:pointer; flex:none;">
+            <img id="strangeOverrideIcon" src="" alt="" style="width:20px; height:20px; display:block;">
+          </button>
+        </label>
+        ${ballSelectHTML('f_ball', p.ball)}
+      </div>
       <div class="field"><label>Met Date</label>${dateFieldHTML('f_metDate', p.metDate||'')}</div>
       <div class="field">
         <label>Origin Game</label>
@@ -480,6 +487,49 @@ function togglePokerus(status){
     btn.classList.toggle('active', btn.dataset.pokerus === selectedPokerus);
   });
 }
+
+// Per-Pokémon Strange Ball override for the ball currently selected in the form.
+// null (the default) means this Pokémon just follows the global Strange Ball
+// setting. true/false pins the display that way from here on, regardless of the
+// global setting -- once set, it sticks even if the global setting later changes.
+// Only relevant while the selected ball is one an administrator has marked eligible
+// in Control Panel → Poké Balls -- Strange Ball itself is a derived display state,
+// never something picked directly.
+let strangeOverrideDraft = null;
+
+function refreshStrangeOverrideRow(){
+  const btn = document.getElementById('strangeOverrideBtn');
+  const ballField = document.getElementById('f_ball');
+  if(!btn || !ballField) return;
+  const ballName = ballField.value;
+  if(!ballName || !ballIsStrangeEligible(ballName)){
+    btn.style.display = 'none';
+    strangeOverrideDraft = null;
+    return;
+  }
+  btn.style.display = 'block';
+  const globalOn = !!(state.settings && state.settings.strangeBallDisplay);
+  const showingStrange = strangeOverrideDraft === null ? globalOn : strangeOverrideDraft;
+  document.getElementById('strangeOverrideIcon').src = BALL_LOOKUP[showingStrange ? 'Strange Ball' : ballName] || '';
+}
+
+function toggleStrangeOverride(){
+  const ballName = document.getElementById('f_ball').value;
+  if(!ballName || !ballIsStrangeEligible(ballName)) return;
+  const globalOn = !!(state.settings && state.settings.strangeBallDisplay);
+  const currentlyStrange = strangeOverrideDraft === null ? globalOn : strangeOverrideDraft;
+  strangeOverrideDraft = !currentlyStrange;
+  refreshStrangeOverrideRow();
+}
+
+// The ball dropdown only exists on this one field, so hooking its selection here
+// keeps the override row (and any stale override from a previously selected ball)
+// in sync without renderer.js needing to know this field exists.
+const _origSelectBall = selectBall;
+selectBall = function(id, ballName){
+  _origSelectBall(id, ballName);
+  if(id === 'f_ball') refreshStrangeOverrideRow();
+};
 
 // Tracks which single move slot (if any) is currently expanded into its editable
 // input+dropdown state, as "rowIdx:slot". Every other resolved slot shows as a pill;
@@ -949,6 +999,7 @@ function closeForm(){
   selectedGender = '';
   selectedPokerus = 'none';
   selectedSpeciesEntryId = '';
+  strangeOverrideDraft = null;
   formMovesDraft = [];
 }
 
@@ -1025,6 +1076,7 @@ function saveForm(id){
     metLocation: document.getElementById('metLocEdit').innerHTML.trim(),
     metDate: document.getElementById('f_metDate').value,
     ball: document.getElementById('f_ball').value.trim(),
+    strangeOverride: strangeOverrideDraft,
     originGame: document.getElementById('f_originGame').value.trim(),
     lastGame: document.getElementById('f_lastGame').value.trim(),
     notes: document.getElementById('notesEdit').innerHTML.trim(),
@@ -1076,7 +1128,9 @@ openForm = function(id){
   selectedGender = existing ? (existing.gender || '') : '';
   selectedPokerus = existing ? (existing.pokerus || 'none') : 'none';
   selectedSpeciesEntryId = existing ? (existing.speciesEntryId || '') : '';
+  strangeOverrideDraft = existing && typeof existing.strangeOverride === 'boolean' ? existing.strangeOverride : null;
   _origOpenForm(id);
+  refreshStrangeOverrideRow();
   // Covers "species already had Mega enabled with no typing saved, and MEGA_TYPES has
   // since gained an entry for it". The checkbox-change and species-pick triggers for
   // auto-fill don't fire just from opening the form, so without this an existing record

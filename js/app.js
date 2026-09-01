@@ -19,7 +19,7 @@ const STAT_COLOR = {
 function changelogEntryHTML(entry){
   return `
     <div class="changelog-entry ${entry.knownIssue?'known-issue':''}">
-      <div class="changelog-entry-title">${escapeHTML(entry.title)}</div>
+      <div class="changelog-entry-title">${entry.icon ? `<img src="${entry.icon}" alt="" class="changelog-entry-icon">` : ''}${escapeHTML(entry.title)}</div>
       <ul class="changelog-list">
         ${entry.items.map(i=>`<li>${i}</li>`).join('')}
       </ul>

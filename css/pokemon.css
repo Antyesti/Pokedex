@@ -48,9 +48,7 @@
 
 .grid.dense .icon-btn svg{ width:14px; height:14px; }
 
-.grid.dense .brand-mark.mini{ width:26px; height:26px; border-width:2px; }
-
-.grid.dense .brand-mark.mini::after{ width:8px; height:8px; border-width:2px; }
+.grid.dense .brand-mark.mini{ width:26px; height:26px; }
 
 @media (max-width: 1200px) {
   .grid.dense{ grid-template-columns:repeat(4, 1fr); }
@@ -1422,6 +1420,50 @@ footer.bottom{
 
 .footer-legal-note{
   display:inline-block; margin-top:8px; max-width:640px; color:var(--text-faint); font-size:10px; line-height:1.6;
+}
+
+.footer-easter-egg{
+  height:34px; margin:0 auto 6px; width:100%; max-width:120px;
+}
+
+.footer-easter-egg img{ width:100%; height:100%; object-fit:contain; image-rendering:pixelated; }
+
+.footer-columns{
+  display:flex; justify-content:space-between; align-items:flex-start; gap:24px;
+  max-width:840px; margin:22px auto 0; padding-top:22px; border-top:1px solid var(--panel-border);
+  text-align:left;
+}
+
+.footer-brand-col{ display:flex; flex-direction:column; gap:8px; flex:1 1 360px; min-width:0; }
+
+.footer-brand-row{ display:flex; align-items:center; gap:10px; }
+
+.footer-brand-mark{
+  width:34px; height:34px; animation:none;
+}
+
+.footer-brand-title{
+  font-family:var(--sans); font-weight:900; font-size:26px; letter-spacing:-0.01em;
+  text-transform:uppercase; color:var(--text);
+}
+
+.footer-link-cols{ display:flex; gap:48px; flex:none; }
+
+.footer-link-col{ display:flex; flex-direction:column; gap:10px; align-items:center; }
+
+.footer-col-heading{
+  font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--text-faint);
+}
+
+.footer-pill-row{ display:flex; flex-direction:column; gap:8px; align-items:center; }
+
+.footer-pill-row .footer-pill-btn{ margin:0; }
+
+@media (max-width: 640px){
+  .footer-columns{ flex-direction:column; align-items:center; text-align:center; }
+  .footer-brand-row{ justify-content:center; }
+  .footer-link-cols{ justify-content:center; }
 }
 
 /* Scrolling ticker for the autosave notice. The text is duplicated back to back in
