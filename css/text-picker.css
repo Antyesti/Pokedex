@@ -1,0 +1,28 @@
+/* ---------- TEXT PICKER ---------- */
+/* Styling for the Ability and Met Location fields' autocomplete (js/text-picker.js), a
+   lighter sibling of the Species Picker (css/species-picker.css) for plain string lists. */
+
+.text-picker-field{ position:relative; }
+.text-picker-field input,
+.text-picker-field .rich-input{ width:100%; }
+
+.text-picker-panel{
+  display:none; position:absolute; z-index:20; top:calc(100% + 6px); left:0; right:0;
+  max-height:280px; overflow-y:auto; border-radius:12px; border:1px solid var(--panel-border);
+  background:var(--panel); box-shadow:0 18px 40px -12px rgba(0,0,0,0.45); padding:6px;
+}
+
+.text-picker-panel.open{ display:block; }
+
+.text-picker-empty{ font-size:12.5px; color:var(--text-faint); padding:14px 10px; text-align:center; }
+
+.text-picker-group-label{
+  font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.06em;
+  color:var(--text-faint); padding:8px 10px 4px;
+}
+
+.text-picker-row{
+  padding:8px 10px; border-radius:8px; cursor:pointer; font-family:var(--sans); font-size:13px; color:var(--text);
+}
+
+.text-picker-row:hover{ background:rgba(255,255,255,0.06); }

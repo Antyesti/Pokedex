@@ -49,13 +49,13 @@
       "ball": "Cherish Ball",
       "originGame": "Pokémon Diamond",
       "lastGame": "Pokémon Pearl",
-      "notes": "Received at <b>Toys 'R' Us </b>.",
+      "notes": "Received at <b>Toys 'R' Us </b>.<div><br><div><sub>Wondercard reads</sub></div><div><p class=\"MsoNormal\"><span class=\"MsoIntenseReference\"><span style=\"color:#FFC000;\nmso-style-textfill-type:gradient;mso-style-textfill-fill-gradientfill-shadetype:\npath-circle;mso-style-textfill-fill-gradientfill-shade-rectfill-pctleft:100.0%;\nmso-style-textfill-fill-gradientfill-shade-rectfill-pcttop:100.0%;mso-style-textfill-fill-gradientfill-shade-rectfill-pctright:\n0%;mso-style-textfill-fill-gradientfill-shade-rectfill-pctbottom:0%;mso-style-textfill-fill-gradientfill-stoplist:\n&quot;0 \\#FFC000 -1 100000\\,100000 \\#74C4E9 4 100000 lumm=45000 lumo=55000&quot;\">It's Ash's PIKACHU from TV and the movies! Like Ash, we hope PIKACHU becomes your best friend on your Pokémon journey! Save the game once you receive PIKACHU at a Poké Mart</span></span><span class=\"MsoIntenseReference\"><span style=\"color:#FFC000;mso-style-textfill-type:gradient;mso-style-textfill-fill-gradientfill-shadetype:\nlinear;mso-style-textfill-fill-gradientfill-shade-linearshade-angle:5400000;\nmso-style-textfill-fill-gradientfill-shade-linearshade-fscaled:no;mso-style-textfill-fill-gradientfill-stoplist:\n&quot;0 \\#FFC000 -1 100000\\,43000 \\#74C4E9 4 100000 lumm=45000 lumo=55000\\,69000 \\#74C4E9 4 100000 lumm=45000 lumo=55000\\,100000 \\#FFFF00 -1 100000&quot;\">.<br></span></span></p></div></div>",
       "sprite": "",
       "isMega": false,
       "isGigantamax": true,
       "spriteMega": "",
       "spriteGigantamax": "",
-      "preferredForm": "gigantamax",
+      "preferredForm": "default",
       "games": [
         {
           "id": "p_t9z9lhp4mr0znw5n",
@@ -130,7 +130,10 @@
       "pokerus": "none",
       "isTera": false,
       "teraType": "Stellar",
-      "characteristic": ""
+      "characteristic": "",
+      "metLevel": 50,
+      "strangeOverride": null
     }
-  ]
+  ],
+  "trainerAvatar": "pikachu"
 }

@@ -76,6 +76,7 @@ function persistState(){
   try{
     localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({
       trainer: state.trainer,
+      trainerAvatar: state.trainerAvatar,
       settings: state.settings,
       pokemon: state.pokemon
     }));
@@ -151,6 +152,7 @@ async function loadHandle(){
 function normalizeImportedData(data){
   if(!data.pokemon || !Array.isArray(data.pokemon)) throw new Error('bad shape');
   if(typeof data.trainer !== 'string') data.trainer = '';
+  if(typeof data.trainerAvatar !== 'string') data.trainerAvatar = '';
   if(typeof data.settings !== 'object' || !data.settings) data.settings = { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting() };
   if(typeof data.settings.custom !== 'object' || !data.settings.custom) data.settings.custom = defaultCustomTheme();
   // migrate the older single "font" setting (pre-nickname-font split) into bodyFont

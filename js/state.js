@@ -1,6 +1,7 @@
 /* ============== ROSTER STATE ============== */
 let state = {
   trainer: '',
+  trainerAvatar: '',
   settings: { defaultSort: 'oldest', defaultTheme: 'light', custom: null },
   pokemon: []
 };
@@ -52,8 +53,15 @@ function normalizePokemon(p){
       g.maxMoveModes = normalizeMaxMoveModes(g);
       delete g.maxGuardSlots;
       delete g.downgradeGMaxSlots;
+      delete g.gameVersion;
     });
   }
+
+  // Original vs Virtual Console used to be set manually (first via a per-Pokemon map, then
+  // a per-entry checkbox); both are gone now that pokemonGameVersion() in
+  // js/ribbon-eligibility.js infers it automatically from a Pokemon's own Moveset by Game
+  // entries, so any leftover value from either era is just discarded here.
+  delete p.gameVersions;
 
   // Achievements: ribbons/marks/misc selections, Memory Ribbon sub-collections, custom
   // achievements, partner trainer name (for the dynamic Partner Ribbon title), custom
@@ -97,6 +105,7 @@ function normalizePokemon(p){
     if(typeof p.customTitleFields[k] !== 'string') p.customTitleFields[k] = '';
   });
   if(typeof p.activeTitleKey !== 'string') p.activeTitleKey = '';
+  if(typeof p.metLevel !== 'number' || !Number.isFinite(p.metLevel) || p.metLevel < 1 || p.metLevel > 100) p.metLevel = null;
   // an active title must point at something the Pokémon actually still has selected,
   // otherwise drop it back to "no title" rather than displaying a stale/invalid one
   const earned = getEarnedTitleKeys(p);

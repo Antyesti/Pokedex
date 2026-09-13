@@ -108,10 +108,13 @@ header.top{
 .brand h1{
   font-family:var(--sans); font-weight:800; font-size:28px; letter-spacing:-0.02em; margin:0;
   line-height:1; cursor:pointer; user-select:none;
+  display:flex; align-items:center; gap:10px;
 }
 
 .brand h1.case-upper{ text-transform:uppercase; }
 .brand h1.case-sentence{ text-transform:none; }
+
+.dex-title-avatar{ width:30px; height:30px; border-radius:50%; object-fit:cover; flex:none; }
 
 .brand .sub{
   font-family:var(--mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase;

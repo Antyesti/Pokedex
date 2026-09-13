@@ -98,6 +98,7 @@ function init(){
   const autosaved = loadAutosavedState();
   if(autosaved){
     state.trainer = typeof autosaved.trainer === 'string' ? autosaved.trainer : '';
+    state.trainerAvatar = typeof autosaved.trainerAvatar === 'string' ? autosaved.trainerAvatar : '';
     state.settings = (autosaved.settings && typeof autosaved.settings === 'object') ? autosaved.settings : state.settings;
     state.pokemon = autosaved.pokemon.map(normalizePokemon);
   } else {
@@ -363,7 +364,13 @@ function render(){
 
 function renderTrainer(){
   const name = (state.trainer||'').trim();
-  document.getElementById('dexTitle').textContent = name ? `${name}'s Pokédex` : 'Pokédex';
+  const dexTitle = document.getElementById('dexTitle');
+  const avatar = trainerAvatarData(state.trainerAvatar);
+  if(name && avatar){
+    dexTitle.innerHTML = `<img src="${avatar.data}" alt="" class="dex-title-avatar">${escapeHTML(name)}'s Pok\u00e9dex`;
+  } else {
+    dexTitle.textContent = name ? `${name}'s Pokédex` : 'Pokédex';
+  }
   document.getElementById('trainerLabel').textContent = name ? `Trainer · ${name}` : 'Personal Roster Records';
 }
 
@@ -579,10 +586,14 @@ function openTrainerNameModal(){
         </div>
         <div style="font-family:var(--sans); font-weight:800; font-size:19px;">Original Trainer</div>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:18px;">
         <div class="field">
           <label>Trainer Name</label>
           <input type="text" id="trainerNameInput" value="${escapeAttr(state.trainer||'')}" placeholder="e.g. Red" maxlength="40">
+        </div>
+        <div class="field">
+          <label>Trainer Avatar</label>
+          ${trainerAvatarSelectHTML('trainerAvatarInput', state.trainerAvatar||'')}
         </div>
       </div>
       <div class="modal-foot">
@@ -598,12 +609,15 @@ function openTrainerNameModal(){
 }
 
 function closeTrainerNameModal(){
+  closeTrainerAvatarDropdown();
   const el = document.getElementById('trainerNameOverlay');
   if(el) el.remove();
 }
 
 function saveTrainerName(){
   state.trainer = document.getElementById('trainerNameInput').value.trim();
+  const avatarInput = document.getElementById('trainerAvatarInput');
+  state.trainerAvatar = avatarInput ? avatarInput.value : '';
   renderTrainer();
   scheduleAutosave();
   closeTrainerNameModal();
@@ -1796,9 +1810,202 @@ function selectBall(id, ballName){
   document.querySelectorAll(`#${id}_panel .ball-option`).forEach(opt => opt.classList.remove('active'));
   document.getElementById(id+'_panel').classList.remove('open');
 }
+
+/* ---------- Trainer Avatar dropdown ---------- */
+// Same picker pattern as the Poké Ball dropdown just above, built from the same
+// .ball-dropdown/.ball-option chrome (reused as-is, not duplicated, so the existing
+// outside-click-closes handler further down already covers this for free), plus a filter
+// input since the avatar catalog runs to dozens of entries where the Ball list only has a
+// handful.
+//
+// Unlike Poké Balls, an avatar's `name` isn't unique -- some characters have a second,
+// hidden alt-art entry sharing the same display name (icons/trainer-avatars.js) -- so
+// everything here keys off each entry's own `key`, and state.trainerAvatar stores that key,
+// not the name. Hidden entries are left out of the browsable list but still resolve
+// normally by key, so something already set to one keeps displaying correctly.
+const TRAINER_AVATAR_LOOKUP = {};
+TRAINER_AVATARS.forEach(a => { TRAINER_AVATAR_LOOKUP[a.key] = a; });
+
+// The stored avatar key resolved back to its catalog entry, or null if nothing's selected
+// or the key no longer matches anything in the catalog (e.g. an avatar removed after being
+// picked) -- callers fall back to no-avatar display rather than erroring, the same "don't
+// break on missing data" rule the rest of the app follows for Poké Balls and games.
+function trainerAvatarData(key){
+  return (key && TRAINER_AVATAR_LOOKUP[key]) || null;
+}
+
+function trainerAvatarIconHTML(key, size){
+  size = size || 22;
+  const entry = TRAINER_AVATAR_LOOKUP[key];
+  if(!entry) return '';
+  return `<img src="${entry.data}" alt="" style="width:${size}px;height:${size}px;flex:none;border-radius:50%;object-fit:cover;vertical-align:middle;">`;
+}
+
+// The picker's browsable list: hidden alt-art entries excluded, everything else
+// alphabetical by display name for easy scanning across dozens of entries.
+function orderedTrainerAvatars(){
+  return TRAINER_AVATARS.filter(a => !a.hidden).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Groups the browsable (non-hidden) avatars by category, in Control Panel's saved category
+// order, each group's own avatars alphabetical. A category with nothing visible in it --
+// either it has no avatars at all, or every avatar it has is a hidden alt-art entry -- is
+// left out entirely rather than shown as an empty heading. Uncategorized avatars (shouldn't
+// normally happen, but data can always predate a field) fall into a plain "Other" group at
+// the end rather than disappearing.
+function trainerAvatarGroups(query){
+  const q = (query || '').trim().toLowerCase();
+  const categories = typeof TRAINER_AVATAR_CATEGORIES !== 'undefined' ? TRAINER_AVATAR_CATEGORIES : [];
+  const catOrder = {};
+  categories.forEach((c, i) => { catOrder[c.key] = i; });
+
+  const groups = new Map();
+  orderedTrainerAvatars().forEach(a => {
+    if(q && !a.name.toLowerCase().includes(q)) return;
+    const catKey = a.category || '__other';
+    if(!groups.has(catKey)){
+      const cat = categories.find(c => c.key === catKey);
+      groups.set(catKey, {
+        name: cat ? cat.name : 'Other',
+        order: cat ? catOrder[catKey] : Infinity,
+        avatars: []
+      });
+    }
+    groups.get(catKey).avatars.push(a);
+  });
+
+  return [...groups.values()].sort((a, b) => a.order - b.order);
+}
+
+function trainerAvatarOptionsHTML(id, selectedKey, query){
+  const groups = trainerAvatarGroups(query);
+  if(!groups.length){
+    return `<div class="text-picker-empty">No matching avatars.</div>`;
+  }
+  return groups.map(g => `
+    <div class="avatar-dropdown-group-label">${escapeHTML(g.name)}</div>
+    ${g.avatars.map(a => `
+      <div class="ball-option ${selectedKey===a.key?'active':''}" onclick="selectTrainerAvatar('${id}','${a.key}')">
+        <img src="${a.data}" alt="" style="border-radius:50%;object-fit:cover;">
+        <span>${escapeHTML(a.name)}</span>
+      </div>
+    `).join('')}
+  `).join('');
+}
+
+function trainerAvatarSelectHTML(id, selectedKey){
+  if(!TRAINER_AVATARS.length){
+    return `
+      <div class="ball-dropdown-trigger" style="cursor:default; opacity:0.6;">
+        <span class="ball-dropdown-current"><span class="placeholder">No trainer avatars added yet</span></span>
+      </div>
+      <input type="hidden" id="${id}" value="">
+    `;
+  }
+  const current = trainerAvatarData(selectedKey);
+  // No nested panel here on purpose -- see toggleTrainerAvatarDropdown() below, which
+  // builds the panel as its own fixed-position element appended straight to <body>. The
+  // modal this field lives in clips overflow (rounded corners, internal scrolling), so a
+  // normal panel nested and positioned relative to the trigger gets cut off against the
+  // modal's own edges; escaping to <body> avoids that regardless of where in the modal
+  // this field ends up.
+  return `
+    <div class="ball-dropdown trainer-avatar-dropdown" id="${id}_wrap">
+      <input type="hidden" id="${id}" value="${escapeAttr(selectedKey||'')}">
+      <button type="button" class="ball-dropdown-trigger" onclick="toggleTrainerAvatarDropdown('${id}')">
+        <span class="ball-dropdown-current">
+          ${current ? `${trainerAvatarIconHTML(current.key,26)}<span>${escapeHTML(current.name)}</span>` : `<span class="placeholder">Select a Trainer Avatar…</span>`}
+        </span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex:none;"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+  `;
+}
+
+// Closes and removes the portal panel, if one is open, and drops the scroll listener that
+// exists only while it's open.
+function closeTrainerAvatarDropdown(){
+  const panel = document.getElementById('trainerAvatarPortal');
+  if(panel) panel.remove();
+  document.removeEventListener('scroll', closeTrainerAvatarDropdownOnOutsideScroll, true);
+}
+
+// Scrolling the avatar list itself is normal use and must not close the panel -- only an
+// ancestor scrolling (the modal body, the page) should, since that's what would actually
+// drag the trigger out from under a fixed-position panel. Scroll events don't bubble, so
+// this only sees them at all because it's registered with capture:true, and e.target there
+// is the element that actually scrolled.
+function closeTrainerAvatarDropdownOnOutsideScroll(e){
+  if(e.target && e.target.closest && e.target.closest('.avatar-dropdown-portal')) return;
+  closeTrainerAvatarDropdown();
+}
+
+function toggleTrainerAvatarDropdown(id){
+  const existing = document.getElementById('trainerAvatarPortal');
+  const wasOpenForThis = existing && existing.dataset.for === id;
+  closeTrainerAvatarDropdown();
+  if(wasOpenForThis) return;
+
+  const wrap = document.getElementById(id+'_wrap');
+  const trigger = wrap.querySelector('.ball-dropdown-trigger');
+  const rect = trigger.getBoundingClientRect();
+  const selectedKey = document.getElementById(id).value;
+
+  const panel = document.createElement('div');
+  panel.className = 'avatar-dropdown-portal';
+  panel.id = 'trainerAvatarPortal';
+  panel.dataset.for = id;
+  panel.style.left = rect.left + 'px';
+  panel.style.top = (rect.bottom + 6) + 'px';
+  panel.style.width = '300px';
+  panel.innerHTML = `
+    <input type="text" class="avatar-dropdown-filter" placeholder="Filter avatars…" oninput="filterTrainerAvatarOptions('${id}', this.value)">
+    <div class="ball-option ${!selectedKey?'active':''}" onclick="selectTrainerAvatar('${id}','')">
+      <span style="width:30px;height:30px;flex:none;"></span><span style="color:var(--text-faint);">None</span>
+    </div>
+    <div class="avatar-dropdown-options" id="${id}_options">${trainerAvatarOptionsHTML(id, selectedKey, '')}</div>
+  `;
+  document.body.appendChild(panel);
+
+  // Flip to open upward if there isn't enough room below the trigger, rather than letting
+  // it run off and clip against the bottom of the window.
+  if(panel.getBoundingClientRect().bottom > window.innerHeight - 8){
+    panel.style.top = 'auto';
+    panel.style.bottom = (window.innerHeight - rect.top + 6) + 'px';
+  }
+
+  panel.querySelector('.avatar-dropdown-filter').focus();
+
+  // The panel is fixed to the viewport, not to the modal's own scroll position -- if the
+  // modal (or anything else) scrolls while it's open the panel would drift away from its
+  // trigger, so close it, the same as a click outside (see the outside-scroll guard above,
+  // which excuses scrolling the list itself from this).
+  document.addEventListener('scroll', closeTrainerAvatarDropdownOnOutsideScroll, true);
+}
+
+function filterTrainerAvatarOptions(id, query){
+  const selectedKey = document.getElementById(id).value;
+  const options = document.getElementById(id+'_options');
+  if(options) options.innerHTML = trainerAvatarOptionsHTML(id, selectedKey, query);
+}
+
+function selectTrainerAvatar(id, key){
+  document.getElementById(id).value = key;
+  const entry = trainerAvatarData(key);
+  const current = document.querySelector(`#${id}_wrap .ball-dropdown-current`);
+  current.innerHTML = entry ? `${trainerAvatarIconHTML(entry.key,26)}<span>${escapeHTML(entry.name)}</span>` : `<span class="placeholder">Select a Trainer Avatar…</span>`;
+  closeTrainerAvatarDropdown();
+}
+
 document.addEventListener('click', (e) => {
   if(!e.target.closest('.ball-dropdown')){
     document.querySelectorAll('.ball-dropdown-panel.open').forEach(p => p.classList.remove('open'));
+  }
+  if(!e.target.closest('.trainer-avatar-dropdown') && !e.target.closest('.avatar-dropdown-portal')){
+    closeTrainerAvatarDropdown();
+  }
+  if(!e.target.closest('.title-dropdown')){
+    document.querySelectorAll('.title-dropdown-panel.open').forEach(p => p.classList.remove('open'));
   }
   if(!e.target.closest('.game-preset-dropdown')){
     document.querySelectorAll('.game-preset-panel.open').forEach(p => p.classList.remove('open'));
@@ -1811,6 +2018,9 @@ document.addEventListener('click', (e) => {
   }
   if(!e.target.closest('.species-field') && !e.target.closest('.move-slot-field')){
     document.querySelectorAll('.species-picker-panel.open').forEach(p => p.classList.remove('open'));
+  }
+  if(!e.target.closest('.text-picker-field')){
+    document.querySelectorAll('.text-picker-panel.open').forEach(p => p.classList.remove('open'));
   }
   // Date panels are now appended to body (not inside .date-field) so check both the
   // field wrapper and any open date-panel directly

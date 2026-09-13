@@ -26,7 +26,7 @@ function openForm(id){
     }));
     formPreferredForm = p.preferredForm || 'default';
   } else {
-    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', characteristic:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', strangeOverride:null, originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', isTera:false, teraType:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'' };
+    p = { nickname:'', species:'', speciesEntryId:'', types:[], megaTypes:[], megaForm:'', nature:'', characteristic:'', gender:'', shiny:false, metLocation:'', metDate:'', ball:'', strangeOverride:null, originGame:'', lastGame:'', notes:'', sprite:'', isMega:false, isGigantamax:false, spriteMega:'', spriteGigantamax:'', isTera:false, teraType:'', preferredForm:'default', achievementKeys:[], contestMemorySubKeys:[], battleMemorySubKeys:[], customMemorySubKeys:{}, customAchievements:[], partnerTrainerName:'', customTitleFields:{}, activeTitleKey:'', metLevel:null, gameVersions:{} };
     formMovesDraft = [];
     formPreferredForm = 'default';
   }
@@ -297,7 +297,10 @@ function formBodyHTML(p){
         <div class="rich-toolbar" id="metLocToolbar">
           <button type="button" class="rich-btn" onclick="richCmd('metLocEdit','superscript')" title="Superscript"><sup>x²</sup></button>
         </div>
-        <div class="rich-input" id="metLocEdit" contenteditable="true" data-placeholder="e.g. Pallet Town">${p.metLocation||''}</div>
+        <div class="text-picker-field">
+          <div class="rich-input" id="metLocEdit" contenteditable="true" data-placeholder="e.g. Pallet Town" oninput="onMetLocationInput(this)" onfocus="onMetLocationInput(this)">${p.metLocation||''}</div>
+          <div class="text-picker-panel" id="metLocationPicker_panel" onmousedown="onMetLocationPickerClick(event)"></div>
+        </div>
       </div>
       <div class="field">
         <label style="display:flex; align-items:center; gap:6px;">Poké Ball
@@ -829,9 +832,14 @@ function abilityFieldHTML(idx, g){
   }
   const eligibleAbility = getEligibleMegaAbility(g.gameKey);
   const applied = !!g.useMegaAbility && eligibleAbility;
-  return '<input placeholder="Ability" value="' + escapeAttr(g.ability) + '" oninput="updateMoveField(' + idx + ',\'ability\',this.value)">' +
+  const panelId = 'abilityPicker_panel_' + idx;
+  return '<div class="text-picker-field">' +
+    '<input placeholder="Ability" autocomplete="off" value="' + escapeAttr(g.ability) + '" oninput="onAbilityInput(' + idx + ',this.value)" onfocus="onAbilityInput(' + idx + ',this.value)">' +
+    '<div class="text-picker-panel" id="' + panelId + '" onmousedown="onAbilityPickerClick(event,' + idx + ')"></div>' +
+    '</div>' +
     megaAbilityToggleRowHTML(idx, eligibleAbility, applied);
 }
+// onAbilityInput/onAbilityPickerClick now live in js/ability-picker.js.
 // Whether a Mega Ability even exists to offer for this row: Mega enabled, the row's
 // game generally supports Mega Evolution, and the current species/Mega Form has one set.
 // Doesn't decide whether it's actually applied; see g.useMegaAbility for that.
@@ -889,6 +897,7 @@ function updateMoveField(idx, field, val){
   }
 }
 function richCmd(elId, cmd){ document.getElementById(elId).focus(); document.execCommand(cmd, false, null); }
+// onMetLocationInput/onMetLocationPickerClick now live in js/location-picker.js.
 function addMoveRow(){
   formMovesDraft.push({ id: cryptoId(), tag:'', ability:'', moves:['','','',''], moveIds:['','','',''], zMoveSlot:-1, zMoveMode:'', maxMoveModes:['','','',''], gameKey:'', useMegaAbility:false });
   renderMovesEditor();
@@ -903,9 +912,18 @@ function removeMoveRow(idx){
    as well as the single Origin Game / Last Game fields (target = "originGame" / "lastGame"). */
 function gamePresetSelectHTML(target, gameKey){
   const selected = GAME_PRESET_INDEX[gameKey];
+  // A game the current species could never actually appear in isn't offered as a choice,
+  // since picking it would just get quietly stripped back out by gameKeysForPokemon()
+  // later anyway. The current selection stays visible even if it now fails this check
+  // (e.g. the Species field changed after it was picked), so nothing gets silently hidden.
+  // Falls back to whatever's typed in the Species field itself when no autocomplete
+  // suggestion has actually been clicked (selectedSpeciesEntryId empty) -- see
+  // speciesGamesFor() in js/ribbon-eligibility.js.
+  const speciesNameTyped = document.getElementById('f_species')?.value || '';
+  const availableGames = GAME_PRESETS.filter(g => g.key === gameKey || speciesAllowsGame(selectedSpeciesEntryId, g.key, speciesNameTyped));
   let panelHTML;
   if(state.settings && state.settings.sortGamesAlpha){
-    panelHTML = [...GAME_PRESETS].sort((a, b) => a.label.localeCompare(b.label)).map(g => `
+    panelHTML = [...availableGames].sort((a, b) => a.label.localeCompare(b.label)).map(g => `
       <div class="ball-option game-preset-option ${gameKey===g.key?'active':''}" onclick="selectGamePreset('${target}','${g.key}')">
         <img src="${g.icon}" alt="">
         <span>${escapeHTML(g.label)}</span>
@@ -913,7 +931,7 @@ function gamePresetSelectHTML(target, gameKey){
     `).join('');
   } else {
     const grouped = {};
-    GAME_PRESETS.forEach(g => { (grouped[g.gen] = grouped[g.gen] || []).push(g); });
+    availableGames.forEach(g => { (grouped[g.gen] = grouped[g.gen] || []).push(g); });
     panelHTML = Object.keys(grouped).sort((a,b)=>a-b).map(gen => `
       <div class="game-dropdown-gen-label">${escapeHTML(gamePresetGenLabel(gen))}</div>
       ${grouped[gen].map(g => `
@@ -978,6 +996,24 @@ function refreshGamePresetWidget(target, key){
   const wrap = document.getElementById(`gamePreset_${target}_wrap`);
   if(!wrap) return;
   wrap.outerHTML = gamePresetSelectHTML(target, key);
+}
+// The Origin Game / Last Game / Moveset by Game pickers filter their options by the
+// current species (speciesAllowsGame(), js/ribbon-eligibility.js), but each one is only a
+// static HTML snapshot taken whenever it was last drawn -- it has no way to notice the
+// species changing out from under it on its own. Species Game Availability wouldn't do
+// anything after the Species field changed without this: called from species-picker.js
+// whenever the species is picked or typed, so every game picker re-filters against
+// whichever species is now actually selected.
+function refreshGamePresetWidgetsForSpecies(){
+  if(document.getElementById('gamePreset_originGame_wrap')){
+    refreshGamePresetWidget('originGame', detectGameKeyFromTag(document.getElementById('f_originGame')?.value || ''));
+  }
+  if(document.getElementById('gamePreset_lastGame_wrap')){
+    refreshGamePresetWidget('lastGame', detectGameKeyFromTag(document.getElementById('f_lastGame')?.value || ''));
+  }
+  (formMovesDraft || []).forEach((g, idx) => {
+    if(document.getElementById(`gamePreset_${idx}_wrap`)) refreshGamePresetWidget(String(idx), g.gameKey || '');
+  });
 }
 // Auto-links Origin Game / Last Game text to its preset icon while typing,
 // mirroring the Moveset by Game tag field's behavior.

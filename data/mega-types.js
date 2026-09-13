@@ -482,7 +482,7 @@ const MEGA_TYPES = {
         "Fighting",
         "Steel"
       ],
-      ability: "Aura Break"
+      ability: "Aura Guard"
     }
   ],
   lopunny: [
@@ -781,7 +781,8 @@ const MEGA_TYPES = {
       types: [
         "Bug",
         "Steel"
-      ]
+      ],
+      ability: "Tough Claws"
     }
   ],
   magearna: [
@@ -836,7 +837,8 @@ const MEGA_TYPES = {
       types: [
         "Dragon",
         "Ice"
-      ]
+      ],
+      ability: "Thermal Exchange"
     }
   ],
   abomasnow: [

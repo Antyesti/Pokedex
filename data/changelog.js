@@ -38,40 +38,93 @@ const CHANGELOG = [
     version: "v29",
     entries: [
       {
+        title: "Ribbons Eligibility Engine",
+        items: [
+          "Added a comprehensive <b>Ribbon Eligibility Engine</b> that evaluates Ribbon eligibility based on game history, game connectivity, species availability, and Ribbon-specific restrictions.",
+          "Added a <b>Ribbons Helper</b> that gives you a list of all ribbons a Pokemon can obtain based on its Origin Game, Last Game, or Moveset by Game entry.",
+          "Games now have configurable Travels To paths, including separate connectivity for Virtual Console/re-release versions.",
+          "When a game has a Virtual Console/re-release version, the version is determined per Moveset by Game entry, ensuring each Pokémon follows the correct transfer path.",
+          "Species availability is used to determine whether a game can count toward Ribbon and Mark eligibility, restricting only impossible paths without adding or removing achievements from the tracker.",
+          "Added a Ribbons filter to the Edit screen with support for Ribbon eligibility and Met Level restrictions.",
+          "Added Met Level requirements for the Winning Ribbon and Footprint Ribbon, divided into three ranges: ≤50, 50–70, and >70. A badge indicates the range of the entered Met Level.",
+          "Ribbons that are unavailable due to species availability, game history, or Met Level are shown as restricted with the reason provided in the tooltip. Restricted Ribbons can still be force-enabled, similar to Unreleased Ribbons.",
+          "Eligibility now checks Origin Game, Last Game, and per-game Movesets against the games where each Ribbon can actually be earned, including valid transfers through later games.",
+          "Ribbon eligibility considers a Pokémon's entire evolution history, allowing Ribbons earned by a valid pre-evolution in an older game to remain eligible after evolution.",
+          "Species-specific Ribbon restrictions, including banned species, game-specific bans, and Mythical exclusions, are evaluated against the relevant evolutionary stage. Earlier stages can establish eligibility, while later evolutions cannot grant eligibility backward.",
+          "Added a Settings option to hide Restricted Ribbons from the Edit screen. When hidden, Footprint Ribbon and Winning Ribbon require a Met Level before they can be selected. When restricted Ribbons are shown, Met Level remains optional.",
+          "Added Give All Eligible Ribbons, allowing all Ribbons a Pokémon qualifies for from a selected game to be added at once. Marks remain manually assigned.",
+          "Jumbo Mark and Mini Mark can no longer both be active on the same Pokémon."
+        ],
+        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAABOUlEQVRYw+2WMQ6DMAxFe4GehZW1Y1cOxBU4EPfpyshIZaRfucEOpo0Dgy1ZIMcJjzixfbuFhIT4Sds+FoteGu40SHz49WyyGoAWyL4fNiHltrgke3Dj2C3zPH8p2dwh05DBjvANw32FmaZOVBojH23+X/CW0OXgOKTLMfiEr2lWTRekEKYwZNPsm/nJusXSCOz4OIUQEPROCkiMke6t5wIIoBwgxk8FBBAPMQc+DVDaNc3uBrh3SQCiqfslySm/KBoc373i1UZK1NzGIbRwI1FzkCKJWhOpMbDmPl5N3ASA0rnUFL5VANNDngOVfKo2qjlIPla1cZXymQZYvbPG+aMndSkSgPQD5Mvnuu9e2pymu2P1cw+vFbBamK31tHjd/bWyWAFdK8eR+nzUr8qNtgBWqSAhISEXlTcT7IXB2WNhRAAAAABJRU5ErkJggg=="
+      },
+      {
         title: "Strange Ball",
         items: [
-          "Strange Ball can no longer be selected from the ball list.",
-          "Added a global Strange Ball display toggle at the top of Settings, with a tooltip explaining that it can be overridden per Pokémon.",
-          "Added per-Pokémon Strange Ball overrides in the Edit screen.",
-          "Fixed per-Pokémon overrides so they remain unchanged when the global setting is modified.",
-          "Updated Poké Ball statistics to reflect the ball currently displayed, including Strange Ball and individual overrides."
+          "Strange Ball can no longer be selected directly from the ball list.",
+          "Added a global Strange Ball display toggle in Settings, with per-Pokémon overrides available from the Edit screen.",
+          "Per-Pokémon overrides now remain unchanged when the global setting is modified.",
+          "Poké Ball statistics now reflect the ball currently displayed, including Strange Ball and individual overrides."
         ],
         icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADPElEQVRYw+2V7U9TVxzHD8+VJwdDtyXbn7MXajKcurgsmzHbEmXJljhcEMGBzzgoJrpQTWwRaQE7sgUYFdpCe0ut0PYCyzaKlmgGLQGH1IdliXPm47nXRNdkryh9YdJv8sm999yc8/3em9/5HSEyyiijV1EbRA5vFr2ehDaWfufSXN4QheyODbJ7tjcZOaa9E4W5aQqSLWgxm9kW/YHtqo0PJpPZrlp5f+5HzlnatQDrHoKG+30oD6fpXw5TqZrY9T8hdqmdfKQMsX9mfB1DyC93jHkYSUwBT3T6ZIj3Qh3S1PqCHfIPVIY7OXq7lw+9AzgmQojsdaiLElGA8YEbz72XAfyrU2wLdUrTLp3KsI0jUTt10asSO3tdo3yjBigT+akFyJeV3fYkQMv8IF9FLqFIY42vIxYOz9l1Mx15fyjaQ020mz3Do+x1u6lWXNTPTGNIZXeUGcoJ/TOJad7B5dgwB363cTDSRe3s1SRqZns4Mu3Gem+AWmWMer+P2jE/36oqm4tfW3uAchkg8DiIb9VHmwxxKTbExQWHzgWJOT6ERY61x69xZaWfqutuan0+anwKptAUF36NUFFUlsIf2LCR8USc/rlZhlc8/PynR1bAIn8Tl7WwiPk3BfOik0bXNNXeMUzBKc5PqDp1Lg+R1ftoa6w5wDsbKxDHzhJYus1jYtJ0GXHoFKLuO0TjKfm8QkPAT5N6nfPjKsYbIfy34nhvLjCzdJes0628ra2x5sYncilV/BQfqEYcb5acoeeil3//StA9EkQcrEedX0aZi0kWCP+xJIOdJPtkC0VyTomcq62R0k7YVGAg/5qT4q4eGaCJp48SxJbiPL2TIKvhBHnHjZJWnZzGZirsdkptNvIcTrS5qTeiojy+l+21+e5PiMMm+eUTurm1N4A4Y6Sw20Zhl/UFOVc6+FLugrbLFrS569aK3x0dxLjSJ2vgKKL+GKKphbqOIfZ5Xez3uKiS1yqPk32Kl63jN9JzHrSaLeyZCPOJrPAvpOFn0vDzkefsGHCwU/aAc+3mtJg/lzxqN2UV8OnkL2xxetjq8upscXr5OBhkc5Yhjcfxf2QQ2bxVUp6ENiYyyiijV1HPAP1NmjOzNt9hAAAAAElFTkSuQmCC"
       },
       {
-        title: "Added brand new abilities",
+        title: "Trainer Avatars are here",
         items: [
-          "Added abilities for <b>Mega Lucario Z</b>, <b>Mega Absol Z</b> and <b>Mega Garchomp Z</b>."
+          "Added a Trainer Avatar option when selecting Trainer Name. It displays on the top on the page title."
+        ],
+        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAACh0lEQVR42u2XL3ODQBDF+1EqKyORkUhkZGTkSWRkZGQlHyEyMjIysrIfI47m0T7mZbsHBI6paJh5Q4H988vu3c715eV5Pa/va7FY1Kk0C9whW9cfqzBZiJMckoDnfDMJDv7/G7AoijqEcKcuIGsL/9kAEfx0OtXX6/VOhLTQuFtb+CPOLICaCEkoQhIed8JZOyopIEeDwrFdXvIhdknHDQLlee5WxVZR7112iDcJ0BuuTBBL3PVs308e3nDASLBjJba27G4easccowDf34rJc2/IXESeUe1ONZxnHdqExK9MrWQDO8uyeru+ge5XrfBchaw+7vL681hFhe+w8/wRN8mYQSANzgQKEYPj3xYQmg1Q4R6RhUwCGGsvBi1FgOvl2Irv1G6WNnvtRbLD4VKXZdkmVzgK72kD++aess0Kd6rWjQiIoavViQG233/sbaxJkHBkMA2K1iDharVpZNurbaYN7NliG3MUoMJpUCQ5V7sGIGx3jTw4Sm3gB38v7sOQBLS/mIDexmDVvHeQBdT4owH3YfmrvYcyRAFjrYbgZ9vM+JMAGRDB8dxsnlsyhWDbY8+whx/8WUXEHQXI3ctANuAmf20C2goCirIVhD387A/mffBu5mDWluq6ISAh2e5Ya1k5+uiSYWwF7oVk9ewooJhIIRVU1xu/WZ9Y7EFVjI2XGKCtJuWBxQAfGjfaUjsS5gLUfNDg+ecBWkgcOOGjG4TCe3zva6+uw84KKpy3FnWBc9wsl8v2nyKF4zt853jx4nj5eiG9Q4LdeRauS4S0E8E7NAweNZxXFlLPcUjcB0kbPVd6cOzI6IOqt3YUskveqUjhRh9cWfLYSXgInFdBGyfZ/yZ/dX0Bg/xPDmbu74gAAAAASUVORK5CYII="
+      },
+      {
+        title: "Ability, Met Location, and Preferred Title pickers",
+        items: [
+          "Ability and Met Location now suggest matches as you type, the same way Species already does, while still accepting custom text that isn't on the list.",
+          "Met Location suggestions are grouped into Generic and in-game Locations.",
+          "Active Title has been renamed to Preferred Title. The picker now shows the Ribbon or Mark each title comes from, along with its icon, making similarly named titles easier to distinguish."
         ]
       },
       {
-        title: "Footer Redesign",
+        title: "Games added",
         items: [
-          "Redesigned the footer with a more polished and aesthetic layout. The footer had remained largely untouched since the beginning of the project, so it was time to give it some attention.",
-          "Updated the Poké Ball symbol to a colorful new design.",
-          "The customizable app title now defaults to All Caps. Clicking the title toggles between All Caps and Sentence case.",
-          "Added permanent footer decoration featuring a running Pikachu. Occasionally, Pikachu might take a break and let someone else take its place.👀"
+          "Added <b>Pokémon Omega Ruby and Pokémon Alpha Sapphire Special Demo Version</b> and <b>Pokémon Sun and Pokémon Moon Special Demo Version</b>.",
+          "<b>Pokémon Omega Ruby and Pokémon Alpha Sapphire Special Demo Version</b> has a <b>Steelix</b> in the Japanese version and <b>Glalie</b> in the rest after completing the first adventure.",
+          "<b>Pokémon Sun and Pokémon Moon Special Demo Version</b> has a gift <b>Ash Greninja</b> after the game saves after completing Professor Kukui's trial and battling Plumeria. This Greninja can be transferred to the main games.",
+          "Added <b>Pokémon HOME</b>, <b>Pokémon Champions</b>, and <b>Pokémon Bank</b> as games."
+        ],
+        icon: "data:image/png;base64,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"
+      },
+      {
+        title: "Added brand new Mega Abilities",
+        items: [
+          "Added abilities for <b>Mega Baxcalibur</b>, <b>Mega Golisopod</b>, <b>Mega Lucario Z</b>, <b>Mega Absol Z</b>, and <b>Mega Garchomp Z</b>."
+        ],
+        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAH6UlEQVRIx52WeXCV1RmHn/N9d8vNehNAKUuiYDZcWCUmRkA2xaHigstYliLSDKaCyjKCgOgIIgIJSijFFqVIy7AoKJVNrEDgAiaQQEiBhIRsZiFkveTe3Pt9b/8IOMq4Td+Z89d7zu95z/5T/PaIARKA7mgqQimlxDCbgCqgALj0W0TUr+RtwNjomOhJQ1OHJCfd1T8qrsftRDjDsWo6rT4PBWVFuPNzGr45evjkxQsXNwE7AM+vAkXkxwmlHk9MTJw1O23GfeOTxxCsh0GDgEegXcHVWuqvfUdUQh/obMMnrezKPciytatyc3JyMkVk4016Pw9USi2YN3vu4oVpc5X9qg7HqqC2HbBTXVnE1nN72XMpm8So21n+8FxMSwCtaxgM7o5xq7BycxZzFs7LQJglIsYvAnWL/lbmspWvp49Po+1YNa3n6wmxhlNSd5ndZ/bx+dl9VHvqsNgcTL33GV5MmUR9az2IgFUREd8FZ0o3Nu/fwtQZ09a1tXmni4j5k0Cl1KKM9zLe+NMz6Vz4shh/E+h2G3vdO9nu3kppbTH33DaArq6uuAuPMjb5CaaOmkZjawOIIAIYJk6Xg/gxvdl2cAuTpk5YaZoyGzBvPjSPzZo1Z8ec2UvJPlhOs1cnYBp8unUF7vwDhAVHMGz4HxjxwJNUXz7PytVpRN/Rj+f/+DaaYRAwAh2Fm2CaBhFhDlJHRLP+r0tZuOj1acD6HwIdcbGxh3d/c2rgkVI/35a0oGwWDm96h6LsLwh1hGKP7Ezy2Gl0SxmNYdX5avkMys5kM3xmJjF33Ufb1VqU0r5fLSNgcmePcMbe4+LpR+4vdrvdA4HGG8AnVq39cFu38VNYlF1JWUgk+pbVXNu1gdABQ9CjbqE9ey9eTxNBfQYT+cTzeFuaqV+7EHuvO1FzMrHoGsEtzRiaDkCzadJFwYKkbnBkN1Oe/P2LAlkKUDE9e36RceT0mHENFmg2ofwiLH0VAgFYnAX3JsKXX8Pe7XD8G7AHQZ9+0NwI1RWQ9CBMnw9mADwe0DQQwDQhMpgdMUG8OSLpxOm8vFQN6Jk0ZFhyQZQLWpohwg6X8qH9GoQ4Yes6OFUA44fDsgyY/Sb0jIYzJ6CxFjp1guP74B8rIMIBriCwBiBIwCHg9XDU4SB55Oi+QIIGJPYeNChiu5igCVgFPE2ga+Cwgfs/sHgGvLsKyi/D5Mdh9QZ4eT70ioOWJtB02PcZrFsOThuEB4NmglWBBu+ZAaIHDLQB/TSgh6tXL3L97YAXlBfCHdDaCAnxMPOVjsEbVsLcabD0HagrgefGQUYGzH0NUh+ASBds/wj+tgLsAjYTlK9Dz+PDGR2DXdejNZvSwvXwYPB7gEbw10BCNIQ7oTAX7u8PG7Jg6pSOgj56H2a/AHP+DHu3wuAEWL4AVrwNfWLhn+th+3oIMzr0aIBAI4Q4CHI4QjQQBQZIA6grcK0MYl2Q0heKCmH+TChww4xnIWsxTHq840nf8zm8tQBeToMPloNqhMnjICoU/r0NKvLA2dqhKQ2ICqCUUppfpNloaQJbM0glGJXgL4OJD8C9cXDhAix5C9LTofAkpD0EWenw2rOQHA9FFyEzC6ZOh52fQtcIqK+D/MPgqAepAmsTeJrwen2tmkBVU0kpLls7SCnIJWg5CxFXYM5QuPvWjutx4Twsex9mLoLjR2BoV1j2CGSMg7QUiI+AM/nQUAMWP1wpBinq0HT68FaU0xbwV2nAueJvT7dM1hRYvgN1CfRyaDwDrjpY0B8SQ8HXDpF2qKiAd7fAtAzI3AK2q5DWGzJTYN1QiLNDsweCm0AVgV7BczYL5bn5ASBXA0pOHsrO6d/iB5cFpAKkHFQVNJyH0FqYdxskhcLVVgjT4D4X+Nvhkzx4aSe88ilsPQb1NR0wp4LbfOAvhhCDoX4Lxw8cOgcUaIBxoejihvr9+bzafTDoNaAug1YBlkpoLgZnJcwPh8E2KG2GJB1Wd4YXIqGrgrwa+OgcvHkMCq7A/UFwdwNcK2NizwFo7hJyv83ZBLTd+CmC+/a9J++E57iMrHpKOIVwGiEPIU8JuQiXEQ45hAFWYaRNKNSFK7pQhrBeE1KtQpxVeNQu5CCcRxJKRsnJ9pMy7MFhl4EuN9uNiW8sWSC58rk8WqKkyznk9kIk9nqL/y/SqwYJeQWx/k5J3CZkmBfpsg/RJmjCHVZxPKTk1hxEr0ZGXkSOGptlxZplArz8UyZK0zR91V82rnxp6HOh7PxuCnXtNywHIBDSCU5/BgeXQOwIcN4CpzZDwKvoM1ZISYegKHC2wLgeGZz7MowJj734d6+vbTrg+9H0rlsM3RkUvHbjv1bLVdkoR1tvkR01yLZqZHsNsteHrDiMxA9HYgYinXshwyYiS/Ygu64huz3IoSakTtbJZ3s+FFdE5DbAcbNB+x54PWHRlL787SXzpM38WlokXUp8yNlGpMJEPt6PxNyNjH4K+WAbUuBBKgQpaUeaZLL4ZL+sWbNU7LagD4HgH+j+NPAHHV5ITU0p3LXrA2n1fyKGvCGGPCYl1d3lYLZNWgJIQDqLIQ+LIa+L1/xY9h1YJ6NHjyi+vmf6TXq/yQi7gKf79es/YdSo5P6DBsU4eseG0qmTjt8vNDaalJV6OHmi1H/gqxNn3O7jm0A+AWr/X+d9IyzAnUBfTbP1dDiCQgF8Pp/HMLyVwCngbMd38svxP+K7vsn1e3fmAAAAAElFTkSuQmCC"
+      },
+      {
+        title: "Footer redesign",
+        items: [
+          "Redesigned the footer with a cleaner layout.",
+          "Updated the Poké Ball symbol with a new full-color design.",
+          "The customizable app title now defaults to ALL CAPS and can be toggled between ALL CAPS and Sentence case by clicking it.",
+          "Added a permanent footer decoration featuring a running Pikachu, with occasional guest appearances."
+        ],
+        icon: "data:image/gif;base64,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"
+      },
+      {
+        title: "Top action bar",
+        items: [
+          "Reordered the action bar to Add Pokémon, New, Last File, Import, Export, Share, Theme, and Settings, with Add Pokémon separated on the left.",
+          "Settings and Theme now show text labels on desktop, and Theme displays the currently selected theme."
         ]
       },
       {
         title: "Toolbar layout",
         items: [
-          "Updated the toolbar so Grid Density and Sort remain pinned to the right, while Type, Game, and Form filters appear to their left.",
-          "The Search field now fills the remaining space and automatically shrinks when additional filters are added."
+          "Grid Density and Sort remain pinned to the right, while Type, Game, and Form filters appear to their left.",
+          "The Search field fills the remaining space and automatically shrinks when additional filters are added."
         ]
       },
       {
-        title: "Fixes",
+        title: "🐞Bug Fixes",
         items: [
           "Reduced the font size of tooltip text.",
           "The History icon now appears to the left of the History heading when the panel is opened.",
@@ -92,7 +145,8 @@ const CHANGELOG = [
           "Added support for Z-Moves, including a toggle that allows one move per row to be designated as the Z-Move.",
           "Max Moves and G-Max Moves now automatically replace Normal Moves when Gigantamax is enabled and the Gigantamax form is currently displayed, with species-specific G-Max Moves taking precedence over generic Max Moves.",
           "Added Max Guard/Max Strike and G-Max Move/Max Move swap controls where applicable."
-        ]
+        ],
+        icon: "data:image/png;base64,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"
       },
       {
         title: "Added built-in Pokémon sprites",
@@ -146,7 +200,7 @@ const CHANGELOG = [
         ]
       },
       {
-        title: "Fixed",
+        title: "🐞Bug Fixes",
         items: [
           "Fixed Mega Evolution typing not updating when the species was changed after a Mega Type had already been selected.",
           "Fixed the Stellar type pill on mobile so that its rounded corners render correctly without color bleeding beyond its edges.",
@@ -182,7 +236,7 @@ const CHANGELOG = [
         icon: "data:image/gif;base64,R0lGODlhIgAiAPfgACkpMSmU/8al3jGM90K1/zlKUjmc/0Kt/+/G/yGE9zk5QimM9xAYITml/0o5WjFKUpx7ree9///O/yF79yl792tSeyExQvfO/9at5zGc9whC9zlCSjE5QjExQimM/7WUziFz99a174RrlEJSWt619yEhKTFCSmsYcxghKQAACM6E1jExOSEpMXtjjJyEtbWUxv/W///e/0JSUjGU/xAIIVJaYxgpMSkxOee990JKUjlSazlCUpR7pXtjlGNra84IEAhK9zlSUimc/1pjY1JjYzmt/5x7tc6l3t6179at70paWlpCYwgIGK2Mxr2czs6t5//v/2MA1sac1koAADml90JCSufWY5RzpWtjhEpaYzGl/6UIGKWEtUJ7zkJrjClShDEpMSGM9+8QEFpKc4xznCGM/zmc7zlCjFJScyFr90Kt9zE5SimE7wAAOVpSIZSMUjk5SiEASr2l1lpra0Jje4RrrTFKtSE5Y0pSWkpjY2NSe1KUxlo5c+/n1jGc/0qc3iEhOUql5///7ylz75R7vWtSc0JCY72c1u+9/62Mve+191Jztf///1pja62cSr29vWtje///rVJja1pKY///SufG/3NzQiFa55RznEJjnDE5Wsa9lBBS93NahGtzc1JjjBhS71Kc1kpznDlCWjGE51KEpSlKhDljlDFCUjExSkql3iEAa+f3/0KEvYQpjFp7hEqErUKUzlqMvSEIKUpCexgAWs6t72tjlDmE3mNSc1paUilCWiFS3ikxUhBC50qM3mMxe86l7+e1/1qExtat9zhHVyw7TLVCe97OQjk5GIGLlXNzc01aaZyUYy8+T7Wtc1JKWoSMjP//Y9a9MWNSY2taa//3hHt7hKWcY/fnrefenOfWQjGU9ymE9yk5SgAAAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/wtYTVAgRGF0YVhNUDw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDkuMS1jMDAzIDc5Ljk2OTBhODdmYywgMjAyNS8wMy8wNi0yMDo1MDoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDI2LjggKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkZFMEEwNEVDOTU4NTExRjFBMjhGOTFBMEE5MTI3RDdFIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkZFMEEwNEVEOTU4NTExRjFBMjhGOTFBMEE5MTI3RDdFIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RkUwQTA0RUE5NTg1MTFGMUEyOEY5MUEwQTkxMjdEN0UiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RkUwQTA0RUI5NTg1MTFGMUEyOEY5MUEwQTkxMjdEN0UiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4B//79/Pv6+fj39vX08/Lx8O/u7ezr6uno5+bl5OPi4eDf3t3c29rZ2NfW1dTT0tHQz87NzMvKycjHxsXEw8LBwL++vby7urm4t7a1tLOysbCvrq2sq6qpqKempaSjoqGgn56dnJuamZiXlpWUk5KRkI+OjYyLiomIh4aFhIOCgYB/fn18e3p5eHd2dXRzcnFwb25tbGtqaWhnZmVkY2JhYF9eXVxbWllYV1ZVVFNSUVBPTk1MS0pJSEdGRURDQkFAPz49PDs6OTg3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"
       },
       {
-        title: "Fixed",
+        title: "🐞Bug Fixes",
         items: [
           "Removed the separate Terapagos Terastal Form species entry now that Terastallization is handled by the Forms toggle.",
           "Moveset by Game Move fields no longer support rich text formatting. Existing entries with Bold or Italic formatting are cleaned up to plain text automatically when a save loads or is imported. This is done so that support for STAB moves which are signified by Bold text and Mega Moves which are signified by Italicized text can be added later."
@@ -203,7 +257,8 @@ const CHANGELOG = [
           "Deleting a Pokémon now also drops it into a <b>History</b> button that appears once its Undo toast has expired, so an accidental deletion is still recoverable after the toast is gone.",
           "Reworked the Sort control into a compact ⇅ menu with three keys (Added, Species, Nickname), each remembering its own direction (Oldest/Newest, A–Z/Z–A) independently.",
           "Added Pokérus as a status: Infected, None, or Cured, set from the edit form. Infected and Cured each get their own badge on the card, next to Shiny, and their own card glow color."
-        ]
+        ],
+        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAMAAADyHTlpAAAA2FBMVEXrPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK7rPK4NMDeIAAAAR3RSTlMAAQMHCQsMDxEUFxofODo8P0FCRUdTWGFiY2RmaGpscXR4iYyNjpqfsLGztLe4ur6/wMLDxcbP0NHU19na3uDj6ezu8vP0+8JrisoAAAGMSURBVHhetdVrb4IwGIbhTgq4k8d5BMQpimNuIMqGss3hpv3//2idfQuNJvST97cnvYIxmIoulmpNrAJQGow6ZZBvhBAPA9AbQ8d1Hbupc/lMjxNmLfLfUqFDMxYHAh38rkol9o+LfeyEgFWMFBi0N5HKJJnAU8EuyVlRBAO+jEekeYiFlzLpKwhSwMqk3Ia5zOnH/CcXvy8JG7FIDQZchO5SLj9v0ZXLhpFLDc5rdDxxOqejzkaqCQ8tpOJjFzK64FI/CHTG6YyOGh860AaR0irQoZxaQB05nQJ1Oe3REfDxSkebD/eUbqo3PZL1eH2/OaVjIs0BasupDbQpp5X8FcjSEOSLYLvdftFSUa4QryvINoLaAjUzqu4z+Y2ykkzuMMoySVadyweS1UdCUW7X6/U7LclljAWpRqSgUKDYJ4UFKpclkBILt6LUMjqAGcbnJA5htI50xIZ/fmnu+hgH4k+rwyRcxTlcmZieqoHwvsoJHZ6CWHrVmrru2K5obDObwCgX/22glmOii/UH3BMcpnGqzPwAAAAASUVORK5CYII="
       },
       {
         title: "Visual",
@@ -232,7 +287,7 @@ const CHANGELOG = [
         ]
       },
       {
-        title: "Bug fixes",
+        title: "🐞Bug Fixes",
         items: [
           "Fixed the Pokérus border tint not showing up on the card.",
           "Fixed Settings opening a native picker (Default Sort) automatically on mobile the instant the modal appeared.",
@@ -276,7 +331,8 @@ const CHANGELOG = [
         items: [
           "Even though Mega Evolution could be enabled before, the types shown would be of the base Pokémon form.",
           "Now, Mega Pokémon will show their correct types separately from their base form."
-        ]
+        ],
+        icon: "data:image/png;base64,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"
       },
       {
         title: "Dex Number Display",
@@ -330,7 +386,7 @@ const CHANGELOG = [
         ]
       },
       {
-        title: "Bug fixes",
+        title: "🐞Bug Fixes",
         items: [
           "Fixed generation labels for future games showing as a plain number instead of a Roman numeral once past Generation IX."
         ]
@@ -362,7 +418,7 @@ const CHANGELOG = [
         ]
       },
       {
-        title: "Bug fixes",
+        title: "🐞Bug Fixes",
         items: [
           "Fixed the Settings modal clipping button labels that ran wider than their button.",
           "Fixed the Age display running the number and unit together with no space (e.g. \"21Years\" instead of \"21 Years\")."
@@ -652,7 +708,7 @@ const CHANGELOG = [
         ]
       },
       {
-        title: "Bug hunt",
+        title: "🐞Bug Hunt",
         items: [
           "Ran a full pass over every interactive feature (forms, modals, filters, sorting, theming, settings, import/export, sprite upload, rich text, stats dashboard, mobile layout) to check for errors; the two fixes above were the issues found."
         ]

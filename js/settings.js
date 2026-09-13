@@ -30,7 +30,7 @@ function fontPickerFieldHTML(slot, labelText, hintText, font){
 }
 
 function openSettings(){
-  const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), monoFont: defaultFontSetting(), shareFormat:'apng', cardFooterInfo:'arrow', sortBallsAlpha:false, sortGamesAlpha:false, strangeBallDisplay:false, easterEggUnlocked:false, easterEggPreferred:'pikachu' };
+  const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), monoFont: defaultFontSetting(), shareFormat:'apng', cardFooterInfo:'arrow', sortBallsAlpha:false, sortGamesAlpha:false, strangeBallDisplay:false, showRestrictedRibbons:true, easterEggUnlocked:false, easterEggPreferred:'pikachu' };
   const custom = s.custom || defaultCustomTheme();
   const bodyFont = s.bodyFont || defaultFontSetting();
   const nicknameFont = s.nicknameFont || defaultFontSetting();
@@ -39,6 +39,7 @@ function openSettings(){
   const sortBallsAlpha = !!s.sortBallsAlpha;
   const sortGamesAlpha = !!s.sortGamesAlpha;
   const strangeBallDisplay = !!s.strangeBallDisplay;
+  const showRestrictedRibbons = s.showRestrictedRibbons !== false;
   const previewMon = { types:['Fire','Flying'], preferredForm:'default', shiny:false };
   const previewIsLight = isNeumorphicActive();
   const previewA1 = previewIsLight ? 0.30 : 0.22;
@@ -73,6 +74,20 @@ function openSettings(){
             </span>
             <label class="switch" style="margin-left:auto;">
               <input type="checkbox" id="settingsStrangeBallDisplay" ${strangeBallDisplay ? 'checked' : ''}>
+              <span class="track"></span>
+              <span class="thumb"></span>
+            </label>
+          </div>
+        </div>
+        <div class="field" style="margin-top:16px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label style="margin:0;">Restricted Ribbons on Edit Screen</label>
+            <span class="info-tooltip-trigger" tabindex="0" data-no-autofocus>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span class="info-tooltip">Hides Ribbons this Pokémon can't earn (species, game, or Met Level) instead of showing them disabled. Selected Ribbons stay visible, and Met Level becomes required first for Ribbons with a Met Level rule.</span>
+            </span>
+            <label class="switch" style="margin-left:auto;">
+              <input type="checkbox" id="settingsShowRestrictedRibbons" ${showRestrictedRibbons ? 'checked' : ''}>
               <span class="track"></span>
               <span class="thumb"></span>
             </label>
@@ -403,6 +418,7 @@ function resetAllPreferencesToDefault(){
     sortBallsAlpha: false,
     sortGamesAlpha: false,
     strangeBallDisplay: false,
+    showRestrictedRibbons: true,
     // Not a display preference in the same sense as the rest of this -- it's a hidden
     // unlock, so "Reset to Default" doesn't re-lock it or clear the chosen ball.
     easterEggUnlocked: !!(previous && previous.easterEggUnlocked),
@@ -499,6 +515,7 @@ function saveSettings(){
   const sortBallsAlpha = document.getElementById('settingsSortBallsAlpha').checked;
   const sortGamesAlpha = document.getElementById('settingsSortGamesAlpha').checked;
   const strangeBallDisplay = document.getElementById('settingsStrangeBallDisplay').checked;
+  const showRestrictedRibbons = document.getElementById('settingsShowRestrictedRibbons').checked;
   // Not editable here -- easterEggUnlocked only flips via the secret click sequence in
   // the footer, and this rebuild would otherwise silently drop it back to its default.
   const easterEggUnlocked = !!(state.settings && state.settings.easterEggUnlocked);
@@ -507,7 +524,7 @@ function saveSettings(){
   const bodyFont = { ...fontDrafts.body };
   const nicknameFont = { ...fontDrafts.nickname };
   const monoFont = { ...fontDrafts.mono };
-  state.settings = { defaultSort, defaultTheme: settingsThemeDraft, custom, bodyFont, nicknameFont, monoFont, shareFormat: settingsShareFormatDraft, cardFooterInfo, sortBallsAlpha, sortGamesAlpha, strangeBallDisplay, easterEggUnlocked, easterEggPreferred };
+  state.settings = { defaultSort, defaultTheme: settingsThemeDraft, custom, bodyFont, nicknameFont, monoFont, shareFormat: settingsShareFormatDraft, cardFooterInfo, sortBallsAlpha, sortGamesAlpha, strangeBallDisplay, showRestrictedRibbons, easterEggUnlocked, easterEggPreferred };
   scheduleAutosave();
   // The footer runner only re-reads this preference the next time it happens to
   // redraw itself (on the next rare appearance/revert cycle), which could be minutes

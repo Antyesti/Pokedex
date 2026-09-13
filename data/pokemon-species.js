@@ -26,6 +26,25 @@
  * This is a seed set covering the worked examples from the v25 spec, proving out the
  * schema end-to-end. The remaining ~1020 species (plain, single-entry, no demonym/form)
  * still need to be added from the full National Dex list.
+ *
+ * `games` lists the Game Preset keys (icons/game-icons.js) this exact entry could
+ * actually be caught, hatched, or otherwise obtained in. A cosmetic-only form/forme
+ * (Vivillon patterns, Unown letters, Alcremie flavors, Deoxys formes...) carries the
+ * same list as its base species, since the games it can appear in don't depend on
+ * which one you have. gameKeysForPokemon() in js/ribbon-eligibility.js checks a
+ * Pokemon's Origin Game, Last Game, and per-game moveset entries against this before
+ * trusting them, so a game the species could never have been in doesn't count toward
+ * Ribbon/Mark eligibility.
+ *
+ * `evolvesFrom` holds another entry's own `id` for whatever species this one evolves
+ * from, left unset on a base form with no pre-evolution. speciesLineageIds() in
+ * js/ribbon-eligibility.js walks this back through however many stages a line has, so a
+ * Pokemon's Ribbon/game eligibility can rest on an earlier stage's availability, not just
+ * its current one -- a Ribbon only obtainable pre-evolution, in a game the current
+ * evolved form never existed in, still counts. Branching lines (Eevee's many
+ * Eeveelutions) just mean multiple entries share the same evolvesFrom. Never point this at
+ * a LATER evolution than the entry itself, or at anything that (directly or through its
+ * own chain) evolves back into this entry -- both would create a loop.
  */
 
 const POKEMON_SPECIES = [
@@ -38,6 +57,48 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -49,7 +110,50 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "bulbasaur"
   },
   {
     id: "venusaur",
@@ -60,7 +164,50 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "ivysaur"
   },
   {
     id: "charmander",
@@ -70,6 +217,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -80,7 +269,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "charmander"
   },
   {
     id: "charizard",
@@ -91,7 +323,50 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "charmeleon"
   },
   {
     id: "squirtle",
@@ -101,6 +376,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -111,7 +428,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "squirtle"
   },
   {
     id: "blastoise",
@@ -121,7 +481,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "wartortle"
   },
   {
     id: "caterpie",
@@ -131,6 +534,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -141,7 +583,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "caterpie"
   },
   {
     id: "butterfree",
@@ -152,7 +634,47 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "metapod"
   },
   {
     id: "weedle",
@@ -163,6 +685,44 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -174,7 +734,46 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "weedle"
   },
   {
     id: "beedrill",
@@ -185,7 +784,46 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "kakuna"
   },
   {
     id: "pidgey",
@@ -196,6 +834,44 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -207,7 +883,46 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "pidgey"
   },
   {
     id: "pidgeot",
@@ -218,7 +933,46 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "pidgeotto"
   },
   {
     id: "rattata-kantonian",
@@ -228,6 +982,43 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -239,6 +1030,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Normal"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee"
     ]
   },
   {
@@ -249,7 +1048,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "rattata-kantonian"
   },
   {
     id: "raticate-alolan",
@@ -260,7 +1097,16 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Normal"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee"
+    ],
+    evolvesFrom: "rattata-alolan"
   },
   {
     id: "spearow",
@@ -271,6 +1117,43 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -282,7 +1165,45 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "spearow"
   },
   {
     id: "ekans",
@@ -292,6 +1213,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -302,7 +1263,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "ekans"
   },
   {
     id: "pikachu",
@@ -312,7 +1314,51 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "pichu"
   },
   {
     id: "pikachu-original-cap",
@@ -322,6 +1368,16 @@ const POKEMON_SPECIES = [
     form: "Original Cap",
     types: [
       "Electric"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -332,6 +1388,16 @@ const POKEMON_SPECIES = [
     form: "Hoenn Cap",
     types: [
       "Electric"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -342,6 +1408,16 @@ const POKEMON_SPECIES = [
     form: "Sinnoh Cap",
     types: [
       "Electric"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -352,6 +1428,16 @@ const POKEMON_SPECIES = [
     form: "Unova Cap",
     types: [
       "Electric"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -362,6 +1448,16 @@ const POKEMON_SPECIES = [
     form: "Kalos Cap",
     types: [
       "Electric"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -372,6 +1468,16 @@ const POKEMON_SPECIES = [
     form: "Alola Cap",
     types: [
       "Electric"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -382,6 +1488,14 @@ const POKEMON_SPECIES = [
     form: "Partner Cap",
     types: [
       "Electric"
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -392,6 +1506,12 @@ const POKEMON_SPECIES = [
     form: "World Cap",
     types: [
       "Electric"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -402,6 +1522,10 @@ const POKEMON_SPECIES = [
     form: "Cosplay",
     types: [
       "Electric"
+    ],
+    games: [
+      "omegaruby",
+      "alphasapphire"
     ]
   },
   {
@@ -412,6 +1536,10 @@ const POKEMON_SPECIES = [
     form: "Rock Star",
     types: [
       "Electric"
+    ],
+    games: [
+      "omegaruby",
+      "alphasapphire"
     ]
   },
   {
@@ -422,6 +1550,10 @@ const POKEMON_SPECIES = [
     form: "Belle",
     types: [
       "Electric"
+    ],
+    games: [
+      "omegaruby",
+      "alphasapphire"
     ]
   },
   {
@@ -432,6 +1564,10 @@ const POKEMON_SPECIES = [
     form: "Pop Star",
     types: [
       "Electric"
+    ],
+    games: [
+      "omegaruby",
+      "alphasapphire"
     ]
   },
   {
@@ -442,6 +1578,10 @@ const POKEMON_SPECIES = [
     form: "Ph.D.",
     types: [
       "Electric"
+    ],
+    games: [
+      "omegaruby",
+      "alphasapphire"
     ]
   },
   {
@@ -452,6 +1592,10 @@ const POKEMON_SPECIES = [
     form: "Libre",
     types: [
       "Electric"
+    ],
+    games: [
+      "omegaruby",
+      "alphasapphire"
     ]
   },
   {
@@ -462,7 +1606,51 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "pikachu"
   },
   {
     id: "raichu-alolan",
@@ -473,7 +1661,21 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Psychic"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "pikachu"
   },
   {
     id: "sandshrew-kantonian",
@@ -483,6 +1685,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -494,6 +1737,18 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Steel"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -504,7 +1759,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sandshrew-kantonian"
   },
   {
     id: "sandslash-alolan",
@@ -515,7 +1812,20 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Steel"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sandshrew-alolan"
   },
   {
     id: "nidoran-female",
@@ -525,6 +1835,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -535,7 +1884,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "nidoran-female"
   },
   {
     id: "nidoqueen",
@@ -546,7 +1935,47 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Ground"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "nidorina"
   },
   {
     id: "nidoran-male",
@@ -556,6 +1985,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -566,7 +2034,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "nidoran-male"
   },
   {
     id: "nidoking",
@@ -577,7 +2085,47 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Ground"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "nidorino"
   },
   {
     id: "clefairy",
@@ -587,7 +2135,51 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "cleffa"
   },
   {
     id: "clefable",
@@ -597,7 +2189,51 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "clefairy"
   },
   {
     id: "vulpix-kantonian",
@@ -607,6 +2243,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -617,6 +2295,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -627,7 +2318,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "vulpix-kantonian"
   },
   {
     id: "ninetales-alolan",
@@ -638,7 +2372,21 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "vulpix-alolan"
   },
   {
     id: "jigglypuff",
@@ -649,7 +2397,50 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Fairy"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "igglybuff"
   },
   {
     id: "wigglytuff",
@@ -660,7 +2451,50 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Fairy"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "jigglypuff"
   },
   {
     id: "zubat",
@@ -671,6 +2505,47 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
     ]
   },
   {
@@ -682,7 +2557,49 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "zubat"
   },
   {
     id: "oddish",
@@ -693,6 +2610,47 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -704,7 +2662,49 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "oddish"
   },
   {
     id: "vileplume",
@@ -715,7 +2715,49 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "gloom"
   },
   {
     id: "paras",
@@ -726,6 +2768,44 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Grass"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -737,7 +2817,46 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Grass"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "paras"
   },
   {
     id: "venonat",
@@ -748,6 +2867,45 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -759,7 +2917,47 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "venonat"
   },
   {
     id: "diglett-kantonian",
@@ -769,6 +2967,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -780,6 +3019,18 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Steel"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -790,7 +3041,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "diglett-kantonian"
   },
   {
     id: "dugtrio-alolan",
@@ -801,7 +3094,20 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Steel"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "diglett-alolan"
   },
   {
     id: "meowth-kantonian",
@@ -811,6 +3117,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -821,6 +3169,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -831,6 +3192,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -841,7 +3209,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "meowth-kantonian"
   },
   {
     id: "persian-alolan",
@@ -851,7 +3262,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "meowth-alolan"
   },
   {
     id: "psyduck",
@@ -861,6 +3286,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -871,7 +3338,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "psyduck"
   },
   {
     id: "mankey",
@@ -881,6 +3391,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -891,7 +3441,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "mankey"
   },
   {
     id: "growlithe-kantonian",
@@ -901,6 +3492,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -912,6 +3544,11 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Rock"
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -922,7 +3559,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "growlithe-kantonian"
   },
   {
     id: "arcanine-hisuian",
@@ -933,7 +3612,13 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Rock"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "growlithe-hisuian"
   },
   {
     id: "poliwag",
@@ -943,6 +3628,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -953,7 +3679,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "poliwag"
   },
   {
     id: "poliwrath",
@@ -964,7 +3732,49 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Fighting"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "poliwhirl"
   },
   {
     id: "abra",
@@ -974,6 +3784,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
     ]
   },
   {
@@ -984,7 +3835,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "abra"
   },
   {
     id: "alakazam",
@@ -994,7 +3887,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "kadabra"
   },
   {
     id: "machop",
@@ -1004,6 +3939,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
     ]
   },
   {
@@ -1014,7 +3990,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "machop"
   },
   {
     id: "machamp",
@@ -1024,7 +4042,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "machoke"
   },
   {
     id: "bellsprout",
@@ -1035,6 +4095,46 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -1046,7 +4146,48 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "bellsprout"
   },
   {
     id: "victreebel",
@@ -1057,7 +4198,48 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "weepinbell"
   },
   {
     id: "tentacool",
@@ -1068,6 +4250,48 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1079,7 +4303,50 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "tentacool"
   },
   {
     id: "geodude-kantonian",
@@ -1090,6 +4357,46 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Ground"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1101,6 +4408,16 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Electric"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1112,7 +4429,48 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Ground"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "geodude-kantonian"
   },
   {
     id: "graveler-alolan",
@@ -1123,7 +4481,18 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Electric"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "geodude-alolan"
   },
   {
     id: "golem-kantonian",
@@ -1134,7 +4503,48 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Ground"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "graveler-kantonian"
   },
   {
     id: "golem-alolan",
@@ -1145,7 +4555,18 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Electric"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "graveler-alolan"
   },
   {
     id: "ponyta-kantonian",
@@ -1155,6 +4576,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -1165,6 +4626,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -1175,7 +4640,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "ponyta-kantonian"
   },
   {
     id: "rapidash-galarian",
@@ -1186,7 +4692,12 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "ponyta-galarian"
   },
   {
     id: "slowpoke-kantonian",
@@ -1197,6 +4708,48 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Psychic"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -1207,6 +4760,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -1218,7 +4778,50 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Psychic"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "slowpoke-kantonian"
   },
   {
     id: "slowbro-galarian",
@@ -1229,7 +4832,15 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Psychic"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "slowpoke-galarian"
   },
   {
     id: "magnemite",
@@ -1240,6 +4851,48 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Steel"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1251,7 +4904,50 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Steel"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "magnemite"
   },
   {
     id: "farfetchd-kantonian",
@@ -1262,6 +4958,46 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -1272,6 +5008,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -1283,6 +5024,45 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1294,7 +5074,47 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "doduo"
   },
   {
     id: "seel",
@@ -1304,6 +5124,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1315,7 +5174,47 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ice"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "seel"
   },
   {
     id: "grimer-kantonian",
@@ -1325,6 +5224,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1336,6 +5274,16 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Dark"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1346,7 +5294,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "grimer-kantonian"
   },
   {
     id: "muk-alolan",
@@ -1357,7 +5345,18 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Dark"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "grimer-alolan"
   },
   {
     id: "shellder",
@@ -1367,6 +5366,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1378,7 +5418,49 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ice"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "shellder"
   },
   {
     id: "gastly",
@@ -1389,6 +5471,49 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -1400,7 +5525,51 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "gastly"
   },
   {
     id: "gengar",
@@ -1411,7 +5580,51 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "haunter"
   },
   {
     id: "onix",
@@ -1422,6 +5635,47 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Ground"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
     ]
   },
   {
@@ -1432,6 +5686,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1442,7 +5735,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "drowzee"
   },
   {
     id: "krabby",
@@ -1452,6 +5785,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -1462,7 +5834,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "krabby"
   },
   {
     id: "voltorb-kantonian",
@@ -1472,6 +5884,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1483,6 +5934,11 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Grass"
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1493,7 +5949,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "voltorb-kantonian"
   },
   {
     id: "electrode-hisuian",
@@ -1504,7 +6000,13 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Grass"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "voltorb-hisuian"
   },
   {
     id: "exeggcute",
@@ -1515,6 +6017,47 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Psychic"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1526,7 +6069,49 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Psychic"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "exeggcute"
   },
   {
     id: "exeggutor-alolan",
@@ -1537,7 +6122,20 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dragon"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "exeggcute"
   },
   {
     id: "cubone",
@@ -1547,6 +6145,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -1557,7 +6195,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "cubone"
   },
   {
     id: "marowak-alolan",
@@ -1568,7 +6247,19 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Ghost"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "cubone"
   },
   {
     id: "hitmonlee",
@@ -1578,7 +6269,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "tyrogue"
   },
   {
     id: "hitmonchan",
@@ -1588,7 +6321,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "tyrogue"
   },
   {
     id: "lickitung",
@@ -1598,6 +6373,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -1608,6 +6423,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1618,7 +6474,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "koffing"
   },
   {
     id: "weezing-galarian",
@@ -1629,7 +6527,14 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "koffing"
   },
   {
     id: "rhyhorn",
@@ -1640,6 +6545,48 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Rock"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1651,7 +6598,50 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Rock"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rhyhorn"
   },
   {
     id: "chansey",
@@ -1661,7 +6651,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "happiny"
   },
   {
     id: "tangela",
@@ -1671,6 +6704,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -1681,6 +6754,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -1691,6 +6804,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1701,7 +6855,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "horsea"
   },
   {
     id: "goldeen",
@@ -1711,6 +6907,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -1721,7 +6956,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "goldeen"
   },
   {
     id: "staryu",
@@ -1731,6 +7006,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -1742,7 +7057,48 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Psychic"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "staryu"
   },
   {
     id: "mr-mime-kantonian",
@@ -1753,7 +7109,49 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fairy"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "mime-jr"
   },
   {
     id: "mr-mime-galarian",
@@ -1764,7 +7162,13 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Psychic"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "mime-jr"
   },
   {
     id: "scyther",
@@ -1775,6 +7179,49 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -1786,7 +7233,47 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Psychic"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "smoochum"
   },
   {
     id: "electabuzz",
@@ -1796,7 +7283,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "elekid"
   },
   {
     id: "magmar",
@@ -1806,7 +7336,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "magby"
   },
   {
     id: "pinsir",
@@ -1816,6 +7389,46 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -1826,6 +7439,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1837,6 +7491,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1848,6 +7506,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Fire"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1858,6 +7520,10 @@ const POKEMON_SPECIES = [
     form: "Combat Breed",
     types: [
       "Fighting"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1868,6 +7534,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -1879,7 +7588,51 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "magikarp"
   },
   {
     id: "lapras",
@@ -1890,6 +7643,47 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ice"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1900,6 +7694,47 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -1910,6 +7745,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -1920,7 +7798,51 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eevee"
   },
   {
     id: "jolteon",
@@ -1930,7 +7852,51 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eevee"
   },
   {
     id: "flareon",
@@ -1940,7 +7906,51 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eevee"
   },
   {
     id: "porygon",
@@ -1950,6 +7960,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -1961,6 +8014,45 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -1972,7 +8064,47 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "omanyte"
   },
   {
     id: "kabuto",
@@ -1983,6 +8115,45 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Water"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -1994,7 +8165,47 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Water"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "kabuto"
   },
   {
     id: "aerodactyl",
@@ -2005,6 +8216,46 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -2015,7 +8266,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "munchlax"
   },
   {
     id: "articuno-kantonian",
@@ -2026,6 +8320,47 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2037,6 +8372,12 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2048,6 +8389,47 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2059,6 +8441,12 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Flying"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2070,6 +8458,47 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Flying"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2081,6 +8510,12 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Flying"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2091,6 +8526,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2101,7 +8578,50 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "dratini"
   },
   {
     id: "dragonite",
@@ -2112,7 +8632,50 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Flying"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "dragonair"
   },
   {
     id: "mewtwo",
@@ -2122,6 +8685,48 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2132,7 +8737,49 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "red",
+      "blue",
+      "green",
+      "yellow",
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "chikorita",
@@ -2142,6 +8789,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2152,7 +8833,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "chikorita"
   },
   {
     id: "meganium",
@@ -2162,7 +8878,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "bayleef"
   },
   {
     id: "cyndaquil",
@@ -2172,6 +8923,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2182,7 +8967,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cyndaquil"
   },
   {
     id: "typhlosion-johtonian",
@@ -2192,7 +9012,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "quilava"
   },
   {
     id: "typhlosion-hisuian",
@@ -2203,7 +9057,13 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Ghost"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "quilava"
   },
   {
     id: "totodile",
@@ -2213,6 +9073,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2223,7 +9117,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "totodile"
   },
   {
     id: "feraligatr",
@@ -2233,7 +9162,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "croconaw"
   },
   {
     id: "sentret",
@@ -2243,6 +9207,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2253,7 +9250,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sentret"
   },
   {
     id: "hoothoot",
@@ -2264,6 +9295,41 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2275,7 +9341,43 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "hoothoot"
   },
   {
     id: "ledyba",
@@ -2286,6 +9388,37 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -2297,7 +9430,39 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "ledyba"
   },
   {
     id: "spinarak",
@@ -2308,6 +9473,40 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2319,7 +9518,42 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spinarak"
   },
   {
     id: "crobat",
@@ -2330,7 +9564,43 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Flying"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "golbat"
   },
   {
     id: "chinchou",
@@ -2341,6 +9611,41 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Electric"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2352,7 +9657,43 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Electric"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "chinchou"
   },
   {
     id: "pichu",
@@ -2362,6 +9703,43 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2372,6 +9750,43 @@ const POKEMON_SPECIES = [
     form: "Spiky-eared Pichu",
     types: [
       "Electric"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2382,6 +9797,43 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2393,6 +9845,42 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Fairy"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2403,6 +9891,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2414,7 +9936,42 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Flying"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "togepi"
   },
   {
     id: "natu",
@@ -2425,6 +9982,39 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -2436,7 +10026,41 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "natu"
   },
   {
     id: "mareep",
@@ -2446,6 +10070,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -2456,7 +10114,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "mareep"
   },
   {
     id: "ampharos",
@@ -2466,7 +10159,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "flaaffy"
   },
   {
     id: "bellossom",
@@ -2476,7 +10204,43 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "gloom"
   },
   {
     id: "marill",
@@ -2487,7 +10251,43 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Fairy"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "azurill"
   },
   {
     id: "azumarill",
@@ -2498,7 +10298,43 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Fairy"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "marill"
   },
   {
     id: "sudowoodo",
@@ -2508,7 +10344,44 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "bonsly"
   },
   {
     id: "politoed",
@@ -2518,7 +10391,43 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "poliwhirl"
   },
   {
     id: "hoppip",
@@ -2529,6 +10438,39 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2540,7 +10482,41 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Flying"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "hoppip"
   },
   {
     id: "jumpluff",
@@ -2551,7 +10527,41 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Flying"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "skiploom"
   },
   {
     id: "aipom",
@@ -2561,6 +10571,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2571,6 +10615,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2581,7 +10658,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sunkern"
   },
   {
     id: "yanma",
@@ -2592,6 +10703,40 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2603,6 +10748,41 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2614,6 +10794,10 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Ground"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2625,7 +10809,43 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "wooper-johtonian"
   },
   {
     id: "espeon",
@@ -2635,7 +10855,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eevee"
   },
   {
     id: "umbreon",
@@ -2645,7 +10903,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eevee"
   },
   {
     id: "murkrow",
@@ -2656,6 +10952,40 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2667,7 +10997,44 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Psychic"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "slowpoke-kantonian"
   },
   {
     id: "slowking-galarian",
@@ -2678,7 +11045,15 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Psychic"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "slowpoke-galarian"
   },
   {
     id: "misdreavus",
@@ -2688,6 +11063,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2698,6 +11107,38 @@ const POKEMON_SPECIES = [
     form: "A",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2708,6 +11149,38 @@ const POKEMON_SPECIES = [
     form: "B",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2718,6 +11191,38 @@ const POKEMON_SPECIES = [
     form: "C",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2728,6 +11233,38 @@ const POKEMON_SPECIES = [
     form: "D",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2738,6 +11275,38 @@ const POKEMON_SPECIES = [
     form: "E",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2748,6 +11317,38 @@ const POKEMON_SPECIES = [
     form: "F",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2758,6 +11359,38 @@ const POKEMON_SPECIES = [
     form: "G",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2768,6 +11401,38 @@ const POKEMON_SPECIES = [
     form: "H",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2778,6 +11443,38 @@ const POKEMON_SPECIES = [
     form: "I",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2788,6 +11485,38 @@ const POKEMON_SPECIES = [
     form: "J",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2798,6 +11527,38 @@ const POKEMON_SPECIES = [
     form: "K",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2808,6 +11569,38 @@ const POKEMON_SPECIES = [
     form: "L",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2818,6 +11611,38 @@ const POKEMON_SPECIES = [
     form: "M",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2828,6 +11653,38 @@ const POKEMON_SPECIES = [
     form: "N",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2838,6 +11695,38 @@ const POKEMON_SPECIES = [
     form: "O",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2848,6 +11737,38 @@ const POKEMON_SPECIES = [
     form: "P",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2858,6 +11779,38 @@ const POKEMON_SPECIES = [
     form: "Q",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2868,6 +11821,38 @@ const POKEMON_SPECIES = [
     form: "R",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2878,6 +11863,38 @@ const POKEMON_SPECIES = [
     form: "S",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2888,6 +11905,38 @@ const POKEMON_SPECIES = [
     form: "T",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2898,6 +11947,38 @@ const POKEMON_SPECIES = [
     form: "U",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2908,6 +11989,38 @@ const POKEMON_SPECIES = [
     form: "V",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2918,6 +12031,38 @@ const POKEMON_SPECIES = [
     form: "W",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2928,6 +12073,38 @@ const POKEMON_SPECIES = [
     form: "X",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2938,6 +12115,38 @@ const POKEMON_SPECIES = [
     form: "Y",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2948,6 +12157,38 @@ const POKEMON_SPECIES = [
     form: "Z",
     types: [
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2958,6 +12199,35 @@ const POKEMON_SPECIES = [
     form: "!",
     types: [
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2968,6 +12238,35 @@ const POKEMON_SPECIES = [
     form: "?",
     types: [
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -2978,7 +12277,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "wynaut"
   },
   {
     id: "girafarig",
@@ -2989,6 +12322,39 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -2999,6 +12365,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3010,7 +12409,41 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Steel"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "pineco"
   },
   {
     id: "dunsparce",
@@ -3020,6 +12453,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3031,6 +12499,40 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3042,7 +12544,44 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Ground"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza",
+      "ORASdemo"
+    ],
+    evolvesFrom: "onix"
   },
   {
     id: "snubbull",
@@ -3052,6 +12591,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3062,7 +12634,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "snubbull"
   },
   {
     id: "qwilfish-johtonian",
@@ -3073,6 +12679,42 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Poison"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3084,6 +12726,12 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Poison"
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3095,7 +12743,45 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Steel"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "scyther"
   },
   {
     id: "shuckle",
@@ -3106,6 +12792,39 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Rock"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -3117,6 +12836,43 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Fighting"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3128,6 +12884,42 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Ice"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3139,6 +12931,11 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Poison"
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3149,6 +12946,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3159,7 +12990,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "teddiursa"
   },
   {
     id: "slugma",
@@ -3169,6 +13035,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3180,7 +13079,41 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Rock"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "slugma"
   },
   {
     id: "swinub",
@@ -3191,6 +13124,42 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Ground"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3202,7 +13171,44 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Ground"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "swinub"
   },
   {
     id: "corsola-johtonian",
@@ -3213,6 +13219,39 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Rock"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -3223,6 +13262,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -3233,6 +13276,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -3243,7 +13320,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "remoraid"
   },
   {
     id: "delibird",
@@ -3254,6 +13366,42 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3265,7 +13413,42 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Flying"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "mantyke"
   },
   {
     id: "skarmory",
@@ -3276,6 +13459,42 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3287,6 +13506,40 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Fire"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3298,7 +13551,42 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Fire"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "houndour"
   },
   {
     id: "kingdra",
@@ -3309,7 +13597,43 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dragon"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "seadra"
   },
   {
     id: "phanpy",
@@ -3319,6 +13643,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3329,7 +13686,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "phanpy"
   },
   {
     id: "porygon2",
@@ -3339,7 +13730,45 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "porygon"
   },
   {
     id: "stantler",
@@ -3349,6 +13778,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3359,6 +13822,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3369,6 +13865,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3379,7 +13910,43 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "tyrogue"
   },
   {
     id: "smoochum",
@@ -3390,6 +13957,39 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Psychic"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -3400,6 +14000,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3410,6 +14046,42 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3420,6 +14092,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -3430,7 +14135,44 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "chansey"
   },
   {
     id: "raikou",
@@ -3440,6 +14182,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3450,6 +14227,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3460,6 +14272,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3471,6 +14318,42 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Ground"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3482,7 +14365,44 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Ground"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "larvitar"
   },
   {
     id: "tyranitar",
@@ -3493,7 +14413,44 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Dark"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "pupitar"
   },
   {
     id: "lugia",
@@ -3504,6 +14461,41 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3515,6 +14507,41 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Flying"
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3526,7 +14553,41 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Grass"
-    ]
+    ],
+    games: [
+      "gold",
+      "silver",
+      "crystal",
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    mythical: true
   },
   {
     id: "treecko",
@@ -3536,6 +14597,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3546,7 +14640,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "treecko"
   },
   {
     id: "sceptile",
@@ -3556,7 +14684,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "grovyle"
   },
   {
     id: "torchic",
@@ -3566,6 +14728,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3577,7 +14772,41 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Fighting"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "torchic"
   },
   {
     id: "blaziken",
@@ -3588,7 +14817,41 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Fighting"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "combusken"
   },
   {
     id: "mudkip",
@@ -3598,6 +14861,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3609,7 +14905,41 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "mudkip"
   },
   {
     id: "swampert",
@@ -3620,7 +14950,41 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "marshtomp"
   },
   {
     id: "poochyena",
@@ -3630,6 +14994,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3640,7 +15034,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "poochyena"
   },
   {
     id: "zigzagoon-hoennian",
@@ -3650,6 +15075,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -3661,6 +15116,10 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Normal"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -3671,7 +15130,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "zigzagoon-hoennian"
   },
   {
     id: "linoone-galarian",
@@ -3682,7 +15172,12 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Normal"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "zigzagoon-galarian"
   },
   {
     id: "wurmple",
@@ -3692,6 +15187,35 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -3702,7 +15226,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "wurmple"
   },
   {
     id: "beautifly",
@@ -3713,7 +15267,37 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "silcoon"
   },
   {
     id: "cascoon",
@@ -3723,7 +15307,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "wurmple"
   },
   {
     id: "dustox",
@@ -3734,7 +15348,37 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "cascoon"
   },
   {
     id: "lotad",
@@ -3745,6 +15389,38 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Grass"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3756,7 +15432,40 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Grass"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "lotad"
   },
   {
     id: "ludicolo",
@@ -3767,7 +15476,40 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Grass"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "lombre"
   },
   {
     id: "seedot",
@@ -3777,6 +15519,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3788,7 +15562,40 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dark"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "seedot"
   },
   {
     id: "shiftry",
@@ -3799,7 +15606,40 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dark"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "nuzleaf"
   },
   {
     id: "taillow",
@@ -3810,6 +15650,34 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -3821,7 +15689,36 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "taillow"
   },
   {
     id: "wingull",
@@ -3832,6 +15729,38 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Flying"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3843,7 +15772,40 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Flying"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "wingull"
   },
   {
     id: "ralts",
@@ -3854,6 +15816,40 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fairy"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -3865,7 +15861,42 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fairy"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "ralts"
   },
   {
     id: "gardevoir",
@@ -3876,7 +15907,42 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fairy"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "kirlia"
   },
   {
     id: "surskit",
@@ -3887,6 +15953,36 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3898,7 +15994,38 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "surskit"
   },
   {
     id: "shroomish",
@@ -3908,6 +16035,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3919,7 +16076,38 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fighting"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "shroomish"
   },
   {
     id: "slakoth",
@@ -3929,6 +16117,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -3939,7 +16157,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "slakoth"
   },
   {
     id: "slaking",
@@ -3949,7 +16198,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "vigoroth"
   },
   {
     id: "nincada",
@@ -3960,6 +16240,36 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Ground"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -3971,7 +16281,38 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "nincada"
   },
   {
     id: "shedinja",
@@ -3982,7 +16323,38 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Ghost"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "nincada"
   },
   {
     id: "whismur",
@@ -3992,6 +16364,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4002,7 +16404,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "whismur"
   },
   {
     id: "exploud",
@@ -4012,7 +16445,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "loudred"
   },
   {
     id: "makuhita",
@@ -4022,6 +16486,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4032,7 +16526,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "makuhita"
   },
   {
     id: "azurill",
@@ -4043,6 +16568,38 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Fairy"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4053,6 +16610,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4063,6 +16651,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4073,7 +16689,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "skitty"
   },
   {
     id: "sableye",
@@ -4084,6 +16729,39 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Ghost"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4095,6 +16773,37 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Fairy"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -4106,6 +16815,37 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Rock"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -4117,7 +16857,39 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Rock"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "aron"
   },
   {
     id: "aggron",
@@ -4128,7 +16900,39 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Rock"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "lairon"
   },
   {
     id: "meditite",
@@ -4139,6 +16943,37 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4150,7 +16985,39 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "meditite"
   },
   {
     id: "electrike",
@@ -4160,6 +17027,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -4170,7 +17068,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "electrike"
   },
   {
     id: "plusle",
@@ -4180,6 +17110,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4190,6 +17150,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4200,6 +17190,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4210,6 +17230,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4221,7 +17271,40 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "budew"
   },
   {
     id: "gulpin",
@@ -4231,6 +17314,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4241,7 +17355,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "gulpin"
   },
   {
     id: "carvanha",
@@ -4252,6 +17398,37 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dark"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -4263,7 +17440,39 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dark"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
+    ],
+    evolvesFrom: "carvanha"
   },
   {
     id: "wailmer",
@@ -4273,6 +17482,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4283,7 +17522,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "wailmer"
   },
   {
     id: "numel",
@@ -4294,6 +17564,37 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Ground"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4305,7 +17606,39 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Ground"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "numel"
   },
   {
     id: "torkoal",
@@ -4315,6 +17648,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4325,6 +17690,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4335,7 +17731,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spoink"
   },
   {
     id: "spinda",
@@ -4345,6 +17773,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4355,6 +17811,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4366,7 +17854,40 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Dragon"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "trapinch"
   },
   {
     id: "flygon",
@@ -4377,7 +17898,40 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Dragon"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "vibrava"
   },
   {
     id: "cacnea",
@@ -4387,6 +17941,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4398,7 +17982,38 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dark"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cacnea"
   },
   {
     id: "swablu",
@@ -4409,6 +18024,39 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4420,7 +18068,41 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Flying"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "swablu"
   },
   {
     id: "zangoose",
@@ -4430,6 +18112,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4440,6 +18153,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4451,6 +18195,36 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4462,6 +18236,36 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4473,6 +18277,39 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4484,7 +18321,41 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "barboach"
   },
   {
     id: "corphish",
@@ -4494,6 +18365,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4505,7 +18408,40 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dark"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "corphish"
   },
   {
     id: "baltoy",
@@ -4516,6 +18452,36 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4527,7 +18493,38 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "baltoy"
   },
   {
     id: "lileep",
@@ -4538,6 +18535,36 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Grass"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4549,7 +18576,38 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Grass"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "lileep"
   },
   {
     id: "anorith",
@@ -4560,6 +18618,36 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Bug"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4571,7 +18659,38 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Bug"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "anorith"
   },
   {
     id: "feebas",
@@ -4581,6 +18700,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4591,7 +18743,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "feebas"
   },
   {
     id: "castform",
@@ -4601,6 +18787,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4611,6 +18825,34 @@ const POKEMON_SPECIES = [
     form: "Rainy Form",
     types: [
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4621,6 +18863,34 @@ const POKEMON_SPECIES = [
     form: "Snowy Form",
     types: [
       "Ice"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4631,6 +18901,34 @@ const POKEMON_SPECIES = [
     form: "Sunny Form",
     types: [
       "Fire"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4641,6 +18939,35 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -4651,6 +18978,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4661,7 +19019,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "shuppet"
   },
   {
     id: "duskull",
@@ -4671,6 +19061,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4681,7 +19104,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "duskull"
   },
   {
     id: "tropius",
@@ -4692,6 +19149,36 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Flying"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4702,7 +19189,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "chingling"
   },
   {
     id: "absol",
@@ -4712,6 +19232,37 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsza"
     ]
   },
   {
@@ -4722,6 +19273,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4732,6 +19313,40 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4742,7 +19357,43 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza",
+      "ORASdemo"
+    ],
+    evolvesFrom: "snorunt"
   },
   {
     id: "spheal",
@@ -4753,6 +19404,37 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -4764,7 +19446,39 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Water"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "spheal"
   },
   {
     id: "walrein",
@@ -4775,7 +19489,39 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Water"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "sealeo"
   },
   {
     id: "clamperl",
@@ -4785,6 +19531,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4795,7 +19569,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "clamperl"
   },
   {
     id: "gorebyss",
@@ -4805,7 +19608,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "clamperl"
   },
   {
     id: "relicanth",
@@ -4816,6 +19648,36 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Rock"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl"
     ]
   },
   {
@@ -4826,6 +19688,36 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4836,6 +19728,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4846,7 +19771,41 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "bagon"
   },
   {
     id: "salamence",
@@ -4857,7 +19816,41 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Flying"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "shelgon"
   },
   {
     id: "beldum",
@@ -4868,6 +19861,39 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4879,7 +19905,41 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "beldum"
   },
   {
     id: "metagross",
@@ -4890,7 +19950,41 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "metang"
   },
   {
     id: "regirock",
@@ -4900,6 +19994,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4910,6 +20036,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4920,6 +20078,38 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -4931,6 +20121,39 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4942,6 +20165,39 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Psychic"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4952,6 +20208,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4962,6 +20251,39 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4973,6 +20295,39 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Flying"
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -4984,7 +20339,40 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "deoxys-normal",
@@ -4994,7 +20382,38 @@ const POKEMON_SPECIES = [
     form: "Normal Forme",
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "deoxys-attack",
@@ -5004,7 +20423,38 @@ const POKEMON_SPECIES = [
     form: "Attack Forme",
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "deoxys-defense",
@@ -5014,7 +20464,38 @@ const POKEMON_SPECIES = [
     form: "Defense Forme",
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "deoxys-speed",
@@ -5024,7 +20505,38 @@ const POKEMON_SPECIES = [
     form: "Speed Forme",
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "ruby",
+      "sapphire",
+      "colosseum",
+      "xdgaleofdarkness",
+      "firered",
+      "leafgreen",
+      "emerald",
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "turtwig",
@@ -5034,6 +20546,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5044,7 +20580,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "turtwig"
   },
   {
     id: "torterra",
@@ -5055,7 +20616,32 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ground"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "grotle"
   },
   {
     id: "chimchar",
@@ -5065,6 +20651,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5076,7 +20686,32 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Fighting"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "chimchar"
   },
   {
     id: "infernape",
@@ -5087,7 +20722,32 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Fighting"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "monferno"
   },
   {
     id: "piplup",
@@ -5097,6 +20757,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5107,7 +20791,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "piplup"
   },
   {
     id: "empoleon",
@@ -5118,7 +20827,32 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Steel"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "prinplup"
   },
   {
     id: "starly",
@@ -5129,6 +20863,31 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -5140,7 +20899,33 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "starly"
   },
   {
     id: "staraptor",
@@ -5151,7 +20936,33 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "staravia"
   },
   {
     id: "bidoof",
@@ -5161,6 +20972,28 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5172,7 +21005,30 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Water"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "bidoof"
   },
   {
     id: "kricketot",
@@ -5182,6 +21038,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5192,7 +21072,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "kricketot"
   },
   {
     id: "shinx",
@@ -5202,6 +21107,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5212,7 +21143,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "shinx"
   },
   {
     id: "luxray",
@@ -5222,7 +21180,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "luxio"
   },
   {
     id: "budew",
@@ -5233,6 +21218,31 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
     ]
   },
   {
@@ -5244,7 +21254,33 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "roselia"
   },
   {
     id: "cranidos",
@@ -5254,6 +21290,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5264,7 +21324,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cranidos"
   },
   {
     id: "shieldon",
@@ -5275,6 +21360,30 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Steel"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5286,7 +21395,32 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Steel"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "shieldon"
   },
   {
     id: "burmy-plant",
@@ -5296,6 +21430,28 @@ const POKEMON_SPECIES = [
     form: "Plant Cloak",
     types: [
       "Bug"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5306,6 +21462,28 @@ const POKEMON_SPECIES = [
     form: "Sandy Cloak",
     types: [
       "Bug"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5316,6 +21494,28 @@ const POKEMON_SPECIES = [
     form: "Trash Cloak",
     types: [
       "Bug"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5327,7 +21527,29 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Grass"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "burmy-plant"
   },
   {
     id: "wormadam-sandy",
@@ -5338,7 +21560,29 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Ground"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "burmy-sandy"
   },
   {
     id: "wormadam-trash",
@@ -5349,7 +21593,29 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Steel"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl"
+    ],
+    evolvesFrom: "burmy-trash"
   },
   {
     id: "mothim",
@@ -5360,7 +21626,30 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "burmy-trash"
   },
   {
     id: "combee",
@@ -5371,6 +21660,32 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5382,7 +21697,34 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "combee"
   },
   {
     id: "pachirisu",
@@ -5392,6 +21734,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5402,6 +21768,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5412,7 +21802,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "buizel"
   },
   {
     id: "cherubi",
@@ -5422,6 +21837,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5432,7 +21871,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "cherubi"
   },
   {
     id: "shellos-east-sea",
@@ -5442,6 +21906,32 @@ const POKEMON_SPECIES = [
     form: "East Sea",
     types: [
       "Water"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5452,6 +21942,32 @@ const POKEMON_SPECIES = [
     form: "West Sea",
     types: [
       "Water"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5463,7 +21979,34 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "shellos-east-sea"
   },
   {
     id: "gastrodon-west-sea",
@@ -5474,7 +22017,34 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "shellos-west-sea"
   },
   {
     id: "ambipom",
@@ -5484,7 +22054,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "aipom"
   },
   {
     id: "drifloon",
@@ -5495,6 +22090,32 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Flying"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5506,7 +22127,34 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "drifloon"
   },
   {
     id: "buneary",
@@ -5516,6 +22164,31 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
     ]
   },
   {
@@ -5526,7 +22199,33 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
+    ],
+    evolvesFrom: "buneary"
   },
   {
     id: "mismagius",
@@ -5536,7 +22235,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "misdreavus"
   },
   {
     id: "honchkrow",
@@ -5547,7 +22271,32 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "murkrow"
   },
   {
     id: "glameow",
@@ -5557,6 +22306,28 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5567,7 +22338,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "glameow"
   },
   {
     id: "chingling",
@@ -5577,6 +22371,31 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -5588,6 +22407,32 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Dark"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5599,7 +22444,34 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Dark"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "stunky"
   },
   {
     id: "bronzor",
@@ -5610,6 +22482,32 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Psychic"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5621,7 +22519,34 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Psychic"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "bronzor"
   },
   {
     id: "bonsly",
@@ -5631,6 +22556,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5642,6 +22593,31 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fairy"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "legendsza"
     ]
   },
   {
@@ -5652,6 +22628,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5663,6 +22665,28 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5674,6 +22698,32 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Dark"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5685,6 +22735,33 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ground"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -5696,7 +22773,35 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ground"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "gible"
   },
   {
     id: "garchomp",
@@ -5707,7 +22812,35 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ground"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "gabite"
   },
   {
     id: "munchlax",
@@ -5717,6 +22850,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5727,6 +22886,33 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -5738,7 +22924,35 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Steel"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "riolu"
   },
   {
     id: "hippopotas",
@@ -5748,6 +22962,33 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -5758,7 +22999,35 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "hippopotas"
   },
   {
     id: "skorupi",
@@ -5769,6 +23038,30 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Bug"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5780,7 +23073,32 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Dark"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "skorupi"
   },
   {
     id: "croagunk",
@@ -5791,6 +23109,32 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Fighting"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5802,7 +23146,34 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Fighting"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "croagunk"
   },
   {
     id: "carnivine",
@@ -5812,6 +23183,28 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5822,6 +23215,30 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -5832,7 +23249,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "finneon"
   },
   {
     id: "mantyke",
@@ -5843,6 +23285,30 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Flying"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
     ]
   },
   {
@@ -5854,6 +23320,33 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ice"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -5865,7 +23358,35 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ice"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "snover"
   },
   {
     id: "weavile",
@@ -5876,7 +23397,34 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Ice"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sneasel-johtonian"
   },
   {
     id: "magnezone",
@@ -5887,7 +23435,34 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Steel"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "magneton"
   },
   {
     id: "lickilicky",
@@ -5897,7 +23472,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "lickitung"
   },
   {
     id: "rhyperior",
@@ -5908,7 +23508,34 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Rock"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rhydon"
   },
   {
     id: "tangrowth",
@@ -5918,7 +23545,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "tangela"
   },
   {
     id: "electivire",
@@ -5928,7 +23580,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "electabuzz"
   },
   {
     id: "magmortar",
@@ -5938,7 +23617,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "magmar"
   },
   {
     id: "togekiss",
@@ -5949,7 +23655,32 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus"
+    ],
+    evolvesFrom: "togetic"
   },
   {
     id: "yanmega",
@@ -5960,7 +23691,32 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "yanma"
   },
   {
     id: "leafeon",
@@ -5970,7 +23726,35 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eevee"
   },
   {
     id: "glaceon",
@@ -5980,7 +23764,35 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eevee"
   },
   {
     id: "gliscor",
@@ -5991,7 +23803,32 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "gligar"
   },
   {
     id: "mamoswine",
@@ -6002,7 +23839,34 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Ground"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "piloswine"
   },
   {
     id: "porygon-z",
@@ -6012,7 +23876,35 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "porygon2"
   },
   {
     id: "gallade",
@@ -6023,7 +23915,35 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fighting"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "kirlia"
   },
   {
     id: "probopass",
@@ -6034,7 +23954,32 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Steel"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "nosepass"
   },
   {
     id: "dusknoir",
@@ -6044,7 +23989,34 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dusclops"
   },
   {
     id: "froslass",
@@ -6055,7 +24027,35 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Ghost"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "snorunt"
   },
   {
     id: "rotom",
@@ -6066,6 +24066,33 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Ghost"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6077,6 +24104,33 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Flying"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6088,6 +24142,33 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Ice"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6099,6 +24180,33 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Fire"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6110,6 +24218,33 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Grass"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6121,6 +24256,33 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Water"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6131,6 +24293,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6141,6 +24329,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6151,6 +24365,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6162,6 +24402,32 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Dragon"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6173,6 +24439,32 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Dragon"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6184,6 +24476,32 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dragon"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6195,6 +24513,32 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dragon"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6206,6 +24550,33 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Steel"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6216,6 +24587,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6227,6 +24624,32 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Dragon"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6238,6 +24661,32 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Dragon"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6248,6 +24697,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6258,7 +24733,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "manaphy",
@@ -6268,7 +24768,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "darkrai",
@@ -6278,7 +24803,33 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "shaymin-land",
@@ -6288,7 +24839,32 @@ const POKEMON_SPECIES = [
     form: "Land Forme",
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "shaymin-sky",
@@ -6299,7 +24875,32 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Flying"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "arceus",
@@ -6309,7 +24910,32 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "diamond",
+      "pearl",
+      "platinum",
+      "heartgold",
+      "soulsilver",
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "brilliantdiamond",
+      "shiningpearl",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "victini",
@@ -6320,7 +24946,24 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fire"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    mythical: true
   },
   {
     id: "snivy",
@@ -6330,6 +24973,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6340,7 +24999,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "snivy"
   },
   {
     id: "serperior",
@@ -6350,7 +25026,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "servine"
   },
   {
     id: "tepig",
@@ -6360,6 +25053,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6371,7 +25081,25 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "tepig"
   },
   {
     id: "emboar",
@@ -6382,7 +25110,25 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "pignite"
   },
   {
     id: "oshawott",
@@ -6392,6 +25138,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6402,7 +25165,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "oshawott"
   },
   {
     id: "samurott-unovan",
@@ -6412,7 +25193,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dewott"
   },
   {
     id: "samurott-hisuian",
@@ -6423,7 +25221,13 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dark"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dewott"
   },
   {
     id: "patrat",
@@ -6433,6 +25237,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -6443,7 +25262,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
+    ],
+    evolvesFrom: "patrat"
   },
   {
     id: "lillipup",
@@ -6453,6 +25288,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -6463,7 +25314,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "lillipup"
   },
   {
     id: "stoutland",
@@ -6473,7 +25341,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "herdier"
   },
   {
     id: "purrloin",
@@ -6483,6 +25368,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -6493,7 +25395,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "purrloin"
   },
   {
     id: "pansage",
@@ -6503,6 +25423,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -6513,7 +25448,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
+    ],
+    evolvesFrom: "pansage"
   },
   {
     id: "pansear",
@@ -6523,6 +25474,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -6533,7 +25499,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
+    ],
+    evolvesFrom: "pansear"
   },
   {
     id: "panpour",
@@ -6543,6 +25525,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -6553,7 +25550,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
+    ],
+    evolvesFrom: "panpour"
   },
   {
     id: "munna",
@@ -6563,6 +25576,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -6573,7 +25603,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "munna"
   },
   {
     id: "pidove",
@@ -6584,6 +25632,22 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -6595,7 +25659,24 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "pidove"
   },
   {
     id: "unfezant",
@@ -6606,7 +25687,24 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "tranquill"
   },
   {
     id: "blitzle",
@@ -6616,6 +25714,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6626,7 +25740,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "blitzle"
   },
   {
     id: "roggenrola",
@@ -6636,6 +25767,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -6646,7 +25793,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "roggenrola"
   },
   {
     id: "gigalith",
@@ -6656,7 +25820,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "boldore"
   },
   {
     id: "woobat",
@@ -6667,6 +25848,22 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -6678,7 +25875,24 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "woobat"
   },
   {
     id: "drilbur",
@@ -6688,6 +25902,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6699,7 +25932,27 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Steel"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "drilbur"
   },
   {
     id: "audino",
@@ -6709,6 +25962,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -6719,6 +25989,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6729,7 +26017,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "timburr"
   },
   {
     id: "conkeldurr",
@@ -6739,7 +26046,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "gurdurr"
   },
   {
     id: "tympole",
@@ -6749,6 +26075,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -6760,7 +26102,24 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "tympole"
   },
   {
     id: "seismitoad",
@@ -6771,7 +26130,24 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ground"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "palpitoad"
   },
   {
     id: "throh",
@@ -6781,6 +26157,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -6791,6 +26184,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -6802,6 +26212,22 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6813,7 +26239,24 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sewaddle"
   },
   {
     id: "leavanny",
@@ -6824,7 +26267,24 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "swadloon"
   },
   {
     id: "venipede",
@@ -6835,6 +26295,23 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -6846,7 +26323,25 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "venipede"
   },
   {
     id: "scolipede",
@@ -6857,7 +26352,25 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Poison"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "whirlipede"
   },
   {
     id: "cottonee",
@@ -6868,6 +26381,24 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fairy"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6879,7 +26410,26 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fairy"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cottonee"
   },
   {
     id: "petilil",
@@ -6889,6 +26439,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6899,7 +26468,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "petilil"
   },
   {
     id: "lilligant-hisuian",
@@ -6910,7 +26498,13 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fighting"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "petilil"
   },
   {
     id: "basculin-blue-striped",
@@ -6920,6 +26514,24 @@ const POKEMON_SPECIES = [
     form: "Blue-Striped Form",
     types: [
       "Water"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6930,6 +26542,24 @@ const POKEMON_SPECIES = [
     form: "Red-Striped Form",
     types: [
       "Water"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6940,6 +26570,11 @@ const POKEMON_SPECIES = [
     form: "White-Striped Form",
     types: [
       "Water"
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -6951,6 +26586,25 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Dark"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -6962,7 +26616,27 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Dark"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "sandile"
   },
   {
     id: "krookodile",
@@ -6973,7 +26647,27 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Dark"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "krokorok"
   },
   {
     id: "darumaka-unovan",
@@ -6983,6 +26677,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -6993,6 +26703,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7003,7 +26717,24 @@ const POKEMON_SPECIES = [
     form: "Standard Mode",
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "darumaka-unovan"
   },
   {
     id: "darmanitan-unovan-zen",
@@ -7014,7 +26745,24 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Psychic"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "darumaka-unovan"
   },
   {
     id: "darmanitan-galarian-standard",
@@ -7024,7 +26772,24 @@ const POKEMON_SPECIES = [
     form: "Standard Mode",
     types: [
       "Ice"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "darumaka-galarian"
   },
   {
     id: "darmanitan-galarian-zen",
@@ -7035,7 +26800,24 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Fire"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "darumaka-galarian"
   },
   {
     id: "maractus",
@@ -7045,6 +26827,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7056,6 +26854,22 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Rock"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7067,7 +26881,24 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Rock"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "dwebble"
   },
   {
     id: "scraggy",
@@ -7078,6 +26909,25 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Fighting"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -7089,7 +26939,27 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "scraggy"
   },
   {
     id: "sigilyph",
@@ -7100,6 +26970,22 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7110,6 +26996,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -7121,6 +27024,11 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Ghost"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -7131,7 +27039,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "yamask-unovan"
   },
   {
     id: "tirtouga",
@@ -7142,6 +27068,22 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Rock"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7153,7 +27095,24 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Rock"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "tirtouga"
   },
   {
     id: "archen",
@@ -7164,6 +27123,22 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7175,7 +27150,24 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "archen"
   },
   {
     id: "trubbish",
@@ -7185,6 +27177,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -7195,7 +27204,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "trubbish"
   },
   {
     id: "zorua-unovan",
@@ -7205,6 +27232,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7216,6 +27261,11 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Ghost"
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7226,7 +27276,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "zorua-unovan"
   },
   {
     id: "zoroark-hisuian",
@@ -7237,7 +27306,13 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Ghost"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "zorua-hisuian"
   },
   {
     id: "minccino",
@@ -7247,6 +27322,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7257,7 +27350,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "minccino"
   },
   {
     id: "gothita",
@@ -7267,6 +27379,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7277,7 +27407,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "gothita"
   },
   {
     id: "gothitelle",
@@ -7287,7 +27436,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "gothorita"
   },
   {
     id: "solosis",
@@ -7297,6 +27465,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7307,7 +27493,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "solosis"
   },
   {
     id: "reuniclus",
@@ -7317,7 +27522,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "duosion"
   },
   {
     id: "ducklett",
@@ -7328,6 +27552,22 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7339,7 +27579,24 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Flying"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "ducklett"
   },
   {
     id: "vanillite",
@@ -7349,6 +27606,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -7359,7 +27633,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "vanillite"
   },
   {
     id: "vanilluxe",
@@ -7369,7 +27661,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "vanillish"
   },
   {
     id: "deerling-autumn",
@@ -7380,6 +27690,22 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7391,6 +27717,22 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7402,6 +27744,22 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7413,6 +27771,22 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Grass"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7424,7 +27798,24 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "deerling-autumn"
   },
   {
     id: "sawsbuck-spring",
@@ -7435,7 +27826,24 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "deerling-spring"
   },
   {
     id: "sawsbuck-summer",
@@ -7446,7 +27854,24 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "deerling-summer"
   },
   {
     id: "sawsbuck-winter",
@@ -7457,7 +27882,24 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Grass"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "deerling-winter"
   },
   {
     id: "emolga",
@@ -7468,6 +27910,23 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -7478,6 +27937,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7489,7 +27964,24 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Steel"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "karrablast"
   },
   {
     id: "foongus",
@@ -7500,6 +27992,25 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -7511,7 +28022,27 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Poison"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "foongus"
   },
   {
     id: "frillish",
@@ -7522,6 +28053,22 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ghost"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7533,7 +28080,24 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ghost"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "frillish"
   },
   {
     id: "alomomola",
@@ -7543,6 +28107,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7554,6 +28134,24 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Electric"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7565,7 +28163,26 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Electric"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "joltik"
   },
   {
     id: "ferroseed",
@@ -7576,6 +28193,22 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Steel"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7587,7 +28220,24 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Steel"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "ferroseed"
   },
   {
     id: "klink",
@@ -7597,6 +28247,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7607,7 +28273,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "klink"
   },
   {
     id: "klinklang",
@@ -7617,7 +28300,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "klang"
   },
   {
     id: "tynamo",
@@ -7627,6 +28327,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -7637,7 +28354,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "tynamo"
   },
   {
     id: "eelektross",
@@ -7647,7 +28382,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eelektrik"
   },
   {
     id: "elgyem",
@@ -7657,6 +28410,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7667,7 +28436,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "elgyem"
   },
   {
     id: "litwick",
@@ -7678,6 +28464,25 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Fire"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -7689,7 +28494,27 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Fire"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "litwick"
   },
   {
     id: "chandelure",
@@ -7700,7 +28525,27 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Fire"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "lampent"
   },
   {
     id: "axew",
@@ -7710,6 +28555,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7720,7 +28583,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "axew"
   },
   {
     id: "haxorus",
@@ -7730,7 +28612,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "fraxure"
   },
   {
     id: "cubchoo",
@@ -7740,6 +28641,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7750,7 +28669,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cubchoo"
   },
   {
     id: "cryogonal",
@@ -7760,6 +28698,25 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -7770,6 +28727,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7780,7 +28753,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "shelmet"
   },
   {
     id: "stunfisk-unovan",
@@ -7791,6 +28781,23 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Electric"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -7802,6 +28809,11 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Steel"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -7812,6 +28824,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7822,7 +28852,26 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "mienfoo"
   },
   {
     id: "druddigon",
@@ -7832,6 +28881,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7843,6 +28908,25 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Ghost"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -7854,7 +28938,27 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Ghost"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "golett"
   },
   {
     id: "pawniard",
@@ -7865,6 +28969,24 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Steel"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7876,7 +28998,26 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Steel"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "pawniard"
   },
   {
     id: "bouffalant",
@@ -7886,6 +29027,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7897,6 +29054,25 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7908,7 +29084,26 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rufflet"
   },
   {
     id: "braviary-hisuian",
@@ -7919,7 +29114,13 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rufflet"
   },
   {
     id: "vullaby",
@@ -7930,6 +29131,24 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7941,7 +29160,26 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Flying"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "vullaby"
   },
   {
     id: "heatmor",
@@ -7951,6 +29189,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7962,6 +29216,22 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Steel"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -7973,6 +29243,24 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Dragon"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -7984,7 +29272,26 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Dragon"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "deino"
   },
   {
     id: "hydreigon",
@@ -7995,7 +29302,26 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Dragon"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "zweilous"
   },
   {
     id: "larvesta",
@@ -8006,6 +29332,24 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Fire"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8017,7 +29361,26 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Fire"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "larvesta"
   },
   {
     id: "cobalion",
@@ -8028,6 +29391,25 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Fighting"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8039,6 +29421,25 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Fighting"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8050,6 +29451,25 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fighting"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8060,6 +29480,25 @@ const POKEMON_SPECIES = [
     form: "Incarnate Forme",
     types: [
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8070,6 +29509,25 @@ const POKEMON_SPECIES = [
     form: "Therian Forme",
     types: [
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8081,6 +29539,25 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8092,6 +29569,25 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8103,6 +29599,24 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Fire"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8114,6 +29628,24 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Electric"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8125,6 +29657,25 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8136,6 +29687,25 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Flying"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8147,6 +29717,24 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ice"
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8158,6 +29746,22 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ice"
+    ],
+    games: [
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8169,6 +29773,22 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ice"
+    ],
+    games: [
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -8180,7 +29800,27 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "keldeo-resolute",
@@ -8191,7 +29831,27 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "meloetta-aria",
@@ -8202,7 +29862,25 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Psychic"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "meloetta-pirouette",
@@ -8213,7 +29891,25 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Fighting"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "genesect",
@@ -8224,7 +29920,25 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Steel"
-    ]
+    ],
+    games: [
+      "black",
+      "white",
+      "black2",
+      "white2",
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "chespin",
@@ -8234,6 +29948,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8244,7 +29971,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "chespin"
   },
   {
     id: "chesnaught",
@@ -8255,7 +29996,21 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fighting"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "quilladin"
   },
   {
     id: "fennekin",
@@ -8265,6 +30020,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8275,7 +30043,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "fennekin"
   },
   {
     id: "delphox",
@@ -8286,7 +30068,21 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Psychic"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "braixen"
   },
   {
     id: "froakie",
@@ -8296,6 +30092,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8306,7 +30115,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "froakie"
   },
   {
     id: "greninja",
@@ -8317,7 +30140,21 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dark"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "frogadier"
   },
   {
     id: "greninja-ash-greninja",
@@ -8328,6 +30165,15 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dark"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "SMdemo"
     ]
   },
   {
@@ -8338,6 +30184,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -8349,7 +30208,21 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Ground"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "bunnelby"
   },
   {
     id: "fletchling",
@@ -8360,6 +30233,21 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8371,7 +30259,23 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "fletchling"
   },
   {
     id: "talonflame",
@@ -8382,7 +30286,23 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "fletchinder"
   },
   {
     id: "scatterbug",
@@ -8392,6 +30312,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8402,7 +30335,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "scatterbug"
   },
   {
     id: "vivillon-meadow-pattern",
@@ -8413,7 +30360,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-icy-snow-pattern",
@@ -8424,7 +30385,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-polar-pattern",
@@ -8435,7 +30410,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-tundra-pattern",
@@ -8446,7 +30435,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-continental-pattern",
@@ -8457,7 +30460,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-garden-pattern",
@@ -8468,7 +30485,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-elegant-pattern",
@@ -8479,7 +30510,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-modern-pattern",
@@ -8490,7 +30535,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-marine-pattern",
@@ -8501,7 +30560,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-archipelago-pattern",
@@ -8512,7 +30585,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-high-plains-pattern",
@@ -8523,7 +30610,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-sandstorm-pattern",
@@ -8534,7 +30635,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-river-pattern",
@@ -8545,7 +30660,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-monsoon-pattern",
@@ -8556,7 +30685,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-savanna-pattern",
@@ -8567,7 +30710,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-sun-pattern",
@@ -8578,7 +30735,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-ocean-pattern",
@@ -8589,7 +30760,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-jungle-pattern",
@@ -8600,7 +30785,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-fancy-pattern",
@@ -8611,7 +30810,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "vivillon-pok-ball-pattern",
@@ -8622,7 +30835,21 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Flying"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "spewpa"
   },
   {
     id: "litleo",
@@ -8633,6 +30860,19 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8644,7 +30884,21 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Normal"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "litleo"
   },
   {
     id: "flabebe-blue-flower",
@@ -8654,6 +30908,19 @@ const POKEMON_SPECIES = [
     form: "Blue Flower",
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8664,6 +30931,19 @@ const POKEMON_SPECIES = [
     form: "Orange Flower",
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8674,6 +30954,19 @@ const POKEMON_SPECIES = [
     form: "Red Flower",
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8684,6 +30977,19 @@ const POKEMON_SPECIES = [
     form: "White Flower",
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8694,6 +31000,19 @@ const POKEMON_SPECIES = [
     form: "Yellow Flower",
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8704,7 +31023,21 @@ const POKEMON_SPECIES = [
     form: "Blue Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "flabebe-blue-flower"
   },
   {
     id: "floette-orange-flower",
@@ -8714,7 +31047,21 @@ const POKEMON_SPECIES = [
     form: "Orange Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "flabebe-orange-flower"
   },
   {
     id: "floette-red-flower",
@@ -8724,7 +31071,21 @@ const POKEMON_SPECIES = [
     form: "Red Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "flabebe-red-flower"
   },
   {
     id: "floette-white-flower",
@@ -8734,7 +31095,21 @@ const POKEMON_SPECIES = [
     form: "White Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "flabebe-white-flower"
   },
   {
     id: "floette-yellow-flower",
@@ -8744,7 +31119,21 @@ const POKEMON_SPECIES = [
     form: "Yellow Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "flabebe-yellow-flower"
   },
   {
     id: "floette-eternal-flower",
@@ -8754,6 +31143,19 @@ const POKEMON_SPECIES = [
     form: "Eternal Flower",
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8764,7 +31166,21 @@ const POKEMON_SPECIES = [
     form: "Blue Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "floette-blue-flower"
   },
   {
     id: "florges-orange-flower",
@@ -8774,7 +31190,21 @@ const POKEMON_SPECIES = [
     form: "Orange Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "floette-orange-flower"
   },
   {
     id: "florges-red-flower",
@@ -8784,7 +31214,21 @@ const POKEMON_SPECIES = [
     form: "Red Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "floette-red-flower"
   },
   {
     id: "florges-white-flower",
@@ -8794,7 +31238,21 @@ const POKEMON_SPECIES = [
     form: "White Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "floette-white-flower"
   },
   {
     id: "florges-yellow-flower",
@@ -8804,7 +31262,21 @@ const POKEMON_SPECIES = [
     form: "Yellow Flower",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "floette-yellow-flower"
   },
   {
     id: "skiddo",
@@ -8814,6 +31286,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8824,7 +31309,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "skiddo"
   },
   {
     id: "pancham",
@@ -8834,6 +31333,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -8845,7 +31357,21 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Dark"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "pancham"
   },
   {
     id: "furfrou",
@@ -8855,6 +31381,17 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8865,6 +31402,17 @@ const POKEMON_SPECIES = [
     form: "Heart Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8875,6 +31423,17 @@ const POKEMON_SPECIES = [
     form: "Star Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8885,6 +31444,17 @@ const POKEMON_SPECIES = [
     form: "Diamond Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8895,6 +31465,17 @@ const POKEMON_SPECIES = [
     form: "Debutante Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8905,6 +31486,17 @@ const POKEMON_SPECIES = [
     form: "Matron Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8915,6 +31507,17 @@ const POKEMON_SPECIES = [
     form: "Dandy Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8925,6 +31528,17 @@ const POKEMON_SPECIES = [
     form: "La Reine Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8935,6 +31549,17 @@ const POKEMON_SPECIES = [
     form: "Kabuki Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8945,6 +31570,17 @@ const POKEMON_SPECIES = [
     form: "Pharaoh Trim",
     types: [
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "legendsza"
     ]
   },
   {
@@ -8955,6 +31591,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -8965,7 +31616,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "espurr"
   },
   {
     id: "honedge",
@@ -8976,6 +31643,19 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Ghost"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -8987,7 +31667,21 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Ghost"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "honedge"
   },
   {
     id: "aegislash",
@@ -8998,7 +31692,21 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Ghost"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "doublade"
   },
   {
     id: "spritzee",
@@ -9008,6 +31716,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9018,7 +31739,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "spritzee"
   },
   {
     id: "swirlix",
@@ -9028,6 +31763,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9038,7 +31786,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "swirlix"
   },
   {
     id: "inkay",
@@ -9049,6 +31811,21 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Psychic"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9060,7 +31837,23 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Psychic"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "inkay"
   },
   {
     id: "binacle",
@@ -9071,6 +31864,19 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Water"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9082,7 +31888,21 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Water"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "binacle"
   },
   {
     id: "skrelp",
@@ -9093,6 +31913,21 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Water"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9104,7 +31939,23 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Dragon"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "skrelp"
   },
   {
     id: "clauncher",
@@ -9114,6 +31965,21 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9124,7 +31990,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "clauncher"
   },
   {
     id: "helioptile",
@@ -9135,6 +32017,19 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Normal"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9146,7 +32041,21 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Normal"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "helioptile"
   },
   {
     id: "tyrunt",
@@ -9157,6 +32066,19 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Dragon"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9168,7 +32090,21 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Dragon"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "tyrunt"
   },
   {
     id: "amaura",
@@ -9179,6 +32115,19 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Ice"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9190,7 +32139,21 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Ice"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "amaura"
   },
   {
     id: "sylveon",
@@ -9200,7 +32163,24 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "eevee"
   },
   {
     id: "hawlucha",
@@ -9211,6 +32191,21 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Flying"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9222,6 +32217,21 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9233,6 +32243,21 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9243,6 +32268,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9253,7 +32294,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "goomy"
   },
   {
     id: "sliggoo-hisuian",
@@ -9264,7 +32321,14 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Dragon"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "goomy"
   },
   {
     id: "goodra-kalosian",
@@ -9274,7 +32338,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "sliggoo-kalosian"
   },
   {
     id: "goodra-hisuian",
@@ -9285,7 +32365,14 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Dragon"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "sliggoo-hisuian"
   },
   {
     id: "klefki",
@@ -9296,6 +32383,21 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9307,6 +32409,21 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9318,7 +32435,23 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "phantump"
   },
   {
     id: "pumpkaboo",
@@ -9329,6 +32462,19 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9340,6 +32486,19 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9351,6 +32510,19 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9362,6 +32534,19 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9373,7 +32558,21 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "pumpkaboo"
   },
   {
     id: "gourgeist-medium",
@@ -9384,7 +32583,21 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "pumpkaboo-medium"
   },
   {
     id: "gourgeist-large",
@@ -9395,7 +32608,21 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "pumpkaboo-large"
   },
   {
     id: "gourgeist-jumbo",
@@ -9406,7 +32633,21 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "pumpkaboo-jumbo"
   },
   {
     id: "bergmite",
@@ -9416,6 +32657,22 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9426,7 +32683,23 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "bergmite"
   },
   {
     id: "avalugg-hisuian",
@@ -9437,7 +32710,14 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Rock"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "bergmite"
   },
   {
     id: "noibat",
@@ -9448,6 +32728,21 @@ const POKEMON_SPECIES = [
     types: [
       "Flying",
       "Dragon"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9459,7 +32754,23 @@ const POKEMON_SPECIES = [
     types: [
       "Flying",
       "Dragon"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "noibat"
   },
   {
     id: "xerneas",
@@ -9469,6 +32780,19 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9480,6 +32804,19 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Flying"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9491,6 +32828,15 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ground"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9502,6 +32848,19 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ground"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9513,6 +32872,19 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ground"
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -9524,7 +32896,23 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Fairy"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "hoopa-confined",
@@ -9535,7 +32923,21 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Ghost"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "hoopa-unbound",
@@ -9546,7 +32948,21 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Dark"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "volcanion",
@@ -9557,7 +32973,23 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Water"
-    ]
+    ],
+    games: [
+      "x",
+      "y",
+      "omegaruby",
+      "alphasapphire",
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "rowlet",
@@ -9568,6 +33000,17 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9579,7 +33022,19 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Flying"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rowlet"
   },
   {
     id: "decidueye-alolan",
@@ -9590,7 +33045,18 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ghost"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dartrix"
   },
   {
     id: "decidueye-hisuian",
@@ -9601,7 +33067,13 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fighting"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dartrix"
   },
   {
     id: "litten",
@@ -9611,6 +33083,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9621,7 +33103,18 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "litten"
   },
   {
     id: "incineroar",
@@ -9632,7 +33125,18 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Dark"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "torracat"
   },
   {
     id: "popplio",
@@ -9642,6 +33146,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9652,7 +33166,18 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "popplio"
   },
   {
     id: "primarina",
@@ -9663,7 +33188,18 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "brionne"
   },
   {
     id: "pikipek",
@@ -9674,6 +33210,14 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9685,7 +33229,16 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "pikipek"
   },
   {
     id: "toucannon",
@@ -9696,7 +33249,16 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "trumbeak"
   },
   {
     id: "yungoos",
@@ -9706,6 +33268,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9716,7 +33286,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "yungoos"
   },
   {
     id: "grubbin",
@@ -9726,6 +33305,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9737,7 +33326,18 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Electric"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "grubbin"
   },
   {
     id: "vikavolt",
@@ -9748,7 +33348,18 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Electric"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "charjabug"
   },
   {
     id: "crabrawler",
@@ -9758,6 +33369,15 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -9769,7 +33389,17 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Ice"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "crabrawler"
   },
   {
     id: "oricorio-baile",
@@ -9780,6 +33410,14 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9791,6 +33429,14 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9802,6 +33448,14 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9813,6 +33467,14 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9824,6 +33486,16 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Fairy"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9835,7 +33507,18 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cutiefly"
   },
   {
     id: "rockruff",
@@ -9845,6 +33528,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9855,7 +33548,18 @@ const POKEMON_SPECIES = [
     form: "Midday Form",
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rockruff"
   },
   {
     id: "lycanroc-dusk",
@@ -9865,7 +33569,16 @@ const POKEMON_SPECIES = [
     form: "Dusk Form",
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rockruff"
   },
   {
     id: "lycanroc-midnight",
@@ -9875,7 +33588,18 @@ const POKEMON_SPECIES = [
     form: "Midnight Form",
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rockruff"
   },
   {
     id: "wishiwashi-school",
@@ -9885,6 +33609,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -9896,6 +33628,16 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Water"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9907,7 +33649,18 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Water"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "mareanie"
   },
   {
     id: "mudbray",
@@ -9917,6 +33670,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9927,7 +33690,18 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "mudbray"
   },
   {
     id: "dewpider",
@@ -9938,6 +33712,16 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Bug"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9949,7 +33733,18 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Bug"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dewpider"
   },
   {
     id: "fomantis",
@@ -9959,6 +33754,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -9969,7 +33774,18 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "fomantis"
   },
   {
     id: "morelull",
@@ -9980,6 +33796,14 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fairy"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -9991,7 +33815,16 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "morelull"
   },
   {
     id: "salandit",
@@ -10002,6 +33835,16 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Fire"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10013,7 +33856,18 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Fire"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "salandit"
   },
   {
     id: "stufful",
@@ -10024,6 +33878,14 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Fighting"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10035,7 +33897,16 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Fighting"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "stufful"
   },
   {
     id: "bounsweet",
@@ -10045,6 +33916,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10055,7 +33936,18 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "bounsweet"
   },
   {
     id: "tsareena",
@@ -10065,7 +33957,18 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "steenee"
   },
   {
     id: "comfey",
@@ -10075,6 +33978,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10086,6 +33999,16 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Psychic"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10096,6 +34019,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10107,6 +34040,15 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Water"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -10118,7 +34060,17 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Water"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "wimpod"
   },
   {
     id: "sandygast",
@@ -10129,6 +34081,17 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Ground"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -10140,7 +34103,19 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Ground"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "sandygast"
   },
   {
     id: "pyukumuku",
@@ -10150,6 +34125,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10160,6 +34143,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10170,7 +34161,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "type-null"
   },
   {
     id: "minior-meteor",
@@ -10181,6 +34181,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10192,6 +34200,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10203,6 +34219,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10214,6 +34238,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10225,6 +34257,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10236,6 +34276,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10247,6 +34295,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10258,6 +34314,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10268,6 +34332,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10279,6 +34351,14 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Dragon"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10290,6 +34370,14 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Steel"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10301,6 +34389,17 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Fairy"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -10312,6 +34411,14 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Psychic"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10323,6 +34430,15 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Dragon"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -10334,6 +34450,14 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Grass"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10344,6 +34468,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10355,7 +34489,18 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Fighting"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "jangmo-o"
   },
   {
     id: "kommo-o",
@@ -10366,7 +34511,18 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Fighting"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "hakamo-o"
   },
   {
     id: "tapu-koko",
@@ -10377,6 +34533,14 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Fairy"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10388,6 +34552,14 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fairy"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10399,6 +34571,14 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fairy"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10410,6 +34590,14 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Fairy"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10420,6 +34608,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10430,7 +34628,18 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cosmog"
   },
   {
     id: "solgaleo",
@@ -10441,7 +34650,18 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Steel"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cosmoem"
   },
   {
     id: "lunala",
@@ -10452,7 +34672,18 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Ghost"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cosmoem"
   },
   {
     id: "nihilego",
@@ -10463,6 +34694,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Poison"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10474,6 +34713,14 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Fighting"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10485,6 +34732,14 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Fighting"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10495,6 +34750,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10506,6 +34769,14 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Flying"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10517,6 +34788,14 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Steel"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10528,6 +34807,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Dragon"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10538,6 +34825,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10549,6 +34846,14 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Ghost"
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10560,6 +34865,14 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Steel"
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10571,7 +34884,19 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "magearna-original-color",
@@ -10582,7 +34907,19 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "marshadow",
@@ -10593,7 +34930,17 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Ghost"
-    ]
+    ],
+    games: [
+      "sun",
+      "moon",
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "poipole",
@@ -10603,6 +34950,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Poison"
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10614,7 +34967,14 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Dragon"
-    ]
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "poipole"
   },
   {
     id: "stakataka",
@@ -10625,6 +34985,12 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Steel"
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10636,6 +35002,12 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Ghost"
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10646,7 +35018,15 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "ultrasun",
+      "ultramoon",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "meltan",
@@ -10656,7 +35036,15 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
-    ]
+    ],
+    games: [
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    mythical: true
   },
   {
     id: "melmetal",
@@ -10666,7 +35054,16 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
-    ]
+    ],
+    games: [
+      "letsgopikachu",
+      "letsgoeevee",
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "meltan",
+    mythical: true
   },
   {
     id: "grookey",
@@ -10676,6 +35073,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10686,7 +35089,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "grookey"
   },
   {
     id: "rillaboom",
@@ -10696,7 +35106,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "thwackey"
   },
   {
     id: "scorbunny",
@@ -10706,6 +35123,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10716,7 +35139,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "scorbunny"
   },
   {
     id: "cinderace",
@@ -10726,7 +35156,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "raboot"
   },
   {
     id: "sobble",
@@ -10736,6 +35173,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10746,7 +35189,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sobble"
   },
   {
     id: "inteleon",
@@ -10756,7 +35206,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "drizzile"
   },
   {
     id: "skwovet",
@@ -10766,6 +35223,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10776,7 +35239,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "skwovet"
   },
   {
     id: "rookidee",
@@ -10786,6 +35256,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Flying"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -10796,7 +35273,15 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Flying"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "rookidee"
   },
   {
     id: "corviknight",
@@ -10807,7 +35292,15 @@ const POKEMON_SPECIES = [
     types: [
       "Flying",
       "Steel"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "corvisquire"
   },
   {
     id: "blipbug",
@@ -10817,6 +35310,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10828,7 +35325,12 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Psychic"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "blipbug"
   },
   {
     id: "orbeetle",
@@ -10839,7 +35341,12 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Psychic"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "dottler"
   },
   {
     id: "nickit",
@@ -10849,6 +35356,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -10859,7 +35371,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "nickit"
   },
   {
     id: "gossifleur",
@@ -10869,6 +35387,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10879,7 +35401,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "gossifleur"
   },
   {
     id: "wooloo",
@@ -10889,6 +35416,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10899,7 +35430,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "wooloo"
   },
   {
     id: "chewtle",
@@ -10909,6 +35445,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10920,7 +35462,14 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Rock"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "chewtle"
   },
   {
     id: "yamper",
@@ -10930,6 +35479,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -10940,7 +35493,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "yamper"
   },
   {
     id: "rolycoly",
@@ -10950,6 +35508,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10961,7 +35525,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Fire"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rolycoly"
   },
   {
     id: "coalossal",
@@ -10972,7 +35543,14 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Fire"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "carkol"
   },
   {
     id: "applin",
@@ -10983,6 +35561,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dragon"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -10994,7 +35578,14 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dragon"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "applin"
   },
   {
     id: "appletun",
@@ -11005,7 +35596,14 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dragon"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "applin"
   },
   {
     id: "silicobra",
@@ -11015,6 +35613,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11025,7 +35629,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ground"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "silicobra"
   },
   {
     id: "cramorant",
@@ -11036,6 +35647,12 @@ const POKEMON_SPECIES = [
     types: [
       "Flying",
       "Water"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11046,6 +35663,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11056,7 +35679,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "arrokuda"
   },
   {
     id: "toxel",
@@ -11067,6 +35697,13 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Poison"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -11078,7 +35715,15 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Poison"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "toxel"
   },
   {
     id: "toxtricity-low-key",
@@ -11089,7 +35734,15 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Poison"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "toxel"
   },
   {
     id: "sizzlipede",
@@ -11100,6 +35753,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Bug"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -11111,7 +35768,12 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Bug"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "sizzlipede"
   },
   {
     id: "clobbopus",
@@ -11121,6 +35783,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
     ]
   },
   {
@@ -11131,7 +35798,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "clobbopus"
   },
   {
     id: "sinistea",
@@ -11141,6 +35814,12 @@ const POKEMON_SPECIES = [
     form: "Phony Form",
     types: [
       "Ghost"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11151,6 +35830,12 @@ const POKEMON_SPECIES = [
     form: "Antique Form",
     types: [
       "Ghost"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11161,7 +35846,14 @@ const POKEMON_SPECIES = [
     form: "Phony Form",
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sinistea"
   },
   {
     id: "polteageist-antique",
@@ -11171,7 +35863,14 @@ const POKEMON_SPECIES = [
     form: "Antique Form",
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sinistea-antique"
   },
   {
     id: "hatenna",
@@ -11181,6 +35880,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11191,7 +35896,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "hatenna"
   },
   {
     id: "hatterene",
@@ -11202,7 +35914,14 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "hattrem"
   },
   {
     id: "impidimp",
@@ -11213,6 +35932,12 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Fairy"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11224,7 +35949,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "impidimp"
   },
   {
     id: "grimmsnarl",
@@ -11235,7 +35967,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "morgrem"
   },
   {
     id: "obstagoon",
@@ -11246,7 +35985,12 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Normal"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "linoone-galarian"
   },
   {
     id: "perrserker",
@@ -11256,7 +36000,15 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "meowth-galarian"
   },
   {
     id: "cursola",
@@ -11266,7 +36018,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield"
+    ],
+    evolvesFrom: "corsola-galarian"
   },
   {
     id: "sirfetchd",
@@ -11276,7 +36033,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "farfetchd-galarian"
   },
   {
     id: "mr-rime",
@@ -11287,7 +36050,13 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Psychic"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "mr-mime-galarian"
   },
   {
     id: "runerigus",
@@ -11298,7 +36067,13 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Ghost"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "legendsza"
+    ],
+    evolvesFrom: "yamask-galarian"
   },
   {
     id: "milcery",
@@ -11308,6 +36083,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11318,7 +36099,14 @@ const POKEMON_SPECIES = [
     form: "Vanilla Cream · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-vanilla-cream-love-sweet",
@@ -11328,7 +36116,14 @@ const POKEMON_SPECIES = [
     form: "Vanilla Cream · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-vanilla-cream-berry-sweet",
@@ -11338,7 +36133,14 @@ const POKEMON_SPECIES = [
     form: "Vanilla Cream · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-vanilla-cream-clover-sweet",
@@ -11348,7 +36150,14 @@ const POKEMON_SPECIES = [
     form: "Vanilla Cream · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-vanilla-cream-flower-sweet",
@@ -11358,7 +36167,14 @@ const POKEMON_SPECIES = [
     form: "Vanilla Cream · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-vanilla-cream-star-sweet",
@@ -11368,7 +36184,14 @@ const POKEMON_SPECIES = [
     form: "Vanilla Cream · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-vanilla-cream-ribbon-sweet",
@@ -11378,7 +36201,14 @@ const POKEMON_SPECIES = [
     form: "Vanilla Cream · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-cream-strawberry-sweet",
@@ -11388,7 +36218,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Cream · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-cream-love-sweet",
@@ -11398,7 +36235,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Cream · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-cream-berry-sweet",
@@ -11408,7 +36252,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Cream · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-cream-clover-sweet",
@@ -11418,7 +36269,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Cream · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-cream-flower-sweet",
@@ -11428,7 +36286,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Cream · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-cream-star-sweet",
@@ -11438,7 +36303,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Cream · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-cream-ribbon-sweet",
@@ -11448,7 +36320,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Cream · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-matcha-cream-strawberry-sweet",
@@ -11458,7 +36337,14 @@ const POKEMON_SPECIES = [
     form: "Matcha Cream · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-matcha-cream-love-sweet",
@@ -11468,7 +36354,14 @@ const POKEMON_SPECIES = [
     form: "Matcha Cream · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-matcha-cream-berry-sweet",
@@ -11478,7 +36371,14 @@ const POKEMON_SPECIES = [
     form: "Matcha Cream · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-matcha-cream-clover-sweet",
@@ -11488,7 +36388,14 @@ const POKEMON_SPECIES = [
     form: "Matcha Cream · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-matcha-cream-flower-sweet",
@@ -11498,7 +36405,14 @@ const POKEMON_SPECIES = [
     form: "Matcha Cream · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-matcha-cream-star-sweet",
@@ -11508,7 +36422,14 @@ const POKEMON_SPECIES = [
     form: "Matcha Cream · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-matcha-cream-ribbon-sweet",
@@ -11518,7 +36439,14 @@ const POKEMON_SPECIES = [
     form: "Matcha Cream · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-mint-cream-strawberry-sweet",
@@ -11528,7 +36456,14 @@ const POKEMON_SPECIES = [
     form: "Mint Cream · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-mint-cream-love-sweet",
@@ -11538,7 +36473,14 @@ const POKEMON_SPECIES = [
     form: "Mint Cream · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-mint-cream-berry-sweet",
@@ -11548,7 +36490,14 @@ const POKEMON_SPECIES = [
     form: "Mint Cream · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-mint-cream-clover-sweet",
@@ -11558,7 +36507,14 @@ const POKEMON_SPECIES = [
     form: "Mint Cream · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-mint-cream-flower-sweet",
@@ -11568,7 +36524,14 @@ const POKEMON_SPECIES = [
     form: "Mint Cream · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-mint-cream-star-sweet",
@@ -11578,7 +36541,14 @@ const POKEMON_SPECIES = [
     form: "Mint Cream · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-mint-cream-ribbon-sweet",
@@ -11588,7 +36558,14 @@ const POKEMON_SPECIES = [
     form: "Mint Cream · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-lemon-cream-strawberry-sweet",
@@ -11598,7 +36575,14 @@ const POKEMON_SPECIES = [
     form: "Lemon Cream · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-lemon-cream-love-sweet",
@@ -11608,7 +36592,14 @@ const POKEMON_SPECIES = [
     form: "Lemon Cream · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-lemon-cream-berry-sweet",
@@ -11618,7 +36609,14 @@ const POKEMON_SPECIES = [
     form: "Lemon Cream · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-lemon-cream-clover-sweet",
@@ -11628,7 +36626,14 @@ const POKEMON_SPECIES = [
     form: "Lemon Cream · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-lemon-cream-flower-sweet",
@@ -11638,7 +36643,14 @@ const POKEMON_SPECIES = [
     form: "Lemon Cream · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-lemon-cream-star-sweet",
@@ -11648,7 +36660,14 @@ const POKEMON_SPECIES = [
     form: "Lemon Cream · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-lemon-cream-ribbon-sweet",
@@ -11658,7 +36677,14 @@ const POKEMON_SPECIES = [
     form: "Lemon Cream · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-salted-cream-strawberry-sweet",
@@ -11668,7 +36694,14 @@ const POKEMON_SPECIES = [
     form: "Salted Cream · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-salted-cream-love-sweet",
@@ -11678,7 +36711,14 @@ const POKEMON_SPECIES = [
     form: "Salted Cream · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-salted-cream-berry-sweet",
@@ -11688,7 +36728,14 @@ const POKEMON_SPECIES = [
     form: "Salted Cream · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-salted-cream-clover-sweet",
@@ -11698,7 +36745,14 @@ const POKEMON_SPECIES = [
     form: "Salted Cream · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-salted-cream-flower-sweet",
@@ -11708,7 +36762,14 @@ const POKEMON_SPECIES = [
     form: "Salted Cream · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-salted-cream-star-sweet",
@@ -11718,7 +36779,14 @@ const POKEMON_SPECIES = [
     form: "Salted Cream · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-salted-cream-ribbon-sweet",
@@ -11728,7 +36796,14 @@ const POKEMON_SPECIES = [
     form: "Salted Cream · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-swirl-strawberry-sweet",
@@ -11738,7 +36813,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Swirl · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-swirl-love-sweet",
@@ -11748,7 +36830,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Swirl · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-swirl-berry-sweet",
@@ -11758,7 +36847,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Swirl · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-swirl-clover-sweet",
@@ -11768,7 +36864,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Swirl · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-swirl-flower-sweet",
@@ -11778,7 +36881,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Swirl · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-swirl-star-sweet",
@@ -11788,7 +36898,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Swirl · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-ruby-swirl-ribbon-sweet",
@@ -11798,7 +36915,14 @@ const POKEMON_SPECIES = [
     form: "Ruby Swirl · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-caramel-swirl-strawberry-sweet",
@@ -11808,7 +36932,14 @@ const POKEMON_SPECIES = [
     form: "Caramel Swirl · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-caramel-swirl-love-sweet",
@@ -11818,7 +36949,14 @@ const POKEMON_SPECIES = [
     form: "Caramel Swirl · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-caramel-swirl-berry-sweet",
@@ -11828,7 +36966,14 @@ const POKEMON_SPECIES = [
     form: "Caramel Swirl · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-caramel-swirl-clover-sweet",
@@ -11838,7 +36983,14 @@ const POKEMON_SPECIES = [
     form: "Caramel Swirl · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-caramel-swirl-flower-sweet",
@@ -11848,7 +37000,14 @@ const POKEMON_SPECIES = [
     form: "Caramel Swirl · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-caramel-swirl-star-sweet",
@@ -11858,7 +37017,14 @@ const POKEMON_SPECIES = [
     form: "Caramel Swirl · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-caramel-swirl-ribbon-sweet",
@@ -11868,7 +37034,14 @@ const POKEMON_SPECIES = [
     form: "Caramel Swirl · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-rainbow-swirl-strawberry-sweet",
@@ -11878,7 +37051,14 @@ const POKEMON_SPECIES = [
     form: "Rainbow Swirl · Strawberry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-rainbow-swirl-love-sweet",
@@ -11888,7 +37068,14 @@ const POKEMON_SPECIES = [
     form: "Rainbow Swirl · Love Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-rainbow-swirl-berry-sweet",
@@ -11898,7 +37085,14 @@ const POKEMON_SPECIES = [
     form: "Rainbow Swirl · Berry Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-rainbow-swirl-clover-sweet",
@@ -11908,7 +37102,14 @@ const POKEMON_SPECIES = [
     form: "Rainbow Swirl · Clover Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-rainbow-swirl-flower-sweet",
@@ -11918,7 +37119,14 @@ const POKEMON_SPECIES = [
     form: "Rainbow Swirl · Flower Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-rainbow-swirl-star-sweet",
@@ -11928,7 +37136,14 @@ const POKEMON_SPECIES = [
     form: "Rainbow Swirl · Star Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "alcremie-rainbow-swirl-ribbon-sweet",
@@ -11938,7 +37153,14 @@ const POKEMON_SPECIES = [
     form: "Rainbow Swirl · Ribbon Sweet",
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "milcery"
   },
   {
     id: "falinks",
@@ -11948,6 +37170,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -11958,6 +37187,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11969,6 +37204,12 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Bug"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -11980,7 +37221,14 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Bug"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "snom"
   },
   {
     id: "stonjourner",
@@ -11990,6 +37238,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12000,6 +37254,12 @@ const POKEMON_SPECIES = [
     form: "Ice Face",
     types: [
       "Ice"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12010,6 +37270,12 @@ const POKEMON_SPECIES = [
     form: "Noice Face",
     types: [
       "Ice"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12021,6 +37287,13 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Normal"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12032,6 +37305,13 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Dark"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12043,6 +37323,13 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Dark"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12053,6 +37340,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12063,7 +37356,14 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cufant"
   },
   {
     id: "dracozolt",
@@ -12074,6 +37374,10 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Dragon"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -12085,6 +37389,10 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Ice"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -12096,6 +37404,10 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dragon"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -12107,6 +37419,10 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ice"
+    ],
+    games: [
+      "sword",
+      "shield"
     ]
   },
   {
@@ -12118,6 +37434,12 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Dragon"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12129,6 +37451,12 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ghost"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12140,7 +37468,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ghost"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dreepy"
   },
   {
     id: "dragapult",
@@ -12151,7 +37486,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ghost"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "drakloak"
   },
   {
     id: "zacian-crowned-sword",
@@ -12162,6 +37504,12 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Steel"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12172,6 +37520,12 @@ const POKEMON_SPECIES = [
     form: "Hero of Many Battles",
     types: [
       "Fairy"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12183,6 +37537,12 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Steel"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12193,6 +37553,12 @@ const POKEMON_SPECIES = [
     form: "Hero of Many Battles",
     types: [
       "Fighting"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12204,6 +37570,12 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Dragon"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12214,6 +37586,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fighting"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12225,7 +37603,14 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Water"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "kubfu"
   },
   {
     id: "urshifu-single-strike",
@@ -12236,7 +37621,14 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Dark"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "kubfu"
   },
   {
     id: "zarude",
@@ -12247,7 +37639,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Grass"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "zarude-dada",
@@ -12258,7 +37657,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Grass"
-    ]
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   },
   {
     id: "regieleki",
@@ -12268,6 +37674,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12278,6 +37690,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dragon"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12288,6 +37706,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12298,6 +37722,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12309,6 +37739,12 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Grass"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12320,6 +37756,12 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Ice"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12331,6 +37773,12 @@ const POKEMON_SPECIES = [
     types: [
       "Psychic",
       "Ghost"
+    ],
+    games: [
+      "sword",
+      "shield",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12342,7 +37790,13 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Psychic"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "stantler"
   },
   {
     id: "kleavor",
@@ -12353,7 +37807,14 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Rock"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "scyther"
   },
   {
     id: "ursaluna",
@@ -12364,7 +37825,13 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Normal"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "ursaring"
   },
   {
     id: "ursaluna-bloodmoon",
@@ -12375,6 +37842,10 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Normal"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12386,7 +37857,13 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Ghost"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "basculin-white-striped"
   },
   {
     id: "sneasler",
@@ -12397,7 +37874,13 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Poison"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sneasel-hisuian"
   },
   {
     id: "overqwil",
@@ -12408,7 +37891,14 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Poison"
-    ]
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "qwilfish-hisuian"
   },
   {
     id: "enamorus-incarnate",
@@ -12419,6 +37909,11 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Flying"
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12430,6 +37925,11 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Flying"
+    ],
+    games: [
+      "legendsarceus",
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12440,6 +37940,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12450,7 +37954,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "sprigatito"
   },
   {
     id: "meowscarada",
@@ -12461,7 +37970,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dark"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "floragato"
   },
   {
     id: "fuecoco",
@@ -12471,6 +37985,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12481,7 +37999,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "fuecoco"
   },
   {
     id: "skeledirge",
@@ -12492,7 +38015,12 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "crocalor"
   },
   {
     id: "quaxly",
@@ -12502,6 +38030,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12512,7 +38044,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "quaxly"
   },
   {
     id: "quaquaval",
@@ -12523,7 +38060,12 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Fighting"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "quaxwell"
   },
   {
     id: "lechonk",
@@ -12533,6 +38075,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12543,7 +38089,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "lechonk"
   },
   {
     id: "tarountula",
@@ -12553,6 +38104,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12563,7 +38118,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "tarountula"
   },
   {
     id: "nymble",
@@ -12573,6 +38133,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12584,7 +38148,12 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Dark"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "nymble"
   },
   {
     id: "pawmi",
@@ -12594,6 +38163,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12605,7 +38178,12 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Fighting"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "pawmi"
   },
   {
     id: "pawmot",
@@ -12616,7 +38194,12 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Fighting"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "pawmo"
   },
   {
     id: "tandemaus",
@@ -12626,6 +38209,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12636,7 +38223,12 @@ const POKEMON_SPECIES = [
     form: "Family of Four",
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "tandemaus"
   },
   {
     id: "maushold-family-of-three",
@@ -12646,7 +38238,12 @@ const POKEMON_SPECIES = [
     form: "Family of Three",
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "tandemaus"
   },
   {
     id: "fidough",
@@ -12656,6 +38253,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12666,7 +38268,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fairy"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "fidough"
   },
   {
     id: "smoliv",
@@ -12677,6 +38285,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Normal"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12688,7 +38300,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Normal"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "smoliv"
   },
   {
     id: "arboliva",
@@ -12699,7 +38316,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Normal"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dolliv"
   },
   {
     id: "squawkabilly-blue-plumage",
@@ -12710,6 +38332,11 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12721,6 +38348,11 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12732,6 +38364,11 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12743,6 +38380,11 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Flying"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12753,6 +38395,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12763,7 +38410,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "nacli"
   },
   {
     id: "garganacl",
@@ -12773,7 +38426,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "naclstack"
   },
   {
     id: "charcadet",
@@ -12783,6 +38442,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Fire"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12794,7 +38458,13 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Psychic"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "charcadet"
   },
   {
     id: "ceruledge",
@@ -12805,7 +38475,13 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "charcadet"
   },
   {
     id: "tadbulb",
@@ -12815,6 +38491,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12825,7 +38505,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Electric"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "tadbulb"
   },
   {
     id: "wattrel",
@@ -12836,6 +38521,10 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Flying"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12847,7 +38536,12 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Flying"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "wattrel"
   },
   {
     id: "maschiff",
@@ -12857,6 +38551,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12867,7 +38566,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Dark"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "maschiff"
   },
   {
     id: "shroodle",
@@ -12878,6 +38583,11 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Normal"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12889,7 +38599,13 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Normal"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "shroodle"
   },
   {
     id: "bramblin",
@@ -12900,6 +38616,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ghost"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12911,7 +38631,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "bramblin"
   },
   {
     id: "toedscool",
@@ -12922,6 +38647,10 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Grass"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12933,7 +38662,12 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Grass"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "toedscool"
   },
   {
     id: "klawf",
@@ -12943,6 +38677,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Rock"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12953,6 +38691,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Grass"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -12964,7 +38707,13 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fire"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "capsakid"
   },
   {
     id: "rellor",
@@ -12974,6 +38723,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Bug"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -12985,7 +38738,12 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Psychic"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "rellor"
   },
   {
     id: "flittle",
@@ -12995,6 +38753,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13005,7 +38767,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Psychic"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "flittle"
   },
   {
     id: "tinkatink",
@@ -13016,6 +38783,11 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Steel"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13027,7 +38799,13 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Steel"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "tinkatink"
   },
   {
     id: "tinkaton",
@@ -13038,7 +38816,13 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Steel"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "tinkatuff"
   },
   {
     id: "wiglett",
@@ -13048,6 +38832,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13058,7 +38846,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "wiglett"
   },
   {
     id: "bombirdier",
@@ -13069,6 +38862,10 @@ const POKEMON_SPECIES = [
     types: [
       "Flying",
       "Dark"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13079,6 +38876,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13089,7 +38890,12 @@ const POKEMON_SPECIES = [
     form: "Hero Form",
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "finizen"
   },
   {
     id: "palafin-zero",
@@ -13099,7 +38905,12 @@ const POKEMON_SPECIES = [
     form: "Zero Form",
     types: [
       "Water"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "finizen"
   },
   {
     id: "varoom",
@@ -13110,6 +38921,10 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Poison"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13121,7 +38936,12 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Poison"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "varoom"
   },
   {
     id: "cyclizar",
@@ -13132,6 +38952,11 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Normal"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13142,6 +38967,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Steel"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13153,6 +38982,11 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Poison"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13164,7 +38998,13 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Poison"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "glimmet"
   },
   {
     id: "greavard",
@@ -13174,6 +39014,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13184,7 +39029,13 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "greavard"
   },
   {
     id: "flamigo",
@@ -13195,6 +39046,11 @@ const POKEMON_SPECIES = [
     types: [
       "Flying",
       "Fighting"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13205,6 +39061,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13215,7 +39075,12 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Ice"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "cetoddle"
   },
   {
     id: "veluza",
@@ -13226,6 +39091,10 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Psychic"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13236,6 +39105,11 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13247,6 +39121,11 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13258,6 +39137,11 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13269,6 +39153,11 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13280,7 +39169,13 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "primeape"
   },
   {
     id: "clodsire",
@@ -13291,7 +39186,12 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Ground"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "wooper-paldean"
   },
   {
     id: "farigiraf",
@@ -13302,7 +39202,12 @@ const POKEMON_SPECIES = [
     types: [
       "Normal",
       "Psychic"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "girafarig"
   },
   {
     id: "dudunsparce-three-segment",
@@ -13312,7 +39217,12 @@ const POKEMON_SPECIES = [
     form: "Three-Segment Form",
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dunsparce"
   },
   {
     id: "dudunsparce-two-segment",
@@ -13322,7 +39232,12 @@ const POKEMON_SPECIES = [
     form: "Two-Segment Form",
     types: [
       "Normal"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dunsparce"
   },
   {
     id: "kingambit",
@@ -13333,7 +39248,12 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Steel"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "bisharp"
   },
   {
     id: "great-tusk",
@@ -13344,6 +39264,10 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Fighting"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13355,6 +39279,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Psychic"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13366,6 +39294,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dark"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13377,6 +39309,10 @@ const POKEMON_SPECIES = [
     types: [
       "Ghost",
       "Fairy"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13388,6 +39324,10 @@ const POKEMON_SPECIES = [
     types: [
       "Bug",
       "Fighting"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13399,6 +39339,10 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Ground"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13410,6 +39354,10 @@ const POKEMON_SPECIES = [
     types: [
       "Ground",
       "Steel"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13421,6 +39369,10 @@ const POKEMON_SPECIES = [
     types: [
       "Ice",
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13432,6 +39384,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Electric"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13443,6 +39399,10 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Flying"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13454,6 +39414,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Poison"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13465,6 +39429,10 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Electric"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13476,6 +39444,11 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ice"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13487,7 +39460,13 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ice"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "frigibax"
   },
   {
     id: "baxcalibur",
@@ -13498,7 +39477,13 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Ice"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "arctibax"
   },
   {
     id: "gimmighoul-chest",
@@ -13508,6 +39493,11 @@ const POKEMON_SPECIES = [
     form: "Chest Form",
     types: [
       "Ghost"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13518,6 +39508,11 @@ const POKEMON_SPECIES = [
     form: "Roaming Form",
     types: [
       "Ghost"
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
     ]
   },
   {
@@ -13529,7 +39524,13 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet",
+      "legendsza"
+    ],
+    evolvesFrom: "gimmighoul-chest"
   },
   {
     id: "wo-chien",
@@ -13540,6 +39541,10 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Grass"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13551,6 +39556,10 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Ice"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13562,6 +39571,10 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Ground"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13573,6 +39586,10 @@ const POKEMON_SPECIES = [
     types: [
       "Dark",
       "Fire"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13584,6 +39601,10 @@ const POKEMON_SPECIES = [
     types: [
       "Dragon",
       "Dark"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13595,6 +39616,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fairy",
       "Fighting"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13606,6 +39631,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fighting",
       "Dragon"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13617,6 +39646,10 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Dragon"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13628,6 +39661,10 @@ const POKEMON_SPECIES = [
     types: [
       "Water",
       "Dragon"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13639,6 +39676,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Psychic"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13650,7 +39691,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dragon"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "applin"
   },
   {
     id: "poltchageist",
@@ -13661,6 +39707,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ghost"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13672,6 +39722,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ghost"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13683,7 +39737,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "poltchageist"
   },
   {
     id: "sinistcha-masterpiece",
@@ -13694,7 +39753,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "poltchageist-artisan"
   },
   {
     id: "okidogi",
@@ -13705,6 +39769,10 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Fighting"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13716,6 +39784,10 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Psychic"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13727,6 +39799,10 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Fairy"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13737,6 +39813,10 @@ const POKEMON_SPECIES = [
     form: "Teal Mask",
     types: [
       "Grass"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13748,6 +39828,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Rock"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13759,6 +39843,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Fire"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13770,6 +39858,10 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Water"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13781,7 +39873,12 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Dragon"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "duraludon"
   },
   {
     id: "hydrapple",
@@ -13792,7 +39889,12 @@ const POKEMON_SPECIES = [
     types: [
       "Grass",
       "Dragon"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    evolvesFrom: "dipplin"
   },
   {
     id: "gouging-fire",
@@ -13803,6 +39905,10 @@ const POKEMON_SPECIES = [
     types: [
       "Fire",
       "Dragon"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13814,6 +39920,10 @@ const POKEMON_SPECIES = [
     types: [
       "Electric",
       "Dragon"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13825,6 +39935,10 @@ const POKEMON_SPECIES = [
     types: [
       "Rock",
       "Psychic"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13836,6 +39950,10 @@ const POKEMON_SPECIES = [
     types: [
       "Steel",
       "Psychic"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13846,6 +39964,10 @@ const POKEMON_SPECIES = [
     form: null,
     types: [
       "Normal"
+    ],
+    games: [
+      "scarlet",
+      "violet"
     ]
   },
   {
@@ -13857,6 +39979,11 @@ const POKEMON_SPECIES = [
     types: [
       "Poison",
       "Ghost"
-    ]
+    ],
+    games: [
+      "scarlet",
+      "violet"
+    ],
+    mythical: true
   }
 ];

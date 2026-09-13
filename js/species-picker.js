@@ -124,6 +124,7 @@ function onSpeciesInput(val){
       renderTeraTypeField();
     }
   }
+  refreshGamePresetWidgetsForSpecies();
   renderSpeciesPickerPanel(trimmed);
 }
 
@@ -155,6 +156,8 @@ function selectSpeciesEntry(entryId){
   renderMegaFormOptions();
   refreshMegaFormLabel();
   renderTeraTypeField();
+
+  refreshGamePresetWidgetsForSpecies();
 
   const panel = document.getElementById('speciesPicker_panel');
   if(panel){ panel.innerHTML = ''; panel.classList.remove('open'); }

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/animations.css">
 <link rel="stylesheet" href="css/card-effects.css">
 <link rel="stylesheet" href="css/species-picker.css">
+<link rel="stylesheet" href="css/text-picker.css">
 <link rel="stylesheet" href="css/themes.css">
 </head>
 <body>
@@ -31,13 +32,13 @@
       </div>
     </div>
     <div class="top-actions">
-      <button class="btn ghost" id="settingsBtn" title="Settings" aria-label="Settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <button class="btn primary" id="btnAdd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Pokémon
       </button>
-      <button class="btn ghost" id="themeToggleBtn" title="Switch to Beast Ball Theme" aria-label="Switch to Beast Ball Theme">
-        <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-        <svg id="themeIconCustom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a9 9 0 0 1 0 18 9 9 0 0 1 0-18z"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
+      <button class="btn ghost" id="btnNewDex" title="Clear the roster and start with an empty Pokédex">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>
+        <span class="btn-label">New</span>
       </button>
       <button class="btn ghost last-file-chip" id="lastFileChip" style="display:none;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
@@ -54,17 +55,17 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <span class="btn-label">Export</span>
       </button>
-      <button class="btn ghost" id="btnNewDex" title="Clear the roster and start with an empty Pokédex">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>
-        <span class="btn-label">New</span>
-      </button>
       <button class="btn ghost" id="btnShareRoster" title="Share your whole roster as an image">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
         <span class="btn-label">Share</span>
       </button>
-      <button class="btn primary" id="btnAdd">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Add Pokémon
+      <button class="btn ghost" id="themeToggleBtn" title="Switch to Beast Ball Theme" aria-label="Switch to Beast Ball Theme">
+        <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg id="themeIconCustom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a9 9 0 0 1 0 18 9 9 0 0 1 0-18z"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
+      </button>
+      <button class="btn ghost" id="settingsBtn" title="Settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
   </header>
@@ -174,7 +175,11 @@
 <script src="icons/ui-icons.js"></script>
 <script src="icons/achievement-icons.js"></script>
 <script src="icons/game-icons.js"></script>
+<script src="icons/trainer-avatars.js"></script>
 <script src="data/achievements.js"></script>
+<script src="data/ribbon-met-level.js"></script>
+<script src="data/pokemon-species.js"></script>
+<script src="data/ribbon-eligibility-data.js"></script>
 <script src="data/changelog.js"></script>
 <script src="data/types.js"></script>
 <script src="data/mega-types.js"></script>
@@ -183,10 +188,12 @@
 <script src="data/characteristics.js"></script>
 <script src="data/sprites.js"></script>
 <script src="data/pokemon.js"></script>
-<script src="data/pokemon-species.js"></script>
+<script src="data/abilities.js"></script>
+<script src="data/met-locations.js"></script>
 <script src="js/state.js"></script>
 <script src="js/app.js"></script>
 <script src="js/settings.js"></script>
+<script src="js/ribbon-eligibility.js"></script>
 <script src="js/achievements.js"></script>
 <script src="js/detail-view.js"></script>
 <script src="js/renderer.js"></script>
@@ -194,6 +201,8 @@
 <script src="js/utils.js"></script>
 <script src="js/pokemon.js"></script>
 <script src="js/species-picker.js"></script>
+<script src="js/ability-picker.js"></script>
+<script src="js/location-picker.js"></script>
 <script src="js/moves.js"></script>
 <script src="js/filters.js"></script>
 <script src="js/vendor/pako.min.js"></script>

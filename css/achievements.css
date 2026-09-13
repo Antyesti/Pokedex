@@ -6,13 +6,6 @@
 
 .achv-title-picker label{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-dim); }
 
-.achv-title-picker select{
-  background:rgba(255,255,255,0.04); border:1px solid var(--panel-border); border-radius:10px;
-  padding:10px 12px; color:var(--text); font-family:var(--sans); font-size:14px; outline:none; cursor:pointer;
-}
-
-.achv-title-picker select option{ background:var(--select-option-bg); color:var(--select-option-text); }
-
 .achv-category{ display:flex; flex-direction:column; gap:14px; }
 
 .achv-header-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
@@ -123,6 +116,70 @@
 .achv-custom-remove:hover{ background:rgba(229,87,123,0.32); }
 
 .achv-add-custom-btn{ align-self:flex-start; font-size:12.5px; padding:8px 14px; }
+
+.achv-toolbar-row{ display:flex; align-items:center; gap:8px; }
+
+.achv-filter-btn.active{ border-color:color-mix(in srgb, var(--accent-2) 55%, transparent); color:var(--text); }
+
+.achv-filter-panel{
+  display:flex; flex-direction:column; gap:8px; padding:10px 12px; border-radius:10px;
+  background:rgba(255,255,255,0.025); border:1px dashed var(--panel-border); margin-top:-4px;
+}
+
+.achv-filter-label{ font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-faint); }
+
+.achv-filter-options{ display:flex; flex-wrap:wrap; gap:6px; }
+
+.achv-filter-options .btn{ font-size:11.5px; padding:6px 10px; }
+
+.achv-filter-options .btn.selected{ border-color:color-mix(in srgb, var(--accent-2) 55%, transparent); color:var(--text); background:rgba(255,255,255,0.06); }
+
+.achv-helper-panel{ gap:12px; }
+
+.achv-helper-game{ display:flex; flex-direction:column; gap:6px; }
+
+.achv-helper-game-header{ display:flex; align-items:center; gap:6px; font-family:var(--sans); font-size:12px; font-weight:600; color:var(--text-dim); }
+
+.achv-helper-game-icons{ display:flex; align-items:center; gap:2px; flex:none; }
+
+.achv-helper-game-header img{ width:20px; height:20px; flex:none; border-radius:3px; object-fit:contain; }
+
+.achv-helper-ribbon-row{ display:flex; flex-wrap:wrap; gap:6px; }
+
+.achv-helper-ribbon{ display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid var(--panel-border); }
+
+.achv-helper-ribbon img{ width:22px; height:22px; flex:none; }
+
+.achv-helper-ribbon.last-chance{ border-color:color-mix(in srgb, #E5577B 55%, transparent); background:rgba(229,87,123,0.14); }
+
+.achv-helper-ribbon.selected{ border-color:color-mix(in srgb, #4CAF7D 55%, transparent); background:rgba(76,175,125,0.14); }
+
+.achv-sub-badge.disabled{ opacity:0.45; cursor:not-allowed; }
+
+.achv-filter-game-select{
+  -webkit-appearance:none; -moz-appearance:none; appearance:none;
+  font-size:12px; padding:6px 30px 6px 8px; border-radius:8px; cursor:pointer;
+  background-color:rgba(255,255,255,0.04); border:1px solid var(--panel-border); color:var(--text);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23AAB4C0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 8px center; background-size:14px;
+  transition:border-color .15s;
+}
+.achv-filter-game-select:focus{ outline:none; border-color:color-mix(in srgb, var(--accent) 55.0%, transparent); }
+.achv-filter-game-select option{ background:var(--select-option-bg); color:var(--select-option-text); }
+
+.achv-filter-metlevel-input{ width:90px; font-size:12.5px; padding:6px 8px; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid var(--panel-border); color:var(--text); -moz-appearance:textfield; }
+
+.achv-filter-metlevel-input::-webkit-outer-spin-button,
+.achv-filter-metlevel-input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+
+.achv-filter-metlevel-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+.met-level-badge{
+  font-family:var(--mono); font-size:10.5px; padding:4px 8px; border-radius:999px;
+  background:rgba(255,255,255,0.05); border:1px solid var(--panel-border); color:var(--text-dim);
+}
+
+.met-level-badge:empty{ display:none; }
 
 .custom-achv-icon-grid{ display:flex; gap:8px; margin-top:4px; }
 
