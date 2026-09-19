@@ -422,3 +422,101 @@ function stripHtmlToText(html){
   return div.textContent.trim();
 }
 
+/* ---- Custom tooltips (achievement/Ribbon badges etc.) ----
+   A plain `title` attribute hands rendering to the OS/browser entirely, which on most
+   platforms means a plain dark box no CSS here can touch. Elements that opt in instead get
+   a small themed panel positioned by us, styled with the app's own colors so it actually
+   matches everything else instead of looking like a system control dropped on top of it.
+
+   Two shapes of trigger:
+   - data-tooltip="..." is a plain string, `\n` becomes a line break. Used for the handful
+     of tooltips that are just a label (the custom Misc achievement badge, which isn't a
+     catalog item and so has no icon/guide/available-games to show).
+   - data-tooltip-achv="key" renders the full rich layout via buildAchievementTooltipHTML()
+     in js/achievements.js: icon, name, the item's own Guiding Text if it has one, an
+     optional data-tooltip-note for whatever's true about this Pokemon right now (locked,
+     restricted, last chance, ...), and an Available In icon row. data-tooltip-name /
+     data-tooltip-icon / data-tooltip-guide override the item's own name/icon/description
+     for the Memory Ribbons' gold state, which shows differently without being a different
+     achievement underneath.
+
+   One shared element, reused for every trigger, appended to body so it can escape modal
+   clipping the same way the date panel and Trainer Avatar dropdown already do. Delegated
+   listeners rather than one per badge, since achievement grids can have a couple hundred
+   of these and re-attaching per render would add up. */
+let customTooltipEl = null;
+
+function ensureCustomTooltipEl(){
+  if(customTooltipEl) return customTooltipEl;
+  customTooltipEl = document.createElement('div');
+  customTooltipEl.className = 'custom-tooltip';
+  document.body.appendChild(customTooltipEl);
+  return customTooltipEl;
+}
+
+function showCustomTooltip(trigger){
+  const achvKey = trigger.getAttribute('data-tooltip-achv');
+  const text = trigger.getAttribute('data-tooltip');
+  if(!achvKey && !text) return;
+  const tip = ensureCustomTooltipEl();
+
+  if(achvKey){
+    const html = typeof buildAchievementTooltipHTML === 'function'
+      ? buildAchievementTooltipHTML(achvKey, trigger.getAttribute('data-tooltip-note'), trigger.getAttribute('data-tooltip-name'), trigger.getAttribute('data-tooltip-icon'), trigger.getAttribute('data-tooltip-guide'))
+      : '';
+    if(!html) return; // an unknown key shouldn't show an empty bubble
+    tip.innerHTML = html;
+    tip.classList.add('rich');
+  } else {
+    tip.innerHTML = text.split('\n').map(escapeHTML).join('<br>');
+    tip.classList.remove('rich');
+  }
+  tip.classList.add('visible');
+
+  const rect = trigger.getBoundingClientRect();
+  const tipRect = tip.getBoundingClientRect();
+  const margin = 8;
+  let left = rect.left + rect.width/2 - tipRect.width/2;
+  left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+  let top = rect.top - tipRect.height - 8;
+  let arrowBelow = false;
+  if(top < margin){
+    // not enough room above the trigger, flip to below it instead
+    top = rect.bottom + 8;
+    arrowBelow = true;
+  }
+  tip.style.left = `${left}px`;
+  tip.style.top = `${top}px`;
+  tip.classList.toggle('arrow-below', arrowBelow);
+  tip.style.setProperty('--tooltip-arrow-x', `${rect.left + rect.width/2 - left}px`);
+}
+
+function hideCustomTooltip(){
+  if(customTooltipEl) customTooltipEl.classList.remove('visible');
+}
+
+document.addEventListener('mouseover', (e) => {
+  const trigger = e.target.closest('[data-tooltip], [data-tooltip-achv]');
+  if(trigger) showCustomTooltip(trigger);
+});
+document.addEventListener('mouseout', (e) => {
+  const trigger = e.target.closest('[data-tooltip], [data-tooltip-achv]');
+  if(!trigger) return;
+  // Moving between the badge's own icon/label doesn't leave the trigger, even though it
+  // fires mouseout -- only actually hide once the pointer's gone somewhere else entirely.
+  if(e.relatedTarget && trigger.contains(e.relatedTarget)) return;
+  hideCustomTooltip();
+});
+document.addEventListener('focusin', (e) => {
+  const trigger = e.target.closest('[data-tooltip], [data-tooltip-achv]');
+  if(trigger) showCustomTooltip(trigger);
+});
+document.addEventListener('focusout', (e) => {
+  if(e.target.closest('[data-tooltip], [data-tooltip-achv]')) hideCustomTooltip();
+});
+// A scroll or resize can move the trigger out from under an already-positioned tooltip;
+// hiding it outright is simpler and safer than re-positioning something that's only meant
+// to be a momentary hover hint anyway.
+window.addEventListener('scroll', hideCustomTooltip, true);
+window.addEventListener('resize', hideCustomTooltip);
+

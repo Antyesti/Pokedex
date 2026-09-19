@@ -1,5 +1,6 @@
 {
   "trainer": "Ash",
+  "trainerAvatar": "pikachu",
   "settings": {
     "defaultSort": "oldest",
     "defaultTheme": "custom",
@@ -31,7 +32,12 @@
     "shareFormat": "gif",
     "cardFooterInfo": "arrow",
     "sortBallsAlpha": false,
-    "sortGamesAlpha": false
+    "sortGamesAlpha": false,
+    "strangeBallDisplay": false,
+    "showRestrictedRibbons": false,
+    "showRibbonHelperByDefault": true,
+    "easterEggUnlocked": false,
+    "easterEggPreferred": "pikachu"
   },
   "pokemon": [
     {
@@ -134,6 +140,5 @@
       "metLevel": 50,
       "strangeOverride": null
     }
-  ],
-  "trainerAvatar": "pikachu"
+  ]
 }

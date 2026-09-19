@@ -71,6 +71,18 @@
   color:var(--text-faint); background:rgba(255,255,255,0.06); border-radius:5px; padding:2px 5px; margin-top:1px;
 }
 
+/* Purely informational -- a Ribbon/Mark/Misc achievement only obtainable through a
+   special event, not through normal gameplay. Never implies a warning or a restriction
+   (that's what achv-unreleased-tag's "Unreleased"/"Restricted" states are for), so it
+   gets its own bright, high-visibility color instead of the muted unreleased-tag look.
+   --achv-event-color/--achv-event-text are theme-adaptive (see css/main.css,
+   css/themes.css, and applyCustomTheme() in js/renderer.js) and are deliberately never
+   set to red or any other warning-coded hue. */
+.achv-event-tag{
+  font-family:var(--mono); font-size:9px; font-weight:650; text-transform:uppercase; letter-spacing:0.05em;
+  color:var(--achv-event-text); background:var(--achv-event-color); border-radius:5px; padding:2px 5px; margin-top:1px;
+}
+
 .achv-badge.memory-ribbon.gold{ border-color:color-mix(in srgb, #F2C14E 65%, transparent); background:linear-gradient(160deg, rgba(242,193,78,0.22), rgba(242,193,78,0.05)); }
 
 .achv-memory-count{ font-family:var(--mono); font-size:10px; color:var(--text-faint); }
@@ -118,6 +130,14 @@
 .achv-add-custom-btn{ align-self:flex-start; font-size:12.5px; padding:8px 14px; }
 
 .achv-toolbar-row{ display:flex; align-items:center; gap:8px; }
+
+.achv-helper-toggle{ display:flex; align-items:center; gap:6px; font-family:var(--sans); font-size:12.5px; font-weight:600; color:var(--text-dim); }
+
+.achv-helper-toggle-icon{ width:15px; height:15px; flex:none; color:var(--accent-2); }
+
+.achv-helper-toggle-switch{ width:34px; height:20px; --switch-travel:14px; }
+
+.achv-helper-toggle-switch .thumb{ width:14px; height:14px; top:3px; left:3px; }
 
 .achv-filter-btn.active{ border-color:color-mix(in srgb, var(--accent-2) 55%, transparent); color:var(--text); }
 

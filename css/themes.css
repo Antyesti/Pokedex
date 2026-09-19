@@ -26,6 +26,13 @@ html[data-theme="light"]{
   --hairline: rgba(0,0,0,0.08);
   --select-option-bg: #ffffff;
   --select-option-text: #222224;
+  --filter-shiny-color: #A8650E;
+  --filter-mega-color: #7B3FC4;
+  --filter-gigantamax-color: #C4406A;
+  --nature-arrow-up-color: #1C9A52;
+  /* See css/main.css for why this isn't just --accent (which is red on this theme). */
+  --achv-event-color: #0B5FFF;
+  --achv-event-text: #FFFFFF;
 }
 
 html[data-theme="light"] body,
@@ -92,19 +99,19 @@ html[data-style="neumorphic"] .filter-toggle-group{
 
 html[data-theme="light"] .filter-toggle.active,
 html[data-style="neumorphic"] .filter-toggle.active{
-  background: var(--bg); border:none; color:#A8650E;
+  background: var(--bg); border:none;
   box-shadow: var(--nm-shadow-in);
 }
 
 html[data-theme="light"] #megaFilterBtn.filter-toggle.active,
 html[data-style="neumorphic"] #megaFilterBtn.filter-toggle.active{
-  background: var(--bg); border:none; color:#7B3FC4;
+  background: var(--bg); border:none;
   box-shadow: var(--nm-shadow-in);
 }
 
 html[data-theme="light"] #gigantamaxFilterBtn.filter-toggle.active,
 html[data-style="neumorphic"] #gigantamaxFilterBtn.filter-toggle.active{
-  background: var(--bg); border:none; color:#C4406A;
+  background: var(--bg); border:none;
   box-shadow: var(--nm-shadow-in);
 }
 
@@ -445,9 +452,6 @@ html[data-theme="light"] .nature-tooltip,
 html[data-style="neumorphic"] .nature-tooltip{
   background:var(--bg); border:none; box-shadow: -6px -6px 14px rgba(255,255,255,0.85), 6px 6px 16px rgba(0,0,0,0.18);
 }
-
-html[data-theme="light"] .nature-tip-arrow.up,
-html[data-style="neumorphic"] .nature-tip-arrow.up{ color:#1C9A52; }
 
 html[data-theme="light"] .nature-tip-arrow.down,
 html[data-style="neumorphic"] .nature-tip-arrow.down{ color:var(--danger); }

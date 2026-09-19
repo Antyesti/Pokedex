@@ -1,9 +1,21 @@
 
+// A subcategory's items live inside its groups (data/achievements.js: subcategory ->
+// groups -> items), in group order then item order within each group. A group with no
+// `label` renders with no header (see achievementGroupHTML below) but is still a real,
+// independently addressable group underneath -- this just flattens all of them back into
+// one array for code that only needs "every item in this subcategory", not the group
+// boundaries themselves.
+function subcategoryItems(sub){
+  const out = [];
+  Object.values(sub.groups).forEach(g => { g.items.forEach(item => out.push(item)); });
+  return out;
+}
+
 // Flat index of all catalog entries (excludes sub-ribbons), keyed by `key`.
 const ACHIEVEMENT_INDEX = {};
 Object.values(ACHIEVEMENT_CATALOG).forEach(cat => {
   Object.values(cat.subcategories).forEach(sub => {
-    sub.items.forEach(item => { ACHIEVEMENT_INDEX[item.key] = item; });
+    subcategoryItems(sub).forEach(item => { ACHIEVEMENT_INDEX[item.key] = item; });
   });
 });
 // Flat index of sub-ribbons (Contest/Battle Memory components, plus any custom
@@ -48,18 +60,31 @@ const CUSTOM_ACHIEVEMENT_TAGS = [
 // Opt-in behavior (catalogItem.memoryUnlockMode === 'all'): stays hidden entirely until
 // every sub-ribbon has been selected — for "you need the full set" achievements like a
 // custom Leaf Crown that requires all 5 Shiny Leaf pieces before it counts as earned.
+//
+// A sub-ribbon flagged excludeFromGold (Control Panel > edit a Memory Ribbon > per
+// sub-ribbon checkbox) doesn't count toward completing the set for Gold specifically --
+// World Ability Ribbon is the standing example, since it's no longer obtainable but still
+// a legitimate sub-ribbon someone may already have from when it was. It still counts
+// everywhere else: the sub-ribbon relationship itself, the raw have/total shown in the
+// tooltip, and the base "unlocked" state (or requireAll's full-set check) are untouched;
+// only whether the set counts as COMPLETE for Gold narrows to exclude it.
 function memoryRibbonState(p, catalogItem, selectedSubKeys){
   const total = catalogItem.subRibbons.length;
   const have = selectedSubKeys.filter(k => catalogItem.subRibbons.some(r => r.key === k)).length;
   const requireAll = catalogItem.memoryUnlockMode === 'all';
+
+  const goldEligible = catalogItem.subRibbons.filter(r => !r.excludeFromGold);
+  const goldTotal = goldEligible.length;
+  const goldHave = selectedSubKeys.filter(k => goldEligible.some(r => r.key === k)).length;
+
   return {
     unlocked: requireAll ? (total > 0 && have === total) : have > 0,
-    gold: have === total && total > 0,
+    gold: goldTotal > 0 && goldHave === goldTotal,
     have, total
   };
 }
-function contestMemoryState(p){ return memoryRibbonState(p, ACHIEVEMENT_CATALOG.ribbons.subcategories.contest.items.find(i=>i.key==='contest_memory_ribbon'), p.contestMemorySubKeys); }
-function battleMemoryState(p){ return memoryRibbonState(p, ACHIEVEMENT_CATALOG.ribbons.subcategories.tower.items.find(i=>i.key==='battle_memory_ribbon'), p.battleMemorySubKeys); }
+function contestMemoryState(p){ return memoryRibbonState(p, subcategoryItems(ACHIEVEMENT_CATALOG.ribbons.subcategories.contest).find(i=>i.key==='contest_memory_ribbon'), p.contestMemorySubKeys); }
+function battleMemoryState(p){ return memoryRibbonState(p, subcategoryItems(ACHIEVEMENT_CATALOG.ribbons.subcategories.tower).find(i=>i.key==='battle_memory_ribbon'), p.battleMemorySubKeys); }
 
 // Returns the mutable array of selected sub-ribbon keys for a given Memory Ribbon
 // catalog item on a given Pokémon. The two built-in items keep their own dedicated
@@ -237,6 +262,48 @@ function cleanupLockedAchievements(p){
   });
 }
 
+// Builds the rich tooltip markup for an achievement badge (see js/utils.js
+// showCustomTooltip, which calls this whenever a trigger has data-tooltip-achv rather than
+// a plain data-tooltip): icon, name, the item's own Guiding Text if one's been written for
+// it (Control Panel > Ribbons/Marks/Misc > edit an achievement), an optional dynamic note
+// for whatever's true about THIS Pokemon right now (locked, restricted, already selected,
+// last chance, ...), and which games it's available in as a plain icon row -- no labels,
+// since the icons alone are what this row is for.
+//
+// `nameOverride`/`iconOverride`/`guideOverride` exist for the Contest/Battle Memory
+// Ribbons' gold state, which displays a different name/icon/description than the item's
+// own while still being the same achievement underneath. guideOverride falls back to the
+// item's own Guiding Text when a gold variant didn't get its own separate one written.
+function buildAchievementTooltipHTML(key, note, nameOverride, iconOverride, guideOverride){
+  const item = (typeof ACHIEVEMENT_INDEX !== 'undefined' && ACHIEVEMENT_INDEX[key])
+    || (typeof SUB_RIBBON_INDEX !== 'undefined' && SUB_RIBBON_INDEX[key]);
+  if(!item) return '';
+
+  const guide = guideOverride || item.guide;
+  const games = typeof ribbonAvailableGames === 'function' ? (ribbonAvailableGames(key) || []) : [];
+  const gamesHTML = games.length ? `
+    <div class="tooltip-rich-games">
+      <span class="tooltip-rich-games-label">Available in</span>
+      ${games.map(g => {
+        const preset = typeof GAME_PRESET_INDEX !== 'undefined' ? GAME_PRESET_INDEX[g] : null;
+        return preset ? `<img src="${preset.icon}" alt="${escapeAttr(preset.label)}" title="${escapeAttr(preset.label)}">` : '';
+      }).join('')}
+    </div>
+  ` : '';
+
+  return `
+    <div class="tooltip-rich">
+      <img class="tooltip-rich-icon" src="${iconOverride || item.icon}" alt="">
+      <div class="tooltip-rich-body">
+        <div class="tooltip-rich-title">${escapeHTML(nameOverride || item.name)}</div>
+        ${guide ? `<div class="tooltip-rich-guide">${escapeHTML(guide)}</div>` : ''}
+        ${note ? `<div class="tooltip-rich-note">${escapeHTML(note)}</div>` : ''}
+        ${gamesHTML}
+      </div>
+    </div>
+  `;
+}
+
 function achievementBadgeHTML(p, item, selected, readonly){
   const ineligibleReason = ribbonIneligibilityReason(p, item.key);
   const disabled = item.status === 'unreleased' || !!ineligibleReason;
@@ -246,7 +313,7 @@ function achievementBadgeHTML(p, item, selected, readonly){
     const awarded = isAchievementAutoGranted(p, item);
     const reqNames = item.autoGrant.map(k => ACHIEVEMENT_INDEX[k]?.name || k).join(', ');
     return `
-      <div class="achv-badge ${awarded?'selected':''}" title="${escapeAttr(item.name)}: ${awarded ? `Auto-awarded: ${reqNames} collected` : `Collect ${reqNames} to unlock`}">
+      <div class="achv-badge ${awarded?'selected':''}" data-tooltip-achv="${item.key}" data-tooltip-note="${escapeAttr(awarded ? `Auto-awarded: ${reqNames} collected` : `Collect ${reqNames} to unlock`)}">
         <img src="${item.icon}" alt="">
         <span class="achv-badge-label">${escapeHTML(item.name)}</span>
         ${!awarded ? '<span class="achv-unreleased-tag">Auto</span>' : ''}
@@ -258,7 +325,7 @@ function achievementBadgeHTML(p, item, selected, readonly){
   if(isAchievementLocked(p, item)){
     const reqNames = item.requires.map(k => ACHIEVEMENT_INDEX[k]?.name || k).join(', ');
     return `
-      <div class="achv-badge disabled" title="${escapeAttr(item.name)}: Requires ${reqNames} first">
+      <div class="achv-badge disabled" data-tooltip-achv="${item.key}" data-tooltip-note="${escapeAttr(`Requires ${reqNames} first`)}">
         <img src="${item.icon}" alt="">
         <span class="achv-badge-label">${escapeHTML(item.name)}</span>
         <span class="achv-unreleased-tag">Locked</span>
@@ -271,15 +338,20 @@ function achievementBadgeHTML(p, item, selected, readonly){
   // it's still unselected.
   const showAsDisabled = disabled && !selected;
   const disabledTag = ineligibleReason ? 'Restricted' : 'Unreleased';
-  const title = showAsDisabled ? `${item.name}\n${ineligibleReason || 'Unreleased'}` : item.name;
+  const tooltipNote = showAsDisabled ? (ineligibleReason || 'Unreleased') : '';
 
   // Read-only (detail view): render as a static, non-interactive badge. Every badge shown
   // here is earned (unearned ones are filtered out before this runs), so it gets a plain
   // "readonly" look rather than the "selected" glow used for the interactive toggle grid --
   // otherwise the whole section reads as if everything were permanently clicked.
+  // Event achievements get an informational EVENT tag in the same spot as the
+  // Unreleased/Restricted tag, but it's purely a heads-up -- it never disables or
+  // greys out the badge, and it goes away the moment the achievement is selected.
+  const showEventTag = !!item.event && !selected;
+
   if(readonly){
     return `
-      <div class="achv-badge readonly ${showAsDisabled?'disabled':''}" title="${escapeAttr(title)}">
+      <div class="achv-badge readonly ${showAsDisabled?'disabled':''}" data-tooltip-achv="${item.key}"${tooltipNote ? ` data-tooltip-note="${escapeAttr(tooltipNote)}"` : ''}>
         <img src="${item.icon}" alt="">
         <span class="achv-badge-label">${escapeHTML(item.name)}</span>
         ${showAsDisabled ? `<span class="achv-unreleased-tag">${disabledTag}</span>` : ''}
@@ -289,11 +361,12 @@ function achievementBadgeHTML(p, item, selected, readonly){
 
   return `
     <button type="button" class="achv-badge ${selected?'selected':''} ${showAsDisabled?'disabled':''}"
-      title="${escapeAttr(title)}"
-      onclick="${disabled ? `confirmForceEnableIneligible('${p.id}','${item.key}')` : `toggleAchievement('${p.id}','${item.key}')`}">
+      data-tooltip-achv="${item.key}"${tooltipNote ? ` data-tooltip-note="${escapeAttr(tooltipNote)}"` : ''}
+      onclick="${disabled ? `confirmForceEnableIneligible('${p.id}','${item.key}','${escapeAttr(ineligibleReason || '')}')` : `toggleAchievement('${p.id}','${item.key}')`}">
       <img src="${item.icon}" alt="">
       <span class="achv-badge-label">${escapeHTML(item.name)}</span>
       ${showAsDisabled ? `<span class="achv-unreleased-tag">${disabledTag}</span>` : ''}
+      ${showEventTag ? '<span class="achv-event-tag">Event</span>' : ''}
     </button>
   `;
 }
@@ -308,7 +381,8 @@ function memoryRibbonBadgeHTML(p, item, readonly){
   return `
     <div class="achv-memory-wrap">
       <button type="button" class="achv-badge memory-ribbon ${st.unlocked?'selected':''} ${st.gold?'gold':''}"
-        title="${escapeAttr(displayName)}: ${st.have}/${st.total} collected"
+        data-tooltip-achv="${item.key}" data-tooltip-note="${escapeAttr(`${st.have}/${st.total} collected`)}"
+        ${st.gold ? `data-tooltip-name="${escapeAttr(displayName)}" data-tooltip-icon="${escapeAttr(displayIcon)}"${item.goldGuide ? ` data-tooltip-guide="${escapeAttr(item.goldGuide)}"` : ''}` : ''}
         onclick="toggleMemoryExpand('${p.id}','${expandKind}')">
         <img src="${displayIcon}" alt="">
         <span class="achv-badge-label">${escapeHTML(displayName)}</span>
@@ -325,17 +399,16 @@ function memoryRibbonExpandHTML(p, item, subKeys, readonly){
     const reason = ribbonIneligibilityReason(p, r.key);
     if(readonly){
       return `
-        <div class="achv-sub-badge ${sel?'selected':''}" title="${escapeAttr(r.name)}">
+        <div class="achv-sub-badge ${sel?'selected':''}" data-tooltip-achv="${r.key}">
           <img src="${r.icon}" alt="">
           <span>${escapeHTML(r.name)}</span>
         </div>
       `;
     }
     const showAsDisabled = !!reason && !sel;
-    const title = showAsDisabled ? `${r.name}\n${reason}` : r.name;
     return `
-      <button type="button" class="achv-sub-badge ${sel?'selected':''} ${showAsDisabled?'disabled':''}" title="${escapeAttr(title)}"
-        onclick="${reason ? `confirmForceEnableIneligibleSubRibbon('${p.id}','${item.key}','${r.key}')` : `toggleMemorySubRibbon('${p.id}','${item.key}','${r.key}')`}">
+      <button type="button" class="achv-sub-badge ${sel?'selected':''} ${showAsDisabled?'disabled':''}" data-tooltip-achv="${r.key}"${showAsDisabled ? ` data-tooltip-note="${escapeAttr(reason)}"` : ''}
+        onclick="${reason ? `confirmForceEnableIneligibleSubRibbon('${p.id}','${item.key}','${r.key}','${escapeAttr(reason)}')` : `toggleMemorySubRibbon('${p.id}','${item.key}','${r.key}')`}">
         <img src="${r.icon}" alt="">
         <span>${escapeHTML(r.name)}</span>
         ${showAsDisabled ? '<span class="achv-unreleased-tag">Restricted</span>' : ''}
@@ -413,34 +486,33 @@ function achvCollapseToggleHTML(open){
 }
 
 function achievementGroupHTML(p, sub, readonly){
-  if(sub.order === 'grouped'){
-    return sub.groups.map(g => {
-      const items = g.keys.map(k => sub.items.find(i=>i.key===k)).filter(Boolean);
-      const visibleItems = (readonly ? items.filter(item => isAchievementEarned(p, item)) : items)
-        .filter(item => !hideRestrictedRibbonKey(p, item.key, readonly, isAchievementEarned(p, item)));
-      if(visibleItems.length === 0) return '';
-      return `
-        <div class="achv-group">
-          <div class="achv-group-label">${escapeHTML(g.label)}</div>
-          <div class="achv-badge-grid">
-            ${visibleItems.map(item => item.isMemoryRibbon ? memoryRibbonBadgeHTML(p, item, readonly) : achievementBadgeHTML(p, item, p.achievementKeys.includes(item.key), readonly)).join('')}
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-  const items = (readonly ? sub.items.filter(item => isAchievementEarned(p, item)) : sub.items)
-    .filter(item => !hideRestrictedRibbonKey(p, item.key, readonly, isAchievementEarned(p, item)));
-  if(items.length === 0) return '';
-  return `<div class="achv-badge-grid">${items.map(item => {
-    if(item.isMemoryRibbon) return memoryRibbonBadgeHTML(p, item, readonly);
-    return achievementBadgeHTML(p, item, p.achievementKeys.includes(item.key), readonly);
-  }).join('')}</div>`;
+  // Every subcategory is groups all the way down now -- a group with a `label` gets its
+  // own header (the old "grouped" look), one with no `label` (a plain flat subcategory,
+  // or the leftover bucket for items outside any named group) just contributes its badge
+  // grid directly with no header, so a subcategory that's never had more than one group
+  // still renders exactly like a flat list.
+  return Object.values(sub.groups).map(g => {
+    const items = (readonly ? g.items.filter(item => isAchievementEarned(p, item)) : g.items)
+      .filter(item => !hideRestrictedRibbonKey(p, item.key, readonly, isAchievementEarned(p, item)));
+    if(items.length === 0) return '';
+    const gridHTML = `
+      <div class="achv-badge-grid">
+        ${items.map(item => item.isMemoryRibbon ? memoryRibbonBadgeHTML(p, item, readonly) : achievementBadgeHTML(p, item, p.achievementKeys.includes(item.key), readonly)).join('')}
+      </div>
+    `;
+    if(!g.label) return gridHTML;
+    return `
+      <div class="achv-group">
+        <div class="achv-group-label">${escapeHTML(g.label)}</div>
+        ${gridHTML}
+      </div>
+    `;
+  }).join('');
 }
 
 function customAchievementBadgeHTML(p, custom, readonly){
   return `
-    <div class="achv-badge ${readonly ? 'readonly' : 'selected'} custom" title="${escapeAttr(custom.name)}">
+    <div class="achv-badge ${readonly ? 'readonly' : 'selected'} custom" data-tooltip="${escapeAttr(custom.name)}">
       <img src="${custom.icon}" alt="">
       <span class="achv-badge-label">${escapeHTML(custom.name)}</span>
       ${readonly ? '' : `<button type="button" class="achv-custom-remove" title="Remove custom achievement" onclick="event.stopPropagation(); removeCustomAchievement('${p.id}','${custom.id}')">
@@ -487,7 +559,7 @@ function customTitleFieldHTML(p, item, readonly){
 // All currently-selected achievements in a given subcategory that have a generic dynamic
 // title, each rendered with its own field via customTitleFieldHTML above.
 function dynamicTitleFieldsHTML(p, sub, readonly){
-  return (sub.items || [])
+  return subcategoryItems(sub)
     .filter(it => it.title && it.title.type === 'dynamic' && p.achievementKeys.includes(it.key))
     .map(it => customTitleFieldHTML(p, it, readonly))
     .join('');
@@ -575,12 +647,25 @@ function toggleRibbonFilterPanel(id){
 
 const ribbonHelperOpenState = {};
 
-function ribbonHelperButtonHTML(p){
+// [Icon] Helper [On/Off] -- lives beside the Ribbons category header itself (see
+// achievementsSectionHTML below), not tucked into the toolbar with Add Custom
+// Achievement/Ribbon filters, since it's meant to be noticed. Its initial ON/OFF state
+// for a given Edit session is set once, when the Edit screen opens (openForm() in
+// js/pokemon.js), from Settings > Show Ribbons Helper by Default; toggling it here only
+// ever changes ribbonHelperOpenState for the rest of this session, and opening the Edit
+// screen again always re-applies the default fresh.
+function ribbonHelperToggleHTML(p){
   const active = !!ribbonHelperOpenState[p.id];
   return `
-    <button type="button" class="btn ghost icon-btn achv-filter-btn ${active?'active':''}" title="Ribbons Helper" aria-label="Ribbons Helper" onclick="toggleRibbonHelperPanel('${p.id}')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-    </button>
+    <span class="achv-helper-toggle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="achv-helper-toggle-icon"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+      <span class="achv-helper-toggle-label">Helper</span>
+      <label class="switch achv-helper-toggle-switch">
+        <input type="checkbox" ${active ? 'checked' : ''} onchange="toggleRibbonHelperPanel('${p.id}')">
+        <span class="track"></span>
+        <span class="thumb"></span>
+      </label>
+    </span>
   `;
 }
 
@@ -627,15 +712,15 @@ function ribbonHelperPanelHTML(p){
     const ribbonsHTML = ribbons.map(({ key, lastChance }) => {
       const info = ACHIEVEMENT_INDEX[key] || SUB_RIBBON_INDEX[key];
       if(!info) return '';
-      // Already having it makes the Last Chance warning moot -- nothing was missed, so it
-      // gets a plain "already got this" mark instead of a red one telling you to hurry.
       const selected = isRibbonAlreadySelected(p, key);
       const flagAsLastChance = lastChance && !selected;
-      const title = selected
-        ? `${info.name}\nAlready selected on this Pok\u00e9mon.`
-        : (flagAsLastChance ? `${info.name}\nLast chance! This achievement can\u2019t be earned in any later game this Pok\u00e9mon reaches.` : info.name);
+      // Already having it makes the Last Chance warning moot -- nothing was missed, so it
+      // gets a plain "already got this" mark instead of a red one telling you to hurry.
+      const note = selected
+        ? 'Already selected on this Pok\u00e9mon.'
+        : (flagAsLastChance ? 'Last chance! This achievement can\u2019t be earned in any later game this Pok\u00e9mon reaches.' : '');
       return `
-        <span class="achv-helper-ribbon ${flagAsLastChance?'last-chance':''} ${selected?'selected':''}" title="${escapeAttr(title)}">
+        <span class="achv-helper-ribbon ${flagAsLastChance?'last-chance':''} ${selected?'selected':''}" data-tooltip-achv="${key}"${note ? ` data-tooltip-note="${escapeAttr(note)}"` : ''}>
           <img src="${info.icon}" alt="">
         </span>
       `;
@@ -678,7 +763,7 @@ function setMetLevel(id, rawValue){
 function allLeafRibbonKeys(){
   const keys = [];
   Object.values(ACHIEVEMENT_CATALOG.ribbons.subcategories).forEach(sub => {
-    sub.items.forEach(item => {
+    subcategoryItems(sub).forEach(item => {
       if(item.isMemoryRibbon && Array.isArray(item.subRibbons)){
         item.subRibbons.forEach(r => keys.push({ key: r.key, parentKey: item.key }));
       } else {
@@ -779,7 +864,6 @@ function achievementsSectionHTML(p, readonly){
         Add Custom Achievement
       </button>
       ${ribbonFilterButtonHTML(p)}
-      ${ribbonHelperButtonHTML(p)}
     </div>
     ${ribbonFilterPanelHTML(p)}
     ${ribbonHelperPanelHTML(p)}
@@ -824,6 +908,7 @@ function achievementsSectionHTML(p, readonly){
             ${achvCollapseToggleHTML(catOpen)}
             <span>${escapeHTML(catLabel)}</span>
           </button>
+          ${catLabel === 'Ribbons' && !readonly ? ribbonHelperToggleHTML(p) : ''}
           ${catLabel === 'Ribbons' ? addCustomBtnHTML : ''}
         </div>
         <div class="collapsible${catOpen ? ' open' : ''}"><div class="collapsible-inner">${subsHTML}</div></div>
@@ -884,6 +969,24 @@ function clearMutuallyExclusive(p, key){
   });
 }
 
+// Alpha Mark and Titan Mark both guarantee a Pokémon's Scale value qualifies it for Jumbo
+// Mark, which makes them incompatible with Mini Mark the same way Jumbo Mark itself is --
+// but unlike Jumbo/Mini's own automatic swap above, this conflict is enforced by blocking
+// the second selection rather than clearing the first. The user has to manually deselect
+// the conflicting Mark themselves before the other can be selected; nothing here ever
+// deselects anything on their behalf.
+const BLOCKED_MARK_CONFLICTS = {
+  mini_mark: ['alpha_mark', 'titan_mark'],
+  alpha_mark: ['mini_mark'],
+  titan_mark: ['mini_mark']
+};
+function blockedMarkConflict(p, key){
+  const conflicts = BLOCKED_MARK_CONFLICTS[key];
+  if(!conflicts) return null;
+  const conflictingKey = conflicts.find(k => p.achievementKeys.includes(k));
+  return conflictingKey ? ACHIEVEMENT_INDEX[conflictingKey] : null;
+}
+
 function toggleAchievement(id, key){
   const p = findPokemonById(id);
   if(!p) return;
@@ -893,6 +996,11 @@ function toggleAchievement(id, key){
   if(isAchievementLocked(p, item)) return; // prerequisites not yet earned
   const idx = p.achievementKeys.indexOf(key);
   if(idx === -1){
+    const conflict = blockedMarkConflict(p, key);
+    if(conflict){
+      showToast(`Deselect ${conflict.name} first \u2014 it can't be active at the same time as ${item.name}.`);
+      return;
+    }
     p.achievementKeys.push(key);
     clearMutuallyExclusive(p, key);
   }
@@ -909,7 +1017,7 @@ function toggleAchievement(id, key){
 // shown (greyed out) by default, but clicking one warns why before letting the user force
 // it on anyway, rather than being inert. Turning an already force-enabled one back off
 // needs no re-warning, since removing it is always safe.
-function confirmForceEnableIneligible(id, key){
+function confirmForceEnableIneligible(id, key, reason){
   const p = findPokemonById(id);
   if(!p) return;
   const item = ACHIEVEMENT_INDEX[key];
@@ -918,18 +1026,12 @@ function confirmForceEnableIneligible(id, key){
     toggleAchievement(id, key);
     return;
   }
-  // Recomputed here rather than passed in through the onclick attribute: reason strings
-  // routinely contain apostrophes ("hasn't", "can't", "Pokémon's"), and HTML-escaping them
-  // for the attribute doesn't help, since the browser decodes entities back to literal
-  // characters before handing the attribute value to the JS parser as the handler body --
-  // reopening the very string the escaping was meant to close.
-  const reason = ribbonIneligibilityReason(p, key);
   openIneligibleWarningModal(id, key, item, reason);
 }
 function openIneligibleWarningModal(id, key, item, reason, enableAction){
   const message = reason
-    ? `⚠ ${escapeHTML(reason)} Marking it here doesn't check this in-game, it just lets you track it against the filter anyway.`
-    : `⚠ "${escapeHTML(item.name)}" is not yet available in any official Pokémon game. Marking it here doesn't unlock or grant it in-game, it just lets you track it ahead of release.`;
+    ? `${escapeHTML(reason)} Marking it here doesn't check this in-game, it just lets you track it against the filter anyway.`
+    : `"${escapeHTML(item.name)}" is not yet available in any official Pokémon game. Marking it here doesn't unlock or grant it in-game, it just lets you track it ahead of release.`;
   const onEnable = enableAction || `forceEnableUnreleased('${id}','${key}')`;
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
@@ -945,7 +1047,10 @@ function openIneligibleWarningModal(id, key, item, reason, enableAction){
         </div>
       </div>
       <div class="modal-body">
-        <div class="hint settings-unreleased-warning">${message}</div>
+        <div class="warning-banner">
+          <svg class="warning-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="warning-banner-text">${message}</div>
+        </div>
       </div>
       <div class="modal-foot">
         <button type="button" class="btn ghost" onclick="closeUnreleasedWarningModal()">Cancel</button>
@@ -1003,7 +1108,7 @@ function applyContestTierConsistency(list, subKey, selecting){
 // Same grey-out-then-confirm pattern as confirmForceEnableIneligible above, but for a
 // Memory Ribbon sub-ribbon (e.g. Winning Ribbon), which lives in its own subKey list
 // rather than the plain achievementKeys array.
-function confirmForceEnableIneligibleSubRibbon(id, parentKey, subKey){
+function confirmForceEnableIneligibleSubRibbon(id, parentKey, subKey, reason){
   const p = findPokemonById(id);
   if(!p) return;
   const item = ACHIEVEMENT_INDEX[parentKey];
@@ -1013,9 +1118,6 @@ function confirmForceEnableIneligibleSubRibbon(id, parentKey, subKey){
     toggleMemorySubRibbon(id, parentKey, subKey);
     return;
   }
-  // Recomputed rather than threaded through the onclick attribute -- see the comment in
-  // confirmForceEnableIneligible above for why passing reason text that way is broken.
-  const reason = ribbonIneligibilityReason(p, subKey);
   openIneligibleWarningModal(id, subKey, { name: item.subRibbons.find(r => r.key === subKey)?.name || subKey }, reason);
   // Route the modal's "Enable Anyway" button at the sub-ribbon toggle instead of the
   // plain achievement toggle it defaults to.

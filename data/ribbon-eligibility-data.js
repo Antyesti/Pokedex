@@ -21,58 +21,6 @@
  */
 
 const RIBBON_ELIGIBILITY = {
-  battle_royal_master_ribbon: {
-    banned: [
-      "mewtwo",
-      "lugia",
-      "ho-oh",
-      "kyogre",
-      "groudon",
-      "rayquaza",
-      "dialga",
-      "palkia",
-      "giratina",
-      "reshiram",
-      "zekrom",
-      "kyurem",
-      "kyurem-black",
-      "kyurem-white",
-      "xerneas",
-      "yveltal",
-      "zygarde",
-      "zygarde-10",
-      "cosmog",
-      "cosmoem",
-      "solgaleo",
-      "lunala",
-      "necrozma",
-      "necrozma-dawn-wings",
-      "necrozma-dusk-mane"
-    ],
-    nomythical: true
-  },
-  battlemem_victory_ribbon: {
-    banned: [
-      "mewtwo",
-      "lugia",
-      "ho-oh",
-      "kyogre",
-      "groudon",
-      "rayquaza"
-    ],
-    nomythical: true
-  },
-  battlemem_winning_ribbon: {
-    banned: [
-      "mewtwo",
-      "lugia",
-      "ho-oh",
-      "kyogre",
-      "groudon",
-      "rayquaza"
-    ],
-    nomythical: true
-  },
   contestmem_sinnoh_base_beauty: {
     banned: [
       "ditto",
@@ -732,46 +680,6 @@ const RIBBON_ELIGIBILITY = {
       "unown-exclamation",
       "unown-question"
     ]
-  },
-  expert_battler_ribbon: {
-    banned: [
-      "mewtwo",
-      "lugia",
-      "ho-oh",
-      "kyogre",
-      "groudon",
-      "rayquaza",
-      "dialga",
-      "palkia",
-      "giratina",
-      "reshiram",
-      "zekrom",
-      "kyurem",
-      "xerneas",
-      "yveltal",
-      "zygarde"
-    ],
-    nomythical: true
-  },
-  skillful_battler_ribbon: {
-    banned: [
-      "mewtwo",
-      "lugia",
-      "ho-oh",
-      "kyogre",
-      "groudon",
-      "rayquaza",
-      "dialga",
-      "palkia",
-      "giratina",
-      "reshiram",
-      "zekrom",
-      "kyurem",
-      "xerneas",
-      "yveltal",
-      "zygarde"
-    ],
-    nomythical: true
   }
 };
 

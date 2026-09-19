@@ -18,6 +18,15 @@
  * Pokemon's history in the first place is filtered by the `games` list on its
  * POKEMON_SPECIES entry (data/pokemon-species.js) -- see speciesAllowsGame() below.
  *
+ * Once a Pokemon has a real entry point, forwardReachableGamesFrom() lets it transit
+ * onward through Travels To without re-checking species at every hop -- a transfer path
+ * like Sword -> HOME -> Brilliant Diamond stays valid regardless of species, the same as
+ * real HOME transfers don't care whether a species was ever native to the destination.
+ * What actually gates a Ribbon tied to a specific game is a separate, per-game check in
+ * ribbonEligibilityReason() below: reaching a game is necessary but not sufficient --
+ * some stage in the Pokemon's evolution line also has to have genuinely been obtainable
+ * IN that particular game for a Ribbon earned there to count.
+ *
  * Nothing in here should ever grey out a Ribbon it simply lacks data for: a Ribbon with no
  * restriction configured anywhere, or a Pokemon with no detectable game history, is always
  * treated as eligible.
@@ -29,6 +38,11 @@
  * game reached as a pre-evolution stays valid after evolving forward. A later evolution's
  * own possibilities never count toward an earlier or current stage, since a Pokemon can't
  * have been something it hasn't evolved into yet.
+ *
+ * `evolvesFrom` is a single id for the common case, but can also be an array of ids for a
+ * species reachable from more than one pre-evolution (Gholdengo from either Gimmighoul
+ * form; Mothim from any Burmy cloak, unlike Wormadam which stays cloak-matched). Either
+ * shape walks the same way -- see speciesLineageIds() below.
  */
 
 // Maps this app's own Game Preset keys to the community dataset's game keys (used only as
@@ -75,24 +89,31 @@ function speciesGamesFor(speciesEntryId, speciesName){
   return [...union];
 }
 
-// A species entry id plus every species it evolved from, earliest last, walking each
-// entry's own `evolvesFrom` field (data/pokemon-species.js) back one hop at a time. Stops
-// at whichever entry has no evolvesFrom set, or safely bails out on a cycle in hand-edited
-// data rather than looping forever. Used everywhere a Pokemon's evolution history needs to
-// widen a check beyond just its current species: a pre-evolution can have reached a game or
-// earned a Ribbon its current form never could have, so most checks below look at this
-// whole chain (current species first, oldest ancestor last) rather than the id alone. A
-// later evolution's own possibilities are never included, since a Pokemon can't have been
+// A species entry id plus every species it evolved from, walking each entry's own
+// `evolvesFrom` field (data/pokemon-species.js) back however many stages a line has. Order
+// isn't meaningful beyond "the entry itself comes first" -- everything after that is just
+// the set of possible earlier stages, since `evolvesFrom` can branch to more than one
+// parent (Gholdengo from either Gimmighoul form; Mothim from any Burmy cloak). Safely stops
+// at whichever entries have no evolvesFrom set, and won't loop forever on a cycle in
+// hand-edited data. Used everywhere a Pokemon's evolution history needs to widen a check
+// beyond just its current species: a pre-evolution can have reached a game or earned a
+// Ribbon its current form never could have, so most checks below look at this whole set
+// (current species plus every possible ancestor) rather than the id alone. A later
+// evolution's own possibilities are never included, since a Pokemon can't have been
 // something it hasn't evolved into yet.
 function speciesLineageIds(speciesEntryId){
   const chain = [];
   const seen = new Set();
-  let cur = speciesEntryId;
-  while(cur && !seen.has(cur)){
-    chain.push(cur);
+  const queue = speciesEntryId ? [speciesEntryId] : [];
+  while(queue.length){
+    const cur = queue.shift();
+    if(!cur || seen.has(cur)) continue;
     seen.add(cur);
+    chain.push(cur);
     const entry = typeof findSpeciesEntry === 'function' ? findSpeciesEntry(cur) : null;
-    cur = entry?.evolvesFrom || null;
+    const parents = entry?.evolvesFrom;
+    if(Array.isArray(parents)) queue.push(...parents);
+    else if(parents) queue.push(parents);
   }
   return chain;
 }
@@ -198,9 +219,14 @@ function travelToForPokemon(p, gameKey){
 
 // Follows games' Travels To lists forward (never backward) from a starting set of game
 // keys, returning every key reached along the way, including the starting ones
-// themselves. Shared by reachableGamesForPokemon() below and the Ribbons Helper further
-// down, which needs the same walk starting from a single game instead of a Pokemon's
-// whole history.
+// themselves. Never re-checks species partway through -- once a Pokemon has a real entry
+// point (gameKeysForPokemon() below already filtered those), a transfer path like Sword ->
+// HOME -> Brilliant Diamond stays valid regardless of species; HOME doesn't care whether
+// Archaludon could ever have been native to Sinnoh. What it can't do is retroactively make
+// a species obtainable in a specific game it never existed in -- that's a Ribbon-level
+// check (see ribbonEligibilityReason() further down), not a travel one. Shared by
+// reachableGamesForPokemon() below and the Ribbons Helper further down, which needs the
+// same walk starting from a single game instead of a Pokemon's whole history.
 function forwardReachableGamesFrom(p, startKeys){
   const seen = new Set(startKeys);
   const queue = [...seen];
@@ -299,16 +325,19 @@ function reachesAnyGame(p, key){
 
 // True if some species in a Pokemon's evolution line -- current or earlier, never a later
 // evolution -- could have earned Ribbon `key` specifically in `gameKey`: that lineage
-// member's own species could actually be obtained there, and isn't banned from the Ribbon
-// either outright or in that particular game. Doesn't check whether the Pokemon's overall
-// game history actually reaches gameKey at all; callers combine this with reachesAnyOfGames
-// for that.
+// member's own species could actually be obtained there. This check always applies,
+// whether or not the Ribbon has any explicit species ban configured -- reaching a game via
+// travel (Sword -> HOME -> Brilliant Diamond, say) doesn't mean the species was ever
+// really obtainable there, and a Ribbon earned by entering that game's Hall of Fame needs
+// the Pokemon to have genuinely been that species at the time. `rule`, if one exists,
+// layers an additional outright-banned/banned-in-this-game check on top. Doesn't check
+// whether the Pokemon's overall game history actually reaches gameKey at all; callers
+// combine this with reachesAnyOfGames for that.
 function lineageClearForRibbonInGame(p, rule, gameKey){
-  if(!p.speciesEntryId) return true; // no species link, nothing to check a ban against
+  if(!p.speciesEntryId) return true; // no species link, nothing to check against
   return speciesLineageIds(p.speciesEntryId).some(id =>
-    !rule.banned.includes(id) &&
-    !(rule.bannedInGame[gameKey] || []).includes(id) &&
-    speciesAllowsGame(id, gameKey)
+    speciesAllowsGame(id, gameKey) &&
+    (!rule || (!rule.banned.includes(id) && !(rule.bannedInGame[gameKey] || []).includes(id)))
   );
 }
 
@@ -324,22 +353,40 @@ function ribbonEligibilityReason(p, key){
 
   const available = ribbonAvailableGames(key);
 
-  if(rule && p.speciesEntryId){
+  if(p.speciesEntryId){
     if(!available || !available.length){
-      // No game list to weigh species-in-game bans against -- only the Ribbon-wide banned
-      // list applies, and only if every stage in the line (current and all earlier) is on
-      // it. A pre-evolution that isn't banned could still have earned this before evolving.
-      if(speciesLineageIds(p.speciesEntryId).every(id => rule.banned.includes(id))){
+      // No game list to weigh species-in-game availability against -- only a Ribbon-wide
+      // banned list (if a rule exists at all) still applies, and only if every stage in
+      // the line (current and all earlier) is on it. A pre-evolution that isn't banned
+      // could still have earned this before evolving.
+      if(rule && speciesLineageIds(p.speciesEntryId).every(id => rule.banned.includes(id))){
         return "This species is excluded from this Ribbon.";
       }
-    } else if(!available.some(g => lineageClearForRibbonInGame(p, rule, g))){
-      // No available game clears the species ban for any stage in the line. Distinguish
-      // "never reaches any of these games at all" (a reachability problem) from "reaches
-      // some of them, but every stage is banned there" (a species problem), since the two
-      // need different messages.
-      return reachesAnyOfGames(p, available)
-        ? "This species is excluded from this Ribbon."
-        : "This Pok\u00e9mon hasn't been in a game that can reach where this Ribbon is earned.";
+    } else {
+      const lineage = speciesLineageIds(p.speciesEntryId);
+      // Which of the Ribbon's games could even POSSIBLY hold this species (current or an
+      // earlier stage), regardless of any explicit ban and regardless of whether this
+      // Pokemon's own history actually reaches it. Archaludon and its pre-evolution
+      // Duraludon never appear in Diamond/Pearl/Platinum/Brilliant Diamond/Shining Pearl
+      // at all -- that's a flat species/game mismatch, distinct from being banned from a
+      // Ribbon it could otherwise have earned there, and distinct from just never having
+      // been in a game that reaches one of them.
+      const possibleGames = available.filter(g => lineage.some(id => speciesAllowsGame(id, g)));
+
+      if(!possibleGames.length){
+        return "This species has never appeared in any game this Ribbon is obtainable in.";
+      }
+
+      if(!possibleGames.some(g => lineageClearForRibbonInGame(p, rule, g))){
+        // The species (or an earlier stage) genuinely could have been in one of these
+        // games, but every stage that could is explicitly banned from the Ribbon there
+        // (or outright). Reachability is checked against just the games it could
+        // plausibly be in, not the Ribbon's full list, since a game it could never be in
+        // reaching this Pokemon anyway wouldn't mean anything.
+        return reachesAnyOfGames(p, possibleGames)
+          ? "This species is excluded from this Ribbon."
+          : "This Pok\u00e9mon hasn't been in a game that can reach where this Ribbon is earned.";
+      }
     }
   }
 
@@ -361,12 +408,16 @@ function ribbonIneligibilityReason(p, key){
 // Helper below. Mirrors the species checks in ribbonEligibilityReason() above, minus its
 // game-reachability check, which is redundant here since the caller already knows the
 // Pokemon reaches this exact game. Blocked only if EVERY stage in the Pokemon's evolution
-// line -- current and all earlier -- is banned from the Ribbon in this game (or outright);
-// a single non-banned stage that could itself have been obtained here is enough to clear it.
+// line -- current and all earlier -- either couldn't genuinely have existed in this game,
+// or is banned from the Ribbon here (or outright, if a rule exists); a single stage that
+// clears both is enough to clear it. Runs even when the Ribbon has no explicit species
+// rule at all, since "could this species actually have been in this game" isn't itself a
+// ban -- it's the same species-vs-game fact gameKeysForPokemon() checks at a Pokemon's
+// entry point, just applied to the Ribbon's own game list instead.
 function ribbonSpeciesBlockedForGame(p, key, gameKey){
+  if(!p.speciesEntryId) return false;
   const rule = ribbonSpeciesRule(key);
-  if(!rule || !p.speciesEntryId) return false;
-  if(rule.nomythical && MYTHICAL_SPECIES.includes(p.speciesEntryId)) return true;
+  if(rule && rule.nomythical && MYTHICAL_SPECIES.includes(p.speciesEntryId)) return true;
   return !lineageClearForRibbonInGame(p, rule, gameKey);
 }
 

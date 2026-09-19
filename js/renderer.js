@@ -380,7 +380,9 @@ const CUSTOM_THEME_VARS = [
   '--panel','--panel-border','--panel-hi',
   '--nm-shadow-out','--nm-shadow-out-sm','--nm-shadow-in','--nm-shadow-hover',
   '--nm-highlight-rgb','--nm-shadow-rgb','--nm-highlight-a','--nm-shadow-a','--nm-highlight-a-hover',
-  '--hairline','--select-option-bg','--select-option-text'
+  '--hairline','--select-option-bg','--select-option-text',
+  '--filter-shiny-color','--filter-mega-color','--filter-gigantamax-color','--nature-arrow-up-color',
+  '--achv-event-color','--achv-event-text'
 ];
 
 function setTheme(theme){
@@ -452,6 +454,18 @@ function applyCustomTheme(custom){
   // background-color/color, so derive an explicit light/dark choice from luminance.
   style.setProperty('--select-option-bg', isLightBg ? '#ffffff' : '#1a1a1a');
   style.setProperty('--select-option-text', custom.text);
+  // Same "OS control" reasoning doesn't apply here, but these four have the same underlying
+  // problem: no single value reads well against both a light and dark background, so pick
+  // per isLightBg the same way, rather than leaving them fixed to whichever theme (Poké
+  // Ball light or Beast Ball dark) some default happened to be written for.
+  style.setProperty('--filter-shiny-color', isLightBg ? '#A8650E' : '#FFE8AE');
+  style.setProperty('--filter-mega-color', isLightBg ? '#7B3FC4' : '#D8B8FF');
+  style.setProperty('--filter-gigantamax-color', isLightBg ? '#C4406A' : '#FFB8CB');
+  style.setProperty('--nature-arrow-up-color', isLightBg ? '#1C9A52' : '#6FD89A');
+  // Same reasoning again: the EVENT achievement tag needs to stay bright and
+  // non-warning-coded regardless of what accent color the user picked for Master Ball.
+  style.setProperty('--achv-event-color', isLightBg ? '#0B5FFF' : '#4FC3FF');
+  style.setProperty('--achv-event-text', isLightBg ? '#FFFFFF' : '#052236');
 
   if(custom.style === 'neumorphic'){
     // Derive shadow tones from the chosen background color rather than fixed white/black,
@@ -910,7 +924,7 @@ function renderStatsDashboard(){
   // Most awarded ribbon: which single Ribbons-category achievement has the most Pokémon
   const ribbonItems = [];
   Object.values(ACHIEVEMENT_CATALOG.ribbons.subcategories).forEach(sub => {
-    sub.items.forEach(item => ribbonItems.push(item));
+    subcategoryItems(sub).forEach(item => ribbonItems.push(item));
   });
   const ribbonAwardCounts = ribbonItems
     .map(item => ({ name: item.name, icon: item.icon, count: list.filter(p => isAchievementEarned(p, item)).length }))
@@ -1934,9 +1948,14 @@ function closeTrainerAvatarDropdown(){
 // ancestor scrolling (the modal body, the page) should, since that's what would actually
 // drag the trigger out from under a fixed-position panel. Scroll events don't bubble, so
 // this only sees them at all because it's registered with capture:true, and e.target there
-// is the element that actually scrolled.
+// is the element that actually scrolled. A window/document-level scroll has no element to
+// check (e.target.closest doesn't exist on it), so it's excluded outright rather than
+// falling through to a close -- a fixed-position panel doesn't drift from those anyway, and
+// on mobile this fires the moment the on-screen keyboard shifts the viewport, which used to
+// close the panel out from under anyone trying to use it.
 function closeTrainerAvatarDropdownOnOutsideScroll(e){
-  if(e.target && e.target.closest && e.target.closest('.avatar-dropdown-portal')) return;
+  if(!e.target || typeof e.target.closest !== 'function') return;
+  if(e.target.closest('.avatar-dropdown-portal')) return;
   closeTrainerAvatarDropdown();
 }
 
@@ -1974,7 +1993,10 @@ function toggleTrainerAvatarDropdown(id){
     panel.style.bottom = (window.innerHeight - rect.top + 6) + 'px';
   }
 
-  panel.querySelector('.avatar-dropdown-filter').focus();
+  // Not auto-focused: doing so pops the on-screen keyboard on mobile the instant this
+  // opens, which shifts the viewport and used to trip the outside-scroll close above before
+  // a tap could even land. Typing to filter still works fine once someone taps the field
+  // themselves; tapping an avatar directly doesn't need the keyboard at all.
 
   // The panel is fixed to the viewport, not to the modal's own scroll position -- if the
   // modal (or anything else) scrolls while it's open the panel would drift away from its
@@ -2114,6 +2136,7 @@ function toggleDatePanel(id){
   renderDatePanel(id);
   positionDatePanel(id);
   panel.classList.add('open');
+  lastDatePanelOpenAt = Date.now();
   const trigger = document.getElementById(id+'_trigger');
   if(trigger) trigger.classList.add('open');
 }

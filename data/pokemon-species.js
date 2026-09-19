@@ -37,7 +37,10 @@
  * Ribbon/Mark eligibility.
  *
  * `evolvesFrom` holds another entry's own `id` for whatever species this one evolves
- * from, left unset on a base form with no pre-evolution. speciesLineageIds() in
+ * from, left unset on a base form with no pre-evolution. It can also be an array of ids
+ * for a species reachable from more than one pre-evolution (Gholdengo from either
+ * Gimmighoul form; Mothim from any Burmy cloak, unlike Wormadam which stays cloak-matched)
+ * -- most entries only ever need a single id. speciesLineageIds() in
  * js/ribbon-eligibility.js walks this back through however many stages a line has, so a
  * Pokemon's Ribbon/game eligibility can rest on an earlier stage's availability, not just
  * its current one -- a Ribbon only obtainable pre-evolution, in a game the current
@@ -21649,7 +21652,11 @@ const POKEMON_SPECIES = [
       "shiningpearl",
       "legendsarceus"
     ],
-    evolvesFrom: "burmy-trash"
+    evolvesFrom: [
+      "burmy-plant",
+      "burmy-sandy",
+      "burmy-trash"
+    ]
   },
   {
     id: "combee",
@@ -31156,7 +31163,8 @@ const POKEMON_SPECIES = [
       "scarlet",
       "violet",
       "legendsza"
-    ]
+    ],
+    evolvesFrom: "flabebe-red-flower"
   },
   {
     id: "florges-blue-flower",
@@ -32596,8 +32604,7 @@ const POKEMON_SPECIES = [
       "sword",
       "shield",
       "legendsza"
-    ],
-    evolvesFrom: "pumpkaboo-medium"
+    ]
   },
   {
     id: "gourgeist-large",
@@ -32621,8 +32628,7 @@ const POKEMON_SPECIES = [
       "sword",
       "shield",
       "legendsza"
-    ],
-    evolvesFrom: "pumpkaboo-large"
+    ]
   },
   {
     id: "gourgeist-jumbo",
@@ -32646,8 +32652,7 @@ const POKEMON_SPECIES = [
       "sword",
       "shield",
       "legendsza"
-    ],
-    evolvesFrom: "pumpkaboo-jumbo"
+    ]
   },
   {
     id: "bergmite",
@@ -39530,7 +39535,10 @@ const POKEMON_SPECIES = [
       "violet",
       "legendsza"
     ],
-    evolvesFrom: "gimmighoul-chest"
+    evolvesFrom: [
+      "gimmighoul-chest",
+      "gimmighoul-roaming"
+    ]
   },
   {
     id: "wo-chien",
@@ -39893,8 +39901,7 @@ const POKEMON_SPECIES = [
     games: [
       "scarlet",
       "violet"
-    ],
-    evolvesFrom: "dipplin"
+    ]
   },
   {
     id: "gouging-fire",

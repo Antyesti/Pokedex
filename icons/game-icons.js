@@ -333,7 +333,9 @@ const GAME_PRESETS = [
     ],
     vc: {
       enabled: true,
-      travelTo: []
+      travelTo: [
+        "home"
+      ]
     }
   },
   {
@@ -1180,14 +1182,12 @@ const GAME_PRESETS = [
       "shiningpearl",
       "scarlet",
       "violet",
-      "legendsza",
-      "champions"
+      "legendsza"
     ],
     vc: {
       enabled: false,
       travelTo: []
-    },
-    restrictable: false
+    }
   }
 ];
 

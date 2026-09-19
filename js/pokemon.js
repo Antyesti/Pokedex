@@ -31,6 +31,11 @@ function openForm(id){
     formPreferredForm = 'default';
   }
 
+  // Ribbons Helper always starts fresh for a newly-opened Edit session, from Settings >
+  // Show Ribbons Helper by Default -- turning it off from its toggle only lasts for this
+  // one session (see ribbonHelperOpenState in js/achievements.js).
+  ribbonHelperOpenState[p.id] = !(state.settings && state.settings.showRibbonHelperByDefault === false);
+
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
   overlay.id = 'formOverlay';
@@ -73,7 +78,18 @@ function closeAllDatePanels(){
     if(trigger) trigger.classList.remove('open');
   });
 }
-window.addEventListener('resize', closeAllDatePanels);
+// The date panel itself has no text input, so it never triggers a mobile keyboard on its
+// own -- but tapping its trigger button to open it can blur whatever OTHER field the person
+// was just typing in, and that field's keyboard closing can fire a window resize a moment
+// later, after the panel has already opened. Without this grace window that resize would
+// immediately close the panel someone just opened, same failure as the Trainer Avatar
+// picker before it stopped auto-focusing. Scroll-triggered closes aren't affected by this
+// and still happen immediately, since a genuine scroll should always close it right away.
+let lastDatePanelOpenAt = 0;
+window.addEventListener('resize', () => {
+  if(Date.now() - lastDatePanelOpenAt < 400) return;
+  closeAllDatePanels();
+});
 
 const SPRITE_SLOT_FIELD = { default: 'f_sprite', mega: 'f_spriteMega', gigantamax: 'f_spriteGigantamax' };
 const SPRITE_SLOT_TOGGLE_FIELD = { mega: 'f_isMega', gigantamax: 'f_isGigantamax' };
@@ -912,15 +928,16 @@ function removeMoveRow(idx){
    as well as the single Origin Game / Last Game fields (target = "originGame" / "lastGame"). */
 function gamePresetSelectHTML(target, gameKey){
   const selected = GAME_PRESET_INDEX[gameKey];
-  // A game the current species could never actually appear in isn't offered as a choice,
-  // since picking it would just get quietly stripped back out by gameKeysForPokemon()
-  // later anyway. The current selection stays visible even if it now fails this check
-  // (e.g. the Species field changed after it was picked), so nothing gets silently hidden.
-  // Falls back to whatever's typed in the Species field itself when no autocomplete
-  // suggestion has actually been clicked (selectedSpeciesEntryId empty) -- see
-  // speciesGamesFor() in js/ribbon-eligibility.js.
+  // A game the current species (or an earlier stage it evolved from, e.g. Duraludon for
+  // Archaludon -- see speciesAllowsGameLineage() in js/ribbon-eligibility.js) could never
+  // actually appear in isn't offered as a choice, since picking it would just get quietly
+  // stripped back out by gameKeysForPokemon() later anyway. The current selection stays
+  // visible even if it now fails this check (e.g. the Species field changed after it was
+  // picked), so nothing gets silently hidden. Falls back to whatever's typed in the
+  // Species field itself when no autocomplete suggestion has actually been clicked
+  // (selectedSpeciesEntryId empty) -- see speciesGamesFor() in js/ribbon-eligibility.js.
   const speciesNameTyped = document.getElementById('f_species')?.value || '';
-  const availableGames = GAME_PRESETS.filter(g => g.key === gameKey || speciesAllowsGame(selectedSpeciesEntryId, g.key, speciesNameTyped));
+  const availableGames = GAME_PRESETS.filter(g => g.key === gameKey || speciesAllowsGameLineage(selectedSpeciesEntryId, g.key, speciesNameTyped));
   let panelHTML;
   if(state.settings && state.settings.sortGamesAlpha){
     panelHTML = [...availableGames].sort((a, b) => a.label.localeCompare(b.label)).map(g => `
@@ -998,12 +1015,12 @@ function refreshGamePresetWidget(target, key){
   wrap.outerHTML = gamePresetSelectHTML(target, key);
 }
 // The Origin Game / Last Game / Moveset by Game pickers filter their options by the
-// current species (speciesAllowsGame(), js/ribbon-eligibility.js), but each one is only a
-// static HTML snapshot taken whenever it was last drawn -- it has no way to notice the
-// species changing out from under it on its own. Species Game Availability wouldn't do
-// anything after the Species field changed without this: called from species-picker.js
-// whenever the species is picked or typed, so every game picker re-filters against
-// whichever species is now actually selected.
+// current species and its evolution line (speciesAllowsGameLineage(),
+// js/ribbon-eligibility.js), but each one is only a static HTML snapshot taken whenever it
+// was last drawn -- it has no way to notice the species changing out from under it on its
+// own. Species Game Availability wouldn't do anything after the Species field changed
+// without this: called from species-picker.js whenever the species is picked or typed, so
+// every game picker re-filters against whichever species is now actually selected.
 function refreshGamePresetWidgetsForSpecies(){
   if(document.getElementById('gamePreset_originGame_wrap')){
     refreshGamePresetWidget('originGame', detectGameKeyFromTag(document.getElementById('f_originGame')?.value || ''));
@@ -1191,7 +1208,10 @@ function openNewDexModal(){
         </div>
       </div>
       <div class="modal-body">
-        <div class="hint settings-unreleased-warning">⚠ This clears every Pokémon currently in your Pokédex. If you haven't exported this roster to a file yet, do that first, this can't be recovered once you close the tab.</div>
+        <div class="warning-banner">
+          <svg class="warning-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="warning-banner-text">This clears every Pok&eacute;mon currently in your Pok&eacute;dex. If you haven't exported this roster to a file yet, do that first, this can't be recovered once you close the tab.</div>
+        </div>
       </div>
       <div class="modal-foot">
         <button type="button" class="btn ghost" onclick="closeNewDexModal()">Cancel</button>

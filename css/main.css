@@ -30,9 +30,79 @@
   --hairline: rgba(0,0,0,0.08);
   --select-option-bg: #0F1620;
   --select-option-text: #E8EDF2;
+  /* These four don't have a single value that reads well against both a light and a dark
+     surface, unlike most of the palette above which is either already-adaptive (uses
+     alpha over the actual background) or fine either way. Each needs its own explicit
+     light/dark pick -- see html[data-theme="light"] in css/themes.css for the light value,
+     and applyCustomTheme() in js/renderer.js for how the Master Ball theme picks between
+     them based on the chosen background's own lightness. */
+  --filter-shiny-color: #FFE8AE;
+  --filter-mega-color: #D8B8FF;
+  /* EVENT achievement tag (css/achievements.css .achv-event-tag). Kept separate from
+     --accent/--accent-2 on purpose: those flip to red/orange on the light theme, and
+     this tag must never read as a warning or restriction color. See css/themes.css and
+     applyCustomTheme() in js/renderer.js for the light/custom-theme values. */
+  --achv-event-color: #4FC3FF;
+  --achv-event-text: #052236;
+  --filter-gigantamax-color: #FFB8CB;
+  --nature-arrow-up-color: #6FD89A;
 }
 
 *{box-sizing:border-box;}
+
+/* A themed replacement for the native title="" tooltip (see js/utils.js), used wherever a
+   plain OS tooltip would look out of place or be hard to read against this app's own
+   colors -- achievement/Ribbon badges mainly, since their tooltips carry real information
+   (why something's disabled) rather than just restating a label. */
+.custom-tooltip{
+  position:fixed; z-index:200; pointer-events:none;
+  max-width:260px; padding:8px 11px; border-radius:10px;
+  background:var(--panel); border:1px solid var(--panel-border);
+  backdrop-filter:blur(16px) saturate(140%); -webkit-backdrop-filter:blur(16px) saturate(140%);
+  font-size:12.5px; line-height:1.45; color:var(--text); font-family:var(--sans);
+  opacity:0; transform:translateY(4px); transition:opacity .12s ease, transform .12s ease;
+  box-shadow:0 10px 24px -8px rgba(0,0,0,0.4);
+}
+
+.custom-tooltip.visible{ opacity:1; transform:translateY(0); }
+
+.custom-tooltip::after{
+  content:''; position:absolute; left:var(--tooltip-arrow-x, 50%); transform:translateX(-50%);
+  border:6px solid transparent; top:100%; border-top-color:var(--panel);
+}
+
+.custom-tooltip.arrow-below{ transform:translateY(-4px); }
+
+.custom-tooltip.arrow-below.visible{ transform:translateY(0); }
+
+.custom-tooltip.arrow-below::after{ top:auto; bottom:100%; border-top-color:transparent; border-bottom-color:var(--panel); }
+
+/* Rich achievement tooltips (buildAchievementTooltipHTML in js/achievements.js) carry a lot
+   more than a one-line label -- icon, name, a full Guiding Text sentence or two, sometimes
+   a dynamic note on top of that, plus an icon row -- so they get their own wider budget
+   rather than sharing the plain tooltip's compact width. Guiding Text is still free-form
+   written copy though, so this can only bound it, not guarantee it stays short: long text
+   just wraps across more lines and the tooltip grows taller, which is fine since nothing
+   about the layout depends on a fixed height. */
+.custom-tooltip.rich{ max-width:min(320px, calc(100vw - 32px)); padding:14px 16px; }
+
+.tooltip-rich{ display:flex; align-items:flex-start; gap:12px; }
+
+.tooltip-rich-icon{ flex:none; width:38px; height:38px; }
+
+.tooltip-rich-body{ min-width:0; } /* lets the guide/note text actually wrap instead of forcing the tooltip wider */
+
+.tooltip-rich-title{ font-family:var(--sans); font-weight:800; font-size:15px; line-height:1.3; color:var(--text); }
+
+.tooltip-rich-guide{ margin-top:4px; font-size:12.5px; line-height:1.5; color:var(--text-dim); }
+
+.tooltip-rich-note{ margin-top:6px; font-size:12px; line-height:1.4; font-weight:600; color:var(--filter-shiny-color); }
+
+.tooltip-rich-games{ display:flex; align-items:center; flex-wrap:wrap; gap:5px; margin-top:8px; }
+
+.tooltip-rich-games-label{ font-size:11px; color:var(--text-faint); margin-right:2px; }
+
+.tooltip-rich-games img{ width:18px; height:18px; border-radius:5px; flex:none; }
 
 html,body{margin:0;padding:0;}
 
@@ -218,7 +288,7 @@ header.top{
 
 .filter-toggle.active{
   background: linear-gradient(160deg, color-mix(in srgb, var(--accent-2) 30%, transparent), color-mix(in srgb, var(--accent-2) 7.0%, transparent)), var(--panel);
-  border-color: color-mix(in srgb, var(--accent-2) 55.0%, transparent); color:#FFE8AE;
+  border-color: color-mix(in srgb, var(--accent-2) 55.0%, transparent); color:var(--filter-shiny-color);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 14px -4px color-mix(in srgb, var(--accent-2) 35%, transparent);
 }
 
@@ -228,13 +298,13 @@ header.top{
 
 #megaFilterBtn.filter-toggle.active{
   background: linear-gradient(160deg, rgba(155,93,229,0.32), rgba(155,93,229,0.08)), var(--panel);
-  border-color: rgba(155,93,229,0.55); color:#D8B8FF;
+  border-color: rgba(155,93,229,0.55); color:var(--filter-mega-color);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 14px -4px rgba(155,93,229,0.35);
 }
 
 #gigantamaxFilterBtn.filter-toggle.active{
   background: linear-gradient(160deg, rgba(229,87,123,0.32), rgba(229,87,123,0.08)), var(--panel);
-  border-color: rgba(229,87,123,0.55); color:#FFB8CB;
+  border-color: rgba(229,87,123,0.55); color:var(--filter-gigantamax-color);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 14px -4px rgba(229,87,123,0.35);
 }
 
