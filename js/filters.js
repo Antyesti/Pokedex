@@ -33,6 +33,9 @@ function readRootVar(name, fallback){
   return Number.isNaN(num) ? fallback : num;
 }
 
+// Shared with the card-deletion exit in app.js, so both animations ease out identically.
+function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
 let clearAnimHandle = null;
 
 searchClearBtn.addEventListener('click', () => {
@@ -76,7 +79,6 @@ searchClearBtn.addEventListener('click', () => {
   const glowPeakAt = readRootVar('--glow-peak-at', 0.15);
   const glowOpacity = readRootVar('--glow-opacity', 0.85);
   const glowSpread = readRootVar('--glow-spread', 1.5);
-  const easeOut = t => 1 - Math.pow(1 - t, 3);
   const easeIn = t => t * t * t;
 
   // Per-word streak positions, measured off the actual rendered spans rather than
@@ -105,7 +107,7 @@ searchClearBtn.addEventListener('click', () => {
     const elapsed = now - start;
 
     const outT = Math.min(elapsed / outDur, 1);
-    const outEased = easeOut(outT);
+    const outEased = easeOutCubic(outT);
     searchMirror.style.transform = `translateY(${-outFly * outEased}px)`;
     searchMirror.style.opacity = String(1 - outEased);
     searchMirror.style.filter = `blur(${(blurMax * outEased).toFixed(2)}px)`;

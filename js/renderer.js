@@ -91,6 +91,7 @@ function toggleSortDirection(key){
 
 function init(){
   document.documentElement.style.setProperty('--shiny-icon-url', `url("${SHINY_ICON}")`);
+  document.getElementById('shinyFilterIcon').src = SHINY_ICON;
   document.getElementById('megaFilterIcon').src = MEGA_ICON;
   document.getElementById('gigantamaxFilterIcon').src = GIGANTAMAX_ICON;
   setupDexTitleCaseToggle();
@@ -1541,7 +1542,7 @@ function cardHTML(p){
   // so the handle only shows up there.
   const dragEnabled = currentSortValue() === 'oldest';
   return `
-  <div class="card ${p.shiny ? 'is-shiny' : ''} ${p.pokerus === 'infected' ? 'pokerus-infected' : ''} ${p.pokerus === 'cured' ? 'pokerus-cured' : ''}" ${dragEnabled ? `data-pid="${p.id}"` : ''} style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; ${midTintStyle} border-color:${borderColor}; --glow-c1:${glowC1}; --glow-c2:${glowC2}; --glow-c3:${glowC3}" onclick="openDetail('${p.id}')">
+  <div class="card ${p.shiny ? 'is-shiny' : ''} ${p.pokerus === 'infected' ? 'pokerus-infected' : ''} ${p.pokerus === 'cured' ? 'pokerus-cured' : ''}" data-pid="${p.id}" style="--glow:${primaryColor}; --type-tint-1:${tint1}; --type-tint-2:${tint2}; ${midTintStyle} border-color:${borderColor}; --glow-c1:${glowC1}; --glow-c2:${glowC2}; --glow-c3:${glowC3}" onclick="openDetail('${p.id}')">
     <span class="card-glow-ring" aria-hidden="true"></span>
     <span class="card-glow-halo" aria-hidden="true"></span>
     ${formBadgeRowHTML(p)}

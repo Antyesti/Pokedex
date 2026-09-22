@@ -193,6 +193,40 @@ function historyDisplayPokemon(entry){
 }
 
 function deletePokemon(id){
+  const cardEl = gridWrap.querySelector(`.card[data-pid="${CSS.escape(id)}"]`);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if(cardEl && !cardEl.classList.contains('is-deleting') && !reduceMotion){
+    // Same lift/fade/blur and timing as clearing the search bar (see searchClearBtn's
+    // click handler in filters.js), so a deleted card leaves with a matching feel.
+    cardEl.classList.add('is-deleting');
+    cardEl.style.pointerEvents = 'none';
+    cardEl.style.transition = 'none';
+    playExitTransition(cardEl, () => finishDeletePokemon(id));
+    return;
+  }
+  finishDeletePokemon(id);
+}
+
+function playExitTransition(el, onDone){
+  const outDur = readRootVar('--clear-out-dur', 400);
+  const outFly = readRootVar('--clear-out-fly', 12);
+  const blurMax = readRootVar('--clear-blur', 2);
+  const start = performance.now();
+
+  function tick(now){
+    const t = Math.min((now - start) / outDur, 1);
+    const eased = easeOutCubic(t);
+    el.style.transform = `translateY(${-outFly * eased}px)`;
+    el.style.opacity = String(1 - eased);
+    el.style.filter = `blur(${(blurMax * eased).toFixed(2)}px)`;
+    if(t < 1) requestAnimationFrame(tick);
+    else onDone();
+  }
+  requestAnimationFrame(tick);
+}
+
+function finishDeletePokemon(id){
   const idx = state.pokemon.findIndex(x=>x.id===id);
   if(idx === -1) return;
   const [removed] = state.pokemon.splice(idx, 1);
