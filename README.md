@@ -5,7 +5,7 @@ nicknames, species, types, natures, met information, sprites, per-game moves and
 abilities, and achievements and ribbons. Everything runs in the browser, so
 `index.html` can be opened directly from disk without a build step or server.
 
-<img width="2559" height="813" alt="v29" src="https://github.com/user-attachments/assets/8c52b731-8a77-4b26-951f-336928d329ad" />
+<img width="1618" height="1032" alt="v30" src="https://github.com/user-attachments/assets/847eb6f2-217f-41c6-9557-a09ecf764646" />
 
 ## Latest as on v24
 https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
