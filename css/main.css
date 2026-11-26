@@ -132,9 +132,18 @@ body::after{
     radial-gradient(circle at 50% 100%, rgba(160,64,160,0.07), transparent 55%),
     var(--bg);
   background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
-  animation: ambientDrift 50s ease-in-out infinite alternate;
+  background-position:0% 0%, 100% 0%, 50% 100%, 0 0;
+
   pointer-events:none;
   z-index:-1;
+}
+
+/* Move the painted gradient as one layer. Custom backgrounds have their own positioning. */
+@media (prefers-reduced-motion: no-preference){
+  html:not([data-bg="custom"]) body::after{
+    inset:-3%;
+    animation:ambientDrift 50s ease-in-out infinite alternate;
+  }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -217,6 +226,8 @@ header.top{
   #settingsBtn, #themeToggleBtn, #btnImport, #btnExport, #btnNewDex, #btnShareRoster{
     flex:1 1 0; min-width:0; padding-left:10px; padding-right:10px;
   }
+  .import-wrap{ flex:1 1 0; min-width:0; }
+  .import-menu{ left:auto; right:0; }
   #btnImport .btn-label, #btnExport .btn-label, #btnNewDex .btn-label, #btnShareRoster .btn-label{
     display:none;
   }
@@ -225,7 +236,7 @@ header.top{
 .btn{
   position:relative;
   font-family:var(--sans); font-weight:600; font-size:14px;
-  padding:11px 18px; border-radius:12px; border:1px solid var(--panel-border);
+  padding:11px 20px; border-radius:999px; border:1px solid var(--panel-border);
   background:
     linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01) 60%),
     var(--panel);
@@ -262,14 +273,14 @@ header.top{
 /* ---- Light theme: neumorphism replaces glassmorphism for all buttons ---- */
 
 .filter-toggle-group{
-  display:flex; gap:4px; padding:4px; border-radius:12px; border:1px solid var(--panel-border);
+  display:flex; gap:4px; padding:4px; border-radius:999px; border:1px solid var(--panel-border);
   background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01) 60%), var(--panel);
   backdrop-filter:blur(14px) saturate(140%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .filter-toggle{
-  height:32px; padding:0 13px; border-radius:8px; border:1px solid transparent; cursor:pointer;
+  height:32px; padding:0 15px; border-radius:999px; border:1px solid transparent; cursor:pointer;
   font-size:11.5px; font-family:var(--sans); font-weight:700; text-transform:uppercase; letter-spacing:0.03em;
   background:transparent; color:var(--text-faint); white-space:nowrap;
   display:flex; align-items:center; justify-content:center; gap:6px;
@@ -340,7 +351,7 @@ header.top{
   position:relative;
   font-family:var(--mono); font-size:12px; color:var(--text-dim);
   background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01) 60%), var(--panel);
-  border:1px solid var(--panel-border); border-radius:10px;
+  border:1px solid var(--panel-border); border-radius:999px;
   padding:9px 14px 9px 16px; backdrop-filter:blur(12px) saturate(140%);
   display:flex; align-items:center; gap:8px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
@@ -384,7 +395,7 @@ header.top{
   margin-left:auto;
   font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
   color:var(--text-faint); background:transparent; border:1px solid var(--panel-border);
-  border-radius:10px; padding:9px 13px; cursor:pointer; display:flex; align-items:center; gap:6px;
+  border-radius:999px; padding:9px 16px; cursor:pointer; display:flex; align-items:center; gap:6px;
   transition: all .15s ease;
 }
 
@@ -502,6 +513,7 @@ header.top{
 
 .dash-list-row{ display:flex; justify-content:space-between; align-items:center; font-family:var(--mono); font-size:12px; color:var(--text-dim); padding:5px 0; border-bottom:1px solid var(--panel-border); }
 
+.stat-filter-count{ font-family:var(--sans); font-size:inherit; font-weight:600; color:var(--text); background:transparent; border:0; padding:3px 0; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
 .dash-list-row:last-child{ border-bottom:none; }
 
 .dash-list-row b{ color:var(--text); font-family:var(--sans); font-weight:600; }
@@ -515,7 +527,7 @@ header.top{
 .search-wrap{ position:relative; flex:1; min-width:220px; }
 
 .search-wrap input{
-  width:100%; padding:12px 34px 12px 40px; border-radius:12px;
+  width:100%; padding:12px 34px 12px 40px; border-radius:999px;
   border:1px solid var(--panel-border);
   background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.01) 60%), var(--panel);
   color:var(--text);
@@ -608,14 +620,14 @@ html[data-theme="custom"]:not([data-style="neumorphic"]) .t-clear-glow{ mix-blen
 
 .view-toggle{
   margin-left:auto;
-  display:flex; gap:4px; padding:4px; border-radius:12px; border:1px solid var(--panel-border);
+  display:flex; gap:4px; padding:4px; border-radius:999px; border:1px solid var(--panel-border);
   background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01) 60%), var(--panel);
   backdrop-filter:blur(14px) saturate(140%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .view-toggle-btn{
-  width:36px; height:36px; border-radius:8px; border:1px solid transparent;
+  width:36px; height:36px; border-radius:999px; border:1px solid transparent;
   background:transparent; color:var(--text-faint); cursor:pointer;
   display:flex; align-items:center; justify-content:center;
   transition: all .18s cubic-bezier(.2,.8,.3,1);
@@ -701,53 +713,48 @@ html[data-theme="custom"]:not([data-style="neumorphic"]) .t-clear-glow{ mix-blen
   .scroll-top-btn{ right:16px; bottom:16px; width:40px; height:40px; }
 }
 
-/* ---------- CHANGELOG MODAL ---------- */
-
-.changelog-version{ margin-bottom:28px; }
-
-.changelog-version:last-child{ margin-bottom:0; }
-
-.changelog-version-head{
-  display:flex; align-items:baseline; gap:10px; margin-bottom:14px;
+/* ---- Import button: hover (or focus, or the touch caret) reveals the Import Game Saves menu ---- */
+.import-wrap{ position:relative; display:inline-flex; }
+.import-wrap #btnImport{ flex:1 1 auto; }
+.import-caret{ display:none; align-items:center; justify-content:center; margin-left:-6px; padding:0 8px; border:1px solid var(--panel-border); border-left:0; border-radius:0 12px 12px 0; background:rgba(255,255,255,0.02); color:var(--text); cursor:pointer; }
+.import-caret svg{ width:14px; height:14px; }
+@media (hover:none){
+  .import-caret{ display:inline-flex; }
+  .import-wrap #btnImport{ border-top-right-radius:0; border-bottom-right-radius:0; }
 }
-
-.changelog-version-head h3{
-  font-family:var(--sans); font-weight:800; font-size:18px; letter-spacing:-0.01em; margin:0; color:var(--text);
+.import-menu{
+  position:absolute; top:100%; left:0; z-index:60; min-width:250px; max-width:calc(100vw - 32px);
+  padding-top:8px; /* invisible bridge so the menu stays open while the pointer crosses the gap */
+  opacity:0; visibility:hidden; transform:translateY(-4px); pointer-events:none;
+  transition:opacity .15s ease, transform .15s ease, visibility 0s linear .15s;
 }
-
-.changelog-version-head .latest-tag{
-  font-family:var(--mono); font-size:10px; font-weight:450; letter-spacing:0.08em; text-transform:uppercase;
-  padding:3px 8px; border-radius:6px; background:color-mix(in srgb, var(--accent) 18%, transparent); color:var(--accent);
+.import-wrap:hover .import-menu, .import-wrap:focus-within .import-menu, .import-menu.open{
+  opacity:1; visibility:visible; transform:none; pointer-events:auto; transition-delay:0s;
 }
-
-.changelog-entry{ margin-bottom:14px; }
-
-.changelog-entry:last-child{ margin-bottom:0; }
-
-.changelog-entry-title{
-  font-family:var(--sans); font-weight:700; font-size:14px; color:var(--text); margin-bottom:6px;
-  display:flex; align-items:center; gap:8px;
+@media (hover:none){ .import-wrap:hover .import-menu:not(.open), .import-wrap:focus-within .import-menu:not(.open){ opacity:0; visibility:hidden; pointer-events:none; } }
+.import-menu-panel{
+  padding:6px; border-radius:14px; border:1px solid var(--panel-border);
+  background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01) 60%), var(--panel);
+  backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
+  box-shadow:0 14px 34px -10px rgba(0,0,0,0.45);
 }
-
-.changelog-entry-title::before{
-  content:""; width:7px; height:7px; border-radius:50%; flex:none;
-  background: var(--accent);
+.import-menu-item{
+  display:flex; align-items:center; gap:12px; width:100%; text-align:left; cursor:pointer;
+  padding:10px 12px; border-radius:10px; border:0; background:transparent; color:var(--text); font-family:var(--sans);
 }
+.import-menu-item:hover, .import-menu-item:focus-visible{ background:color-mix(in srgb, var(--accent) 14%, transparent); outline:none; }
+.import-menu-item svg{ width:20px; height:20px; flex:none; color:var(--accent); }
+.import-menu-item b{ display:block; font-size:14px; font-weight:700; }
+.import-menu-item small{ display:block; font-size:12px; opacity:.7; margin-top:1px; }
 
-.changelog-entry-icon{ width:18px; height:18px; flex:none; }
-
-.changelog-entry.known-issue .changelog-entry-title::before{ background: var(--danger); }
-
-.changelog-entry.known-issue .changelog-entry-title{ color:var(--danger); }
-
-.changelog-list{ margin:0; padding-left:21px; list-style:disc; }
-
-.changelog-list li{ font-size:13.5px; color:var(--text-dim); line-height:1.55; margin-bottom:4px; }
-
-.changelog-list li:last-child{ margin-bottom:0; }
-
-.changelog-list ul{ margin:4px 0 0; padding-left:18px; list-style:circle; }
-
-.changelog-list ul li{ font-size:13px; }
-
-.changelog-divider{ border:none; border-top:1px solid var(--panel-border); margin:24px 0; }
+/* ---- Share buttons reuse the Import hover menu; touch devices skip it ---- */
+.share-wrap .share-menu{ min-width:240px; }
+.card-share-button{ padding:0; }
+@media (hover:none){ .share-wrap .share-menu{ display:none !important; } }
+/* The card Share dropdown is one floating menu next to the active button, so cards can't clip it. */
+.share-float{
+  position:fixed; z-index:80; padding-top:8px; opacity:0; visibility:hidden; pointer-events:none;
+  transform:translateY(-4px); transition:opacity .15s ease, transform .15s ease, visibility 0s linear .15s;
+}
+.share-float.flip{ padding-top:0; padding-bottom:8px; transform:translateY(4px); }
+.share-float.show{ opacity:1; visibility:visible; pointer-events:auto; transform:none; transition-delay:0s; }

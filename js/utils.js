@@ -17,6 +17,10 @@ document.addEventListener('keydown', (e) => {
    Watching body for those comings and goings, rather than wiring this into every
    individual open/close function, means scroll lock, initial focus, Tab containment,
    and returning focus on close all work for any current or future modal for free. */
+function cardBackButtonHTML(action){
+  return `<button type="button" class="modal-close detail-back" data-autofocus onclick="${action}()" aria-label="Back to roster" title="Back to roster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 5-7 7 7 7M5 12h15"/></svg></button>`;
+}
+
 function getFocusableEls(container){
   return Array.from(container.querySelectorAll(
     'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -25,27 +29,39 @@ function getFocusableEls(container){
 
 let activeModalEl = null;
 let focusBeforeModal = null;
+const suspendedModalFocus = new WeakMap();
 
 const bodyScrollObserver = new MutationObserver(() => {
-  const overlay = document.body.querySelector(':scope > .overlay');
+  const stack = modalStack();
+  const overlay = stack.length ? document.getElementById(stack[stack.length - 1]) : null;
   document.body.classList.toggle('modal-open', !!overlay);
+  syncStateHooks();
 
   if(overlay && overlay !== activeModalEl){
-    focusBeforeModal = document.activeElement;
+    if(!activeModalEl) focusBeforeModal = document.activeElement;
+    if(activeModalEl?.contains(document.activeElement)){
+      suspendedModalFocus.set(activeModalEl, document.activeElement);
+    }
     activeModalEl = overlay;
-    // Auto-focus is for keyboard/screen-reader users landing somewhere sensible; on a touch
-    // device it can instead pop open a native <select> picker the instant the modal appears,
-    // before the person has tapped anything, so skip it there entirely.
-    const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    if(!isTouch){
+    const previous = suspendedModalFocus.get(overlay);
+    suspendedModalFocus.delete(overlay);
+    if(previous && overlay.contains(previous) && !previous.disabled && previous.offsetParent !== null){
+      previous.focus();
+    } else if(!overlay.contains(document.activeElement)){
       const focusable = getFocusableEls(overlay);
-      const explicit = focusable.find(el => el.hasAttribute('data-autofocus'));
-      const preferred = explicit || focusable.find(el => !el.classList.contains('modal-close') && !el.hasAttribute('data-no-autofocus')) || focusable[0];
-      if(preferred) preferred.focus();
+      const preferred = focusable.find(el => el.hasAttribute('data-autofocus'))
+        || focusable.find(el => !el.classList.contains('modal-close') && !el.hasAttribute('data-no-autofocus'))
+        || focusable[0];
+      if(preferred && !window.matchMedia('(pointer: coarse)').matches){
+        preferred.focus();
+      } else {
+        overlay.tabIndex = -1;
+        overlay.focus({ preventScroll: true });
+      }
     }
   } else if(!overlay && activeModalEl){
     activeModalEl = null;
-    if(focusBeforeModal && document.body.contains(focusBeforeModal)) focusBeforeModal.focus();
+    if(focusBeforeModal && document.body.contains(focusBeforeModal)) focusBeforeModal.focus({ preventScroll:true });
     focusBeforeModal = null;
   }
 });
@@ -56,7 +72,9 @@ document.addEventListener('keydown', (e) => {
   const focusable = getFocusableEls(activeModalEl);
   if(!focusable.length) return;
   const first = focusable[0], last = focusable[focusable.length - 1];
-  if(e.shiftKey && document.activeElement === first){
+  if(!activeModalEl.contains(document.activeElement) || document.activeElement === activeModalEl){
+    e.preventDefault(); (e.shiftKey ? last : first).focus();
+  } else if(e.shiftKey && document.activeElement === first){
     e.preventDefault(); last.focus();
   } else if(!e.shiftKey && document.activeElement === last){
     e.preventDefault(); first.focus();
@@ -71,6 +89,8 @@ document.addEventListener('keydown', (e) => {
 const AUTOSAVE_KEY = 'pokedex_autosave_v1';
 let autosaveTimer = null;
 let autosaveQuotaWarned = false;
+// Result of the last write: 'clean' until the first one, then 'saved' or 'error'.
+let autosaveResult = 'clean';
 
 function persistState(){
   try{
@@ -80,9 +100,13 @@ function persistState(){
       settings: state.settings,
       pokemon: state.pokemon
     }));
+    autosaveResult = 'saved';
+    // A good write re-arms the warning, so a later failure is reported again.
+    autosaveQuotaWarned = false;
   } catch(e){
-    // Quota exceeded or storage disabled (e.g. private browsing). Warn once per
-    // session rather than repeating the toast on every debounced write attempt.
+    autosaveResult = 'error';
+    // Quota exceeded or storage disabled (e.g. private browsing). Warn once rather than
+    // on every debounced write attempt, until a write succeeds again.
     if(!autosaveQuotaWarned){
       autosaveQuotaWarned = true;
       showToast('Autosave failed: browser storage is full or unavailable. Export to back up your roster.');
@@ -92,7 +116,12 @@ function persistState(){
 
 function scheduleAutosave(){
   clearTimeout(autosaveTimer);
-  autosaveTimer = setTimeout(persistState, 400);
+  autosaveTimer = setTimeout(() => {
+    autosaveTimer = null;
+    persistState();
+    syncStateHooks();
+  }, 400);
+  syncStateHooks();
 }
 
 function loadAutosavedState(){
@@ -155,6 +184,7 @@ function normalizeImportedData(data){
   if(typeof data.trainerAvatar !== 'string') data.trainerAvatar = '';
   if(typeof data.settings !== 'object' || !data.settings) data.settings = { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting() };
   if(typeof data.settings.custom !== 'object' || !data.settings.custom) data.settings.custom = defaultCustomTheme();
+  if(data.settings.background) data.settings.background = normalizeBackground(data.settings.background);
   // migrate the older single "font" setting (pre-nickname-font split) into bodyFont
   if(data.settings.font && !data.settings.bodyFont) data.settings.bodyFont = data.settings.font;
   delete data.settings.font;
@@ -171,6 +201,7 @@ async function applyFileToState(file){
   changeHistory = [];
   updateHistoryBar();
   applySettings();
+  if(typeof refreshSettingsPage === 'function') refreshSettingsPage();
   render();
   showToast(`Loaded ${data.pokemon.length} Pokémon from ${file.name}.`);
 }
@@ -184,7 +215,7 @@ async function tryShowLastFileChip(){
   if(!chip) return;
   label.textContent = `Load ${handle.name}`;
   chip.style.display = 'inline-flex';
-  chip.onclick = async () => {
+  chip.onclick = () => confirmReplaceBeforeImport(async () => {
     try{
       const perm = await handle.queryPermission({mode:'read'});
       if(perm !== 'granted'){
@@ -197,7 +228,7 @@ async function tryShowLastFileChip(){
       showToast('Could not reopen that file, it may have moved or been deleted.');
       chip.style.display = 'none';
     }
-  };
+  });
 }
 
 document.getElementById('lastFileDismiss')?.addEventListener('click', (e) => {
@@ -241,14 +272,21 @@ function showToast(msg, action, opts){
   t.offsetHeight; // flush reflow so removal registers before re-add
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> {
-    t.classList.remove('show');
-    if(toastVanishCallback){
-      const cb = toastVanishCallback;
-      toastVanishCallback = null;
-      cb();
-    }
-  }, action ? 8000 : 2600);
+  toastTimer = setTimeout(hideToast, action ? 8000 : 2600);
+  syncStateHooks();
+}
+
+// Hides the toast now (the timeout calls this too) and runs its vanish callback, if any.
+function hideToast(){
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  t.classList.remove('show');
+  if(toastVanishCallback){
+    const cb = toastVanishCallback;
+    toastVanishCallback = null;
+    cb();
+  }
+  syncStateHooks();
 }
 
 // Any .switch, anywhere (Shiny, Mega, Gigantamax, Settings, future ones too) gets the
@@ -329,8 +367,7 @@ const MEGA_GMAX_PREFIX_WORD = { MEGA:'Mega', PRIMAL:'Primal', ULTRA:'Ultra', GIG
 // Returns '' when neither Mega nor Gigantamax is currently shown. Shared by the Sprite
 // List lookup (findPlaceholderSprite, js/renderer.js) and Special Z-Move/G-Max Move
 // eligibility (pokemonEligible, js/moves.js), so a Pokémon that's actually Ultra Necrozma
-// or a Mega Evolution can be targeted by name in the Control Panel the same way it's
-// found a sprite.
+// or a Mega Evolution can be targeted by the same name used for sprite lookup.
 function megaOrGigantamaxDisplayName(p){
   const entry = (typeof findSpeciesEntry === 'function') ? findSpeciesEntry(p.speciesEntryId) : null;
 

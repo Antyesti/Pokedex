@@ -1,8 +1,7 @@
 /**
  * Met Level rules for Ribbons
  * ---------------------------
- * Which Ribbons care about Met Level, and what they require, is configured per-Ribbon in
- * the Control Panel (metLevelMax: 'le50' | '50to70', plus an optional voiceless-species
+ * Which Ribbons care about Met Level, and what they require, is configured per Ribbon (metLevelMax: 'le50' | '50to70', plus an optional voiceless-species
  * exemption) rather than hardcoded here. This file only holds the one piece that isn't
  * Ribbon-specific: which species are exempt from a Met Level requirement because they
  * can't be judged on friendship the normal way (used by Footprint Ribbon out of the box,

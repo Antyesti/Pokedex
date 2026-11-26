@@ -1,0 +1,157 @@
+/* ---------- Settings page (#/settings) ----------
+   The header stays; everything else in .app is swapped for the settings page. */
+html.route-settings .app > :not(header.top):not(#settingsPage){ display:none !important; }
+html.route-settings header.top .top-actions > :not(#themeToggleBtn):not(#settingsBtn){ display:none !important; }
+.settings-page[hidden]{ display:none; }
+.settings-page{ max-width:760px; margin:8px auto 0; }
+
+.settings-top{ display:flex; align-items:center; gap:14px; margin:6px 0 22px; }
+.settings-title{ font-family:var(--sans); font-size:26px; font-weight:800; letter-spacing:-0.02em; margin:0; }
+
+.settings-body{ display:flex; flex-direction:column; gap:18px; }
+.modal.settings-section{
+  max-width:none; animation:none; overflow:visible; padding:22px 24px 24px;
+}
+.settings-section > h3{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--accent); margin:0 0 16px;
+}
+.modal.settings-foot{
+  position:sticky; bottom:14px; z-index:5; max-width:none; animation:none; overflow:visible;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  margin-top:18px; padding:14px 18px;
+}
+
+html[data-theme="custom"][data-style="neumorphic"] .modal:is(.settings-section, .settings-foot){
+  box-shadow:var(--nm-shadow-out);
+}
+
+/* ---------- Settings button morphs into a Home button ---------- */
+.settings-morph .morph-ico{ position:relative; display:inline-block; width:16px; height:16px; flex:none; }
+.settings-morph .morph-ico svg{
+  position:absolute; inset:0; width:16px; height:16px;
+  transition:transform .5s cubic-bezier(.2,.9,.3,1), opacity .25s ease;
+}
+.settings-morph .ico-home{ opacity:0; transform:rotate(-120deg) scale(.3); }
+html.route-settings .settings-morph .ico-gear{ opacity:0; transform:rotate(120deg) scale(.3); }
+html.route-settings .settings-morph .ico-home{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: reduce){
+  .settings-morph .morph-ico svg{ transition:opacity .01s; }
+}
+
+/* ---------- Custom background editor ---------- */
+.bg-panel{ margin-top:14px; }
+.bg-sub{ font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); margin:18px 0 8px; }
+.bg-preview{
+  position:relative; height:46px; border-radius:12px; border:1px solid var(--hairline);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+.bg-stop{
+  position:absolute; top:50%; width:22px; height:22px; border-radius:50%; transform:translate(-50%, -50%);
+  border:2px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.35);
+}
+.bg-preview{ margin-left:11px; margin-right:11px; }
+.bg-color-list{ display:flex; flex-direction:column; gap:8px; }
+.bg-color-row{ display:flex; align-items:stretch; gap:8px; }
+.bg-color-row .cpb{ flex:1; min-width:0; }
+.bg-stop-field{ display:flex; align-items:center; gap:4px; flex:none; font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+.bg-stop-input{
+  width:68px; padding:0 6px; text-align:right; border-radius:10px; border:1px solid var(--hairline);
+  background:rgba(255,255,255,0.04); color:var(--text); font:inherit; font-size:13px; height:100%;
+}
+.bg-stop-input:disabled{ opacity:.4; }
+.bg-remove{ width:42px; padding:0; justify-content:center; flex:none; }
+.bg-remove:disabled, .bg-add:disabled{ opacity:.4; cursor:not-allowed; }
+.bg-add{ width:100%; margin-top:8px; justify-content:center; gap:8px; }
+
+.bg-type-row{ display:flex; gap:8px; }
+.bg-type-row .btn{ flex:1; width:auto; height:auto; padding:10px 8px; border-radius:999px; font-size:13px; justify-content:center; }
+
+.bg-pos{ margin-top:14px; }
+.bg-pos-grid{ display:grid; grid-template-columns:repeat(3, 28px); gap:8px; margin-top:8px; }
+.bg-pos-dot{
+  width:28px; height:28px; border-radius:8px; border:1px solid var(--hairline); background:rgba(255,255,255,0.04);
+  cursor:pointer; position:relative; padding:0;
+}
+.bg-pos-dot::after{ content:""; position:absolute; inset:9px; border-radius:50%; background:var(--text-faint); transition:background .15s, transform .15s; }
+.bg-pos-dot:hover::after{ background:var(--text-dim); }
+.bg-pos-dot.on{ border-color:var(--accent); }
+.bg-pos-dot.on::after{ background:var(--accent); transform:scale(1.35); }
+
+.bg-slider{ margin-top:14px; }
+.bg-slider.is-disabled{ opacity:.45; }
+.bg-slider-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+.bg-slider-head label{ font-family:var(--sans); font-size:14px; font-weight:700; text-transform:none; letter-spacing:0; color:var(--text); }
+.bg-slider-head span{ font-family:var(--mono); font-size:13px; color:var(--text-dim); font-variant-numeric:tabular-nums; }
+.bg-slider-hint{ margin-top:6px; }
+/* The html[data-theme] prefix keeps the generic .field input look (border, inset shadow) off the slider in every theme. */
+html[data-theme] .bg-slider input[type="range"], html[data-theme] .bg-slider input[type="range"]:focus{
+  -webkit-appearance:none; appearance:none; width:100%; height:16px; margin:0; padding:0; outline:none; cursor:pointer;
+  background:transparent; border:0; border-radius:0; box-shadow:none;
+}
+.bg-slider input[type="range"]:disabled{ cursor:not-allowed; }
+/* A 3px line from the middle of the thumb at the minimum to the middle of the thumb at the maximum,
+   so the dot reaches both ends of the bar. */
+.bg-slider input[type="range"]::-webkit-slider-runnable-track{
+  height:16px; background:linear-gradient(var(--hairline), var(--hairline)) center / calc(100% - 16px) 3px no-repeat;
+}
+.bg-slider input[type="range"]::-moz-range-track{
+  height:16px; background:linear-gradient(var(--hairline), var(--hairline)) center / calc(100% - 16px) 3px no-repeat;
+}
+.bg-slider input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; box-sizing:border-box; width:16px; height:16px; border-radius:50%; background:#fff; border:2px solid var(--accent);
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+.bg-slider input[type="range"]::-moz-range-thumb{
+  box-sizing:border-box; width:16px; height:16px; border-radius:50%; background:#fff; border:2px solid var(--accent); box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+.bg-slider input[type="range"]:focus-visible{ outline:2px solid var(--accent); outline-offset:4px; }
+.bg-toggle-row{ display:flex; align-items:center; gap:10px; margin-top:18px; }
+.bg-toggle-row > label:first-child{ font-family:var(--sans); font-size:14px; font-weight:700; text-transform:none; letter-spacing:0; color:var(--text); }
+
+.bg-actions{ display:flex; flex-direction:column; gap:8px; margin-top:22px; }
+.bg-actions .btn{ width:100%; justify-content:center; gap:8px; padding-top:12px; padding-bottom:12px; }
+
+/* ---------- Custom page background (Master Ball theme only: gated on data-theme="custom") ---------- */
+html[data-theme="custom"][data-bg="custom"] body{ background:transparent !important; }
+html[data-theme="custom"][data-bg="custom"] body::after{
+  background-color:var(--bg) !important;
+  background-image:var(--user-bg-image) !important;
+  background-size:var(--user-bg-size) !important;
+  background-position:0 0, 0 0, 50% 50%; /* no !important: it would beat the drift keyframes below and freeze the animation */
+  background-repeat:repeat, no-repeat, no-repeat !important;
+  background-blend-mode:var(--user-bg-blend) !important;
+  animation:none !important;
+}
+html[data-theme="custom"][data-bg-anim="on"] body::after{ animation:userBgDrift var(--user-bg-anim-duration, 45s) ease-in-out infinite alternate !important; }
+@keyframes userBgDrift{
+  from{ background-position:0 0, 0 0, 0% 50%; }
+  to{ background-position:0 0, 0 0, 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce){
+  html[data-theme="custom"][data-bg-anim="on"] body::after{ animation:none !important; }
+}
+
+@media (max-width:560px){
+  .modal.settings-section{ padding:18px 16px 20px; }
+  .modal.settings-foot{ bottom:8px; }
+}
+
+.settings-section .hint{ line-height:1.5; }
+.custom-color-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+.custom-color-field .cpb{ width:100%; min-height:42px; }
+.custom-color-field .cpb svg{ margin-inline-start:auto; }
+.bg-slider-head span{ min-width:4ch; text-align:end; }
+.settings-section .bg-actions{ flex-direction:row; }
+.settings-section .bg-actions .btn{ flex:1; }
+@media (max-width:420px){
+  .custom-color-grid{ gap:12px 8px; }
+  .custom-color-field .cpb, .bg-color-row .cpb{ gap:5px; padding-inline:5px; }
+  .custom-color-field .cps, .bg-color-row .cps{ width:24px; height:24px; }
+  .bg-color-row{ gap:5px; }
+  .bg-stop-field .bg-stop-input{ width:5ch; padding-inline:2px; }
+  .modal.settings-foot{ align-items:stretch; padding:10px; gap:8px; }
+  .settings-foot > .btn, .settings-foot > div{ flex:1 1 auto; }
+  .settings-foot .btn{ justify-content:center; padding:9px 10px; }
+  .settings-foot > div .btn{ flex:1; }
+}

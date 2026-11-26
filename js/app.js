@@ -16,30 +16,6 @@ const STAT_COLOR = {
 
 /* ============== CHANGELOG ============== */
 
-function changelogEntryHTML(entry){
-  return `
-    <div class="changelog-entry ${entry.knownIssue?'known-issue':''}">
-      <div class="changelog-entry-title">${entry.icon ? `<img src="${entry.icon}" alt="" class="changelog-entry-icon">` : ''}${escapeHTML(entry.title)}</div>
-      <ul class="changelog-list">
-        ${entry.items.map(i=>`<li>${i}</li>`).join('')}
-      </ul>
-    </div>
-  `;
-}
-
-function changelogVersionHTML(v, idx){
-  return `
-    <div class="changelog-version">
-      <div class="changelog-version-head">
-        <h3>Pokédex ${escapeHTML(v.version)}</h3>
-        ${idx===0 ? '<span class="latest-tag">Latest</span>' : ''}
-      </div>
-      ${v.entries.map(changelogEntryHTML).join('')}
-    </div>
-    ${idx < CHANGELOG.length-1 ? '<hr class="changelog-divider">' : ''}
-  `;
-}
-
 function openChangelog(){
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
@@ -75,17 +51,6 @@ document.getElementById('changelogLink').addEventListener('click', (e) => {
 
 /* ============== CREDITS ============== */
 // Credit source data (CREDITS) lives in data/changelog.js, alongside CHANGELOG.
-
-function creditsEntryHTML(entry){
-  return `
-    <div class="changelog-entry">
-      <div class="changelog-entry-title">${escapeHTML(entry.title)}</div>
-      <ul class="changelog-list">
-        ${entry.items.map(i=>`<li>${i}</li>`).join('')}
-      </ul>
-    </div>
-  `;
-}
 
 function openCredits(){
   const overlay = document.createElement('div');
@@ -401,13 +366,10 @@ function closeHistory(){
 
 /* hook up the type swatches whenever form opens for editing existing pokemon */
 /* ============== KEYBOARD ============== */
+// Escape closes one layer at a time: an open dropdown first, otherwise the modal on top.
 document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape'){
-    closeDetail();
-    closeForm();
-    closeChangelog();
-    closeSettings();
-    closeCredits();
-    closeHistory();
-  }
+  if(e.key !== 'Escape') return;
+  if(closeAllDropdowns()) return;
+  if(closeTopModal()) return;
+  if(typeof settingsPageOpen === 'function' && settingsPageOpen()) closeSettings();
 });

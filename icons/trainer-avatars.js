@@ -8,11 +8,9 @@
  * true) sharing the same display name, so the value actually stored (state.trainerAvatar)
  * is each entry's own `key`, not its name. Hidden entries are left out of the picker's
  * browsable list on purpose but still resolve normally if something is already set to one.
- * The Control Panel generates `key` automatically from the name and never exposes it for
- * editing, so this is safe to manage entirely from Trainer Avatars > Add/Edit here.
  *
  * TRAINER_AVATAR_CATEGORIES groups avatars in the picker (Trainer, Generic, etc.) and its
- * array order is the display order, managed from Control Panel > Trainer Avatars. A
+ * array order is the display order. A
  * category with no visible (non-hidden) avatars in it is left out of the picker entirely
  * rather than shown as an empty heading.
  */

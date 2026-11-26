@@ -7,7 +7,7 @@
  * type. Click in, type, and a list of matches drops below the field; click one to fill it in.
  *
  * Nothing in here is hardcoded per-species. Every row, subtitle, and typing comes from
- * POKEMON_SPECIES, so new entries (added later, eventually via the Control Panel) show up
+ * POKEMON_SPECIES, so new entries show up
  * automatically with no changes needed here.
  */
 

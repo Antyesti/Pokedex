@@ -68,7 +68,7 @@
 
 .achv-unreleased-tag{
   font-family:var(--mono); font-size:9px; font-weight:450; text-transform:uppercase; letter-spacing:0.05em;
-  color:var(--text-faint); background:rgba(255,255,255,0.06); border-radius:5px; padding:2px 5px; margin-top:1px;
+  color:var(--text-faint); background:rgba(255,255,255,0.06); border-radius:999px; padding:2px 8px; margin-top:1px;
 }
 
 /* Purely informational -- a Ribbon/Mark/Misc achievement only obtainable through a
@@ -80,7 +80,7 @@
    set to red or any other warning-coded hue. */
 .achv-event-tag{
   font-family:var(--mono); font-size:9px; font-weight:650; text-transform:uppercase; letter-spacing:0.05em;
-  color:var(--achv-event-text); background:var(--achv-event-color); border-radius:5px; padding:2px 5px; margin-top:1px;
+  color:var(--achv-event-text); background:var(--achv-event-color); border-radius:999px; padding:2px 8px; margin-top:1px;
 }
 
 .achv-badge.memory-ribbon.gold{ border-color:color-mix(in srgb, #F2C14E 65%, transparent); background:linear-gradient(160deg, rgba(242,193,78,0.22), rgba(242,193,78,0.05)); }

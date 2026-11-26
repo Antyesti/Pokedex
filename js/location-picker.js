@@ -11,6 +11,11 @@
  * <input>. Picking a suggestion replaces whatever superscript formatting was there before.
  */
 
+function metLocationHTML(value){
+  return String(value || '').split(/(<\/?sup>|&(?:#\d+|#x[\da-f]+|[a-z][\da-z]*);)/ig)
+    .map((part,index) => index % 2 ? part : escapeHTML(part)).join('');
+}
+
 function locationPickerMatches(query){
   const q = (query || '').trim().toLowerCase();
   return MET_LOCATION_GROUPS

@@ -1195,7 +1195,7 @@ const GAME_PRESET_INDEX = {};
 GAME_PRESETS.forEach(g => { GAME_PRESET_INDEX[g.key] = g; });
 
 // The subset of Game Preset keys Species Game Availability is allowed to restrict by --
-// derived from each entry's own `restrictable` flag (Control Panel > Games), rather than a
+// derived from each entry's own `restrictable` flag, rather than a
 // separate hardcoded list that could silently drift out of sync with the actual games. A
 // game defaults to NOT restrictable when added (Pokemon GO/Bank/HOME/Champions, or any
 // brand-new game someone adds, start with no per-species availability data behind them);

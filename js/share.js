@@ -101,6 +101,113 @@ function downloadFile(file){
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
+// Detailed View and roster sharing use hover menus on devices with a fine pointer.
+const hasHoverMenus = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+// A single finished canvas as a one-frame GIF.
+async function canvasToGifFile(canvas, filename){
+  await loadGifenc();
+  const blob = encodeCanvasesAsGif([canvas], [1000]);
+  return new File([blob], filename, { type: 'image/gif' });
+}
+
+// Shares or downloads a still canvas. 'gif' (picked from the Share menu) writes a GIF; anything else keeps the PNG.
+async function shareOrDownloadStill(canvas, baseName, format){
+  if(format === 'gif'){
+    await shareOrDownloadFile(await canvasToGifFile(canvas, `${baseName}.gif`));
+    return;
+  }
+  await shareOrDownloadCanvas(canvas, `${baseName}.png`);
+}
+
+// The format choices in each Share menu: GIF first, then Animated PNG. `call(format)` returns the JS to run on click.
+function shareFormatPanelHTML(call){
+  const item = (fmt, title, sub, icon) => `
+    <button type="button" class="import-menu-item" role="menuitem" onclick="event.stopPropagation(); ${call(fmt)}">
+      ${icon}<span><b>${title}</b><small>${sub}</small></span>
+    </button>`;
+  const formatIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.6"/><path d="m21 15-5-5L5 21"/></svg>';
+  return `<div class="import-menu-panel">
+    ${item('gif', 'GIF', 'Lower quality, smaller file size', formatIcon)}
+    ${item('apng', 'Animated PNG', 'High quality, larger file size', formatIcon)}
+  </div>`;
+}
+// The roster Share button's menu is plain CSS, like Import's.
+function shareFormatMenuHTML(call){
+  return `<div class="import-menu share-menu" role="menu">${shareFormatPanelHTML(call)}</div>`;
+}
+
+// The same floating panel serves click-open card buttons and the detail view's hover button.
+let shareFloatEl = null, shareFloatHideTimer = null, shareFloatOwner = null;
+function hideShareFloat(){
+  clearTimeout(shareFloatHideTimer);
+  if(shareFloatOwner?.matches('.card-share-button')) shareFloatOwner.setAttribute('aria-expanded', 'false');
+  shareFloatOwner = null;
+  if(shareFloatEl) shareFloatEl.classList.remove('show');
+}
+function toggleCardShare(button){
+  if(shareFloatOwner === button){ hideShareFloat(); return; }
+  showShareFloat(button);
+  button.setAttribute('aria-expanded', 'true');
+  shareFloatEl.querySelector('button').focus({preventScroll:true});
+}
+function showShareFloat(wrap){
+  if(wrap.matches('.share-hover') && !hasHoverMenus()) return;
+  clearTimeout(shareFloatHideTimer);
+  if(shareFloatOwner === wrap) return;
+  hideShareFloat();
+  shareFloatOwner = wrap;
+  if(!shareFloatEl){
+    shareFloatEl = document.createElement('div');
+    shareFloatEl.className = 'share-float';
+    shareFloatEl.setAttribute('role', 'menu');
+    document.body.appendChild(shareFloatEl);
+  }
+  shareFloatEl.innerHTML = shareFormatPanelHTML(fmt => `shareFloatFormat('${fmt}')`);
+  const r = wrap.getBoundingClientRect(), width = 250;
+  shareFloatEl.style.width = width + 'px';
+  shareFloatEl.style.left = Math.max(8, Math.min(window.innerWidth - width - 8, r.right - width)) + 'px';
+  // Opens downward; only flips above when the viewport has no room below it.
+  const needed = 150, flip = r.bottom + needed > window.innerHeight && r.top > needed;
+  shareFloatEl.classList.toggle('flip', flip);
+  shareFloatEl.style.top = flip ? '' : r.bottom + 'px';
+  shareFloatEl.style.bottom = flip ? (window.innerHeight - r.top) + 'px' : '';
+  shareFloatEl.classList.add('show');
+}
+function shareFloatFormat(format){
+  const owner = shareFloatOwner;
+  if(!owner) return;
+  hideShareFloat();
+  if(owner.matches('.card-share-button')) owner.focus({preventScroll:true});
+  shareCardAsImage(owner.dataset.shareId, format);
+}
+document.addEventListener('pointerdown', e => {
+  if(shareFloatOwner && !shareFloatOwner.contains(e.target) && !shareFloatEl.contains(e.target)) hideShareFloat();
+}, true);
+document.addEventListener('mouseover', (e) => {
+  const t = e.target;
+  if(!t.closest || shareFloatOwner?.matches('.card-share-button')) return;
+  const wrap = t.closest('.share-hover');
+  if(wrap){ showShareFloat(wrap); return; }
+  if(t.closest('.share-float')){ clearTimeout(shareFloatHideTimer); return; }
+  if(shareFloatEl && shareFloatEl.classList.contains('show')){
+    clearTimeout(shareFloatHideTimer);
+    shareFloatHideTimer = setTimeout(hideShareFloat, 140);
+  }
+});
+document.addEventListener('focusin', (e) => { const w = e.target.closest && e.target.closest('.share-hover'); if(w) showShareFloat(w); });
+document.addEventListener('focusin', e => {
+  if(shareFloatOwner?.matches('.card-share-button') && e.target !== shareFloatOwner && !shareFloatEl.contains(e.target)) hideShareFloat();
+});
+document.addEventListener('keydown', e => {
+  if(e.key !== 'Escape' || !shareFloatOwner) return;
+  const owner = shareFloatOwner;
+  hideShareFloat();
+  if(owner.matches('.card-share-button')) owner.focus({preventScroll:true});
+});
+window.addEventListener('scroll', hideShareFloat, true);
+window.addEventListener('resize', hideShareFloat);
+
 async function shareOrDownloadCanvas(canvas, filename){
   const file = await canvasToPngFile(canvas, filename);
   if(!file) throw new Error('Canvas export failed (tainted canvas).');
@@ -668,10 +775,39 @@ function encodeCanvasesAsGif(canvases, delays){
   return new Blob([gif.bytes()], { type: 'image/gif' });
 }
 
-async function shareCardAsImage(id){
+/* One share job at a time. A second tap while an image is still being made would otherwise
+   start a duplicate download or share sheet. */
+const SHARE_PREPARING_MSG = 'Preparing image…';
+const SHARE_BUSY_MSG = 'Still preparing the last image, one moment.';
+
+async function withShareLock(job){
+  if(shareLock){
+    showToast(SHARE_BUSY_MSG);
+    return;
+  }
+  shareM.expect(shareState(), 'START');
+  shareLock = true;
+  showToast(SHARE_PREPARING_MSG);
+  syncStateHooks();
+  try{
+    await job();
+  } finally {
+    shareLock = false;
+    // Clear our own messages, but leave a newer one (like an error) alone.
+    const msg = document.getElementById('toastMsg').textContent;
+    if(msg === SHARE_PREPARING_MSG || msg === SHARE_BUSY_MSG) hideToast();
+    syncStateHooks();
+  }
+}
+
+function shareCardAsImage(id, format){
   const p = findPokemonById(id);
   if(!p) return;
-  showToast('Preparing image…');
+  return withShareLock(() => shareCardJob(p, format));
+}
+
+// `format` is 'gif' or 'apng' from the Share menu; left out, the saved preference applies as before.
+async function shareCardJob(p, format){
   try{
     const spriteSrc = resolveDisplaySprite(p);
     const assets = await prepareCardShareAssets(p);
@@ -682,7 +818,7 @@ async function shareCardAsImage(id){
       const spriteImg = await loadImageAsync(spriteSrc);
       const canvas = drawCardFrame(p, assets, spriteImg);
       try{
-        await shareOrDownloadCanvas(canvas, `${baseName}.png`);
+        await shareOrDownloadStill(canvas, baseName, format);
       } catch(e){
         // A placeholder sprite is hotlinked from img.pokemondb.net; if that host doesn't
         // hand back CORS-cleared image data, the canvas comes out tainted and export
@@ -690,7 +826,7 @@ async function shareCardAsImage(id){
         // rest of the card (name, types, ribbons, etc.) doesn't depend on it.
         if(!spriteImg) throw e;
         const fallbackCanvas = drawCardFrame(p, assets, null);
-        await shareOrDownloadCanvas(fallbackCanvas, `${baseName}.png`);
+        await shareOrDownloadStill(fallbackCanvas, baseName, format);
       }
       return;
     }
@@ -700,7 +836,7 @@ async function shareCardAsImage(id){
     const frameCanvases = animated.frames.map(buffer =>
       drawCardFrame(p, assets, frameBufferToCanvas(buffer, animated.width, animated.height))
     );
-    const useGif = state.settings && state.settings.shareFormat === 'gif';
+    const useGif = format ? format === 'gif' : !!(state.settings && state.settings.shareFormat === 'gif');
     if(useGif) await loadGifenc();
     const blob = useGif
       ? encodeCanvasesAsGif(frameCanvases, animated.delays)
@@ -838,24 +974,29 @@ async function buildRosterShareCanvas(skipPlaceholderSprites){
   return canvas;
 }
 
-async function shareRosterAsImage(){
+function shareRosterAsImage(format){
   if(state.pokemon.length === 0){ showToast('Add a Pokémon before sharing your roster.'); return; }
-  showToast('Preparing image…');
+  return withShareLock(() => shareRosterJob(format));
+}
+
+async function shareRosterJob(format){
   try{
     const canvas = await buildRosterShareCanvas();
     try{
-      await shareOrDownloadCanvas(canvas, 'pokedex-roster.png');
+      await shareOrDownloadStill(canvas, 'pokedex-roster', format);
     } catch(e){
       // Same tainted-canvas situation as a single card's placeholder sprite, just
       // possibly from any Pokémon in the roster rather than one specific card.
       const hasPlaceholder = state.pokemon.some(usingPlaceholderSprite);
       if(!hasPlaceholder) throw e;
       const fallbackCanvas = await buildRosterShareCanvas(true);
-      await shareOrDownloadCanvas(fallbackCanvas, 'pokedex-roster.png');
+      await shareOrDownloadStill(fallbackCanvas, 'pokedex-roster', format);
     }
   } catch(e){
     showToast('Could not generate the share image.');
   }
 }
 
-document.getElementById('btnShareRoster').addEventListener('click', shareRosterAsImage);
+document.getElementById('btnShareRoster').addEventListener('click', () => shareRosterAsImage());
+// The roster Share button's hover menu (GIF / Animated PNG).
+document.getElementById('rosterShareMenuSlot').innerHTML = shareFormatMenuHTML(fmt => `shareRosterAsImage('${fmt}')`);

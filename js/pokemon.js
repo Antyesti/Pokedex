@@ -37,17 +37,18 @@ function openForm(id){
   ribbonHelperOpenState[p.id] = !(state.settings && state.settings.showRibbonHelperByDefault === false);
 
   const overlay = document.createElement('div');
-  overlay.className = 'overlay';
+  const fullScreen = !!id && state.settings?.detailViewStyle === 'fullscreen';
+  overlay.className = fullScreen ? 'overlay edit-full' : 'overlay';
   overlay.id = 'formOverlay';
   if(id) overlay.dataset.pokemonId = id;
   overlay.onclick = (e) => { if(e.target === overlay) closeForm(); };
   overlay.innerHTML = `
     <div class="modal">
       <div class="modal-head">
-        <div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeForm()">
+        ${fullScreen ? cardBackButtonHTML('closeForm') : `<div class="modal-close" role="button" tabindex="0" aria-label="Close" onclick="closeForm()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </div>
-        <div style="font-family:var(--sans); font-weight:800; font-size:22px; letter-spacing:-0.02em;">${id ? 'Edit Pokémon' : 'Add Pokémon'}</div>
+        </div>`}
+        <div class="edit-heading" style="font-family:var(--sans); font-weight:800; font-size:22px; letter-spacing:-0.02em;">${id ? 'Edit Pokémon' : 'Add Pokémon'}</div>
       </div>
       <div class="modal-body" id="formBody"></div>
       <div class="modal-foot">
@@ -66,7 +67,7 @@ function openForm(id){
   renderMegaFormOptions();
   // the date panel is position:fixed so it can escape this container's overflow clipping;
   // close it on scroll rather than letting it float disconnected from its trigger button
-  document.getElementById('formBody').addEventListener('scroll', closeAllDatePanels);
+  (fullScreen ? overlay : document.getElementById('formBody')).addEventListener('scroll', closeAllDatePanels);
 }
 
 function closeAllDatePanels(){
@@ -511,8 +512,7 @@ function togglePokerus(status){
 // null (the default) means this Pokémon just follows the global Strange Ball
 // setting. true/false pins the display that way from here on, regardless of the
 // global setting -- once set, it sticks even if the global setting later changes.
-// Only relevant while the selected ball is one an administrator has marked eligible
-// in Control Panel → Poké Balls -- Strange Ball itself is a derived display state,
+// Only relevant while the selected ball is marked eligible in BALL_DATA -- Strange Ball itself is a derived display state,
 // never something picked directly.
 let strangeOverrideDraft = null;
 
@@ -566,9 +566,7 @@ function renderMovesEditor(){
   wrap.innerHTML = formMovesDraft.map(function(g, idx){ return moveRowHTML(g, idx); }).join('');
   wireMoveRowDragReorder(wrap);
 }
-// Native HTML5 drag-and-drop reordering for Moveset by Game rows, same pattern as the
-// Control Panel's wireDragReorder (control-panel/js/panel-core.js) but kept local to this
-// app rather than shared, since the two tools don't otherwise share a script. Re-renders
+// Native HTML5 drag-and-drop reordering for Moveset by Game rows. Re-renders
 // the whole editor on drop so every row's idx-bound handlers stay correct.
 function wireMoveRowDragReorder(container){
   let dragIndex = null;
@@ -693,7 +691,7 @@ function resolveMoveSlotDisplay(g, slot){
   return resolveDisplayedMove(currentFormPreviewPokemon(), moveName, moveId, zMoveMode, maxMoveMode, GAME_PRESET_INDEX[g.gameKey]);
 }
 // Z-Move toggle: offered per slot (only one per row, like a real Z-Ring) whenever the
-// row's game is flagged supportsZMove in GAME_PRESETS (Control Panel > Games); clicking it
+// row's game is flagged supportsZMove in GAME_PRESETS; clicking it
 // cycles no Z-Move -> Basic Z-Move -> Special Z-Move (only when one actually applies to
 // this move) -> back to no Z-Move, in zMoveCycleStates' order (js/moves.js). Only one slot
 // per row can be the Z-Move, so taking over from another slot resets to Basic. Gigantamax
@@ -734,8 +732,8 @@ function moveSlotTogglesHTML(idx, slot, g, moveId){
   return buttons ? '<div class="move-slot-toggles">' + buttons + '</div>' : '';
 }
 function moveDropdownRowsHTML(idx, slot, query){
-  const q = String(query || '').trim().toLowerCase();
-  const matches = (q ? MOVE_LIST.filter(function(m){ return m.name.toLowerCase().includes(q); }) : MOVE_LIST.slice())
+  const q = normalizeMoveNameForMatch(query);
+  const matches = (q ? MOVE_LIST.filter(function(m){ return normalizeMoveNameForMatch(m.name).includes(q); }) : MOVE_LIST.slice())
     .sort(function(a, b){ return a.name.localeCompare(b.name); })
     .slice(0, q ? 50 : Infinity);
   if(!matches.length){
@@ -832,15 +830,9 @@ function cycleMoveSlotMaxMode(idx, slot){
   g.maxMoveModes[slot] = cycleMaxMoveMode(g.maxMoveModes[slot], entry.type, currentFormPreviewPokemon());
   refreshMoveSlot(idx, slot);
 }
-// Mega Ability (see data/mega-types.js) only applies to a Moveset by Game row when the
-// Pokémon is currently Mega and that row's game is flagged supportsMega in GAME_PRESETS
-// (Control Panel > Games), since not every game a Pokémon has appeared in supports Mega
-// Evolution. Returns '' when nothing overrides that row's typed-in Ability.
-// Renders the whole Ability area for a game row: nothing at all for games flagged
-// noAbilities in GAME_PRESETS (Control Panel > Games), otherwise the normal input plus,
-// when eligible, a dimmed Mega icon the user can click to apply the Mega Ability to that
-// specific row, since some Megas were introduced after a given game released, so this isn't
-// automatic just because the game generally supports Mega Evolution.
+// Games flagged noAbilities hide the Ability field. Other games show the usual input.
+// When the Pokémon is Mega and the game supports Mega Evolution, the player can
+// apply its Mega Ability to this row. Some Mega forms debuted after the game did.
 function abilityFieldHTML(idx, g){
   const preset = GAME_PRESET_INDEX[g.gameKey];
   if(preset && preset.noAbilities){
@@ -1276,7 +1268,9 @@ document.getElementById('btnExport').onclick = async () => {
   showToast('Dex exported as JSON.');
 };
 
-document.getElementById('btnImport').onclick = async () => {
+document.getElementById('btnImport').onclick = () => confirmReplaceBeforeImport(importRosterFile);
+
+async function importRosterFile(){
   if(FS_SUPPORTED){
     try{
       const [handle] = await window.showOpenFilePicker({
@@ -1294,7 +1288,7 @@ document.getElementById('btnImport').onclick = async () => {
     }
   }
   document.getElementById('fileInput').click();
-};
+}
 
 document.getElementById('fileInput').onchange = (e) => {
   const file = e.target.files[0];

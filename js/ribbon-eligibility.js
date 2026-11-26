@@ -4,13 +4,12 @@
  * Works out whether a given Pokemon could ever get a given Ribbon.
  *
  * Game reachability is driven entirely by each game's own Travels To list (and, for games
- * with a Virtual Console/re-release version, that version's own Travels To list), both
- * editable in Control Panel -> Games. Which of those two lists applies to a given Pokemon
+ * with a Virtual Console/re-release version, that version's own Travels To list). Which of those two lists applies to a given Pokemon
  * depends on its actual Original/Virtual Console version for that game -- see
  * pokemonGameVersion() below, derived from its Moveset by Game entries rather than a
  * separate manual toggle, since two copies of the same game can have different transfer
  * paths. A Ribbon's own game restriction comes from its availableGames field if the
- * Control Panel has one set for it (Control Panel -> Ribbons), falling back to the
+ * catalog supplies one, falling back to the
  * community Ribbon dataset in data/ribbon-eligibility-data.js for Ribbons nobody has
  * customized yet. Species bans (banned/bannedBDSP/nomythical) still come from that same
  * community dataset. Met Level is handled separately in data/ribbon-met-level.js and
@@ -32,7 +31,7 @@
  * treated as eligible.
  *
  * A Pokemon's evolution line (the `evolvesFrom` field on each data/pokemon-species.js
- * entry, editable from Control Panel -> Pokemon Database) widens both the
+ * entry) widens both the
  * game-reachability and species-ban checks above to look at the current species AND every
  * species it evolved from -- see speciesLineageIds() below -- since a Ribbon earned or a
  * game reached as a pre-evolution stays valid after evolving forward. A later evolution's
@@ -46,7 +45,7 @@
  */
 
 // Maps this app's own Game Preset keys to the community dataset's game keys (used only as
-// a fallback for Ribbons that don't have availableGames configured in the Control Panel).
+// a fallback for Ribbons that don't have availableGames configured in the catalog).
 const APP_GAME_TO_RIBBON_GAME = {
   red: 'red', blue: 'blue', green: 'green', yellow: 'yellow',
   gold: 'gold', silver: 'silver', crystal: 'crystal',
@@ -245,7 +244,7 @@ function reachableGamesForPokemon(p){
   return forwardReachableGamesFrom(p, gameKeysForPokemon(p));
 }
 
-// A Ribbon's configured game list: the Control Panel's own availableGames if set (already
+// A Ribbon's configured game list: the item's availableGames if set (already
 // in this app's Game Preset keys), otherwise the community dataset's list (translated from
 // its own key space), otherwise null for "no restriction known".
 function ribbonAvailableGames(key){
@@ -421,7 +420,7 @@ function ribbonSpeciesBlockedForGame(p, key, gameKey){
   return !lineageClearForRibbonInGame(p, rule, gameKey);
 }
 
-// Whether a Ribbon is flagged Event in the catalog (Control Panel -> Ribbons/Marks/Misc):
+// Whether a Ribbon is flagged Event in the catalog:
 // distributed only through special events, never earnable through normal gameplay. Only
 // consulted by the Ribbons Helper below -- everywhere else (the Ribbons filter, eligibility
 // checks, Give All Eligible) treats an Event Ribbon exactly like any other.
@@ -431,7 +430,7 @@ function ribbonIsEventOnly(key){
   return !!entry?.event;
 }
 
-// Whether a Ribbon's release status (Control Panel -> Ribbons/Marks/Misc) is Unreleased.
+// Whether a Ribbon's release status is Unreleased.
 // A Memory Ribbon sub-ribbon has no status of its own -- it's the parent Memory Ribbon
 // item that's marked released/unreleased -- so this checks the parent's status for those.
 // Only consulted by the Ribbons Helper below; the Ribbons filter elsewhere still shows
@@ -447,8 +446,7 @@ function ribbonIsUnreleased(entry){
 // specific Pokemon can earn through one specific game. Ribbons with no availableGames
 // restriction at all are left out on purpose -- they're not tied to any one game, so
 // listing them under a single game here would misstate where they actually come from.
-// Whether a Ribbon is currently locked behind an unmet prerequisite (Control Panel ->
-// Ribbons/Marks/Misc -> Requires). Only top-level items can have a requires list (a
+// Whether a Ribbon is currently locked behind an unmet prerequisite. Only top-level items can have a requires list (a
 // Memory Ribbon sub-ribbon has no such field), so this is a no-op for sub-ribbon keys.
 // Only consulted by the Ribbons Helper below -- the Ribbons filter elsewhere already
 // disables a locked Ribbon's badge directly via isAchievementLocked(), independent of

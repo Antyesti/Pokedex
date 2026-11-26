@@ -12,10 +12,7 @@
  * own item-level fields in data/achievements.js first (availableGames, nomythical, banned,
  * bannedInGame -- the last one generalizes this file's BD/SP-specific bannedBDSP to any
  * game), and only falls back to an entry here for whichever of those an item has never had
- * set. This file is regenerated automatically on every Control Panel save: editing a
- * Ribbon's restrictions there prunes the now-redundant fields out of this file's copy of
- * that Ribbon, so an entry here shrinks and eventually disappears as each Ribbon gets
- * edited, rather than the two sources silently drifting apart. A Ribbon missing from here
+ * set. A Ribbon missing from here
  * entirely has no known restriction beyond whatever data/ribbon-met-level.js already
  * covers.
  */
@@ -684,7 +681,7 @@ const RIBBON_ELIGIBILITY = {
 };
 
 // Species this app treats as "Mythical" for the purposes of a Ribbon's nomythical flag --
-// derived from each species entry's own `mythical` flag (Control Panel > Species) rather
+// derived from each species entry's own `mythical` flag rather
 // than a separate hardcoded list, so it can't drift out of sync with the actual roster and
 // so a species with multiple forme entries (Deoxys, Hoopa, Keldeo, Magearna, Meloetta,
 // Shaymin, Zarude) gets every one of its formes covered, not just whichever one a

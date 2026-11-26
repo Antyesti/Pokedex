@@ -61,8 +61,7 @@ const CUSTOM_ACHIEVEMENT_TAGS = [
 // every sub-ribbon has been selected — for "you need the full set" achievements like a
 // custom Leaf Crown that requires all 5 Shiny Leaf pieces before it counts as earned.
 //
-// A sub-ribbon flagged excludeFromGold (Control Panel > edit a Memory Ribbon > per
-// sub-ribbon checkbox) doesn't count toward completing the set for Gold specifically --
+// A sub-ribbon flagged excludeFromGold doesn't count toward completing the set for Gold specifically --
 // World Ability Ribbon is the standing example, since it's no longer obtainable but still
 // a legitimate sub-ribbon someone may already have from when it was. It still counts
 // everywhere else: the sub-ribbon relationship itself, the raw have/total shown in the
@@ -144,7 +143,7 @@ function resolveTitleDisplay(p, key){
     const subject = (p.nickname || p.species || 'Pok\u00e9mon').trim();
     return { type:'prefix', text: `${trainer}'s`, full: `${trainer}'s ${subject}` };
   }
-  // Generic dynamic title: the control panel defines a field label/placeholder and a
+  // Generic dynamic title: the catalog defines a field label/placeholder and a
   // template containing "{value}", filled in per-Pokémon (see customTitleFieldHTML).
   // Falls back to the placeholder text itself when nothing's been entered yet.
   if(item.title.type === 'dynamic'){
@@ -265,7 +264,7 @@ function cleanupLockedAchievements(p){
 // Builds the rich tooltip markup for an achievement badge (see js/utils.js
 // showCustomTooltip, which calls this whenever a trigger has data-tooltip-achv rather than
 // a plain data-tooltip): icon, name, the item's own Guiding Text if one's been written for
-// it (Control Panel > Ribbons/Marks/Misc > edit an achievement), an optional dynamic note
+// it, an optional dynamic note
 // for whatever's true about THIS Pokemon right now (locked, restricted, already selected,
 // last chance, ...), and which games it's available in as a plain icon row -- no labels,
 // since the icons alone are what this row is for.

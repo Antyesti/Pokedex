@@ -110,6 +110,7 @@ function init(){
   // very first paint, so starting it any earlier would draw Pikachu regardless of what
   // was actually saved.
   startFooterEasterEgg();
+  if(typeof initSettingsRoute === 'function') initSettingsRoute();
   renderTypeFilterPanel();
   document.querySelectorAll('#viewToggle .view-toggle-btn[data-density]').forEach(btn=>{
     btn.addEventListener('click', () => {
@@ -211,6 +212,8 @@ function setupEasterEggSecretToggle(){
       state.settings.easterEggPreferred = easterEggPreferSuicune() ? 'pikachu' : 'suicune';
       scheduleAutosave();
       if(easterEggShowBase) easterEggShowBase();
+      const hiddenAvatars = TRAINER_AVATARS.filter(a => a.hidden).length;
+      if(hiddenAvatars) showToast(`Easter Egg unlocked. ${hiddenAvatars} Hidden Trainer Avatars are now in the avatar picker.`);
     }
   });
 }
@@ -361,6 +364,7 @@ function render(){
   renderStats();
   populateGameFilter();
   renderGrid();
+  syncStateHooks();
 }
 
 function renderTrainer(){
@@ -423,7 +427,12 @@ function mixRgb(rgb, target, amount){
 }
 function rgbaStr(rgb, alpha){ return `rgba(${Math.round(rgb[0])},${Math.round(rgb[1])},${Math.round(rgb[2])},${alpha})`; }
 
+// The Master Ball colors the user picked, before the Card Style look is laid over them.
+let lastCustomTheme = null;
 function applyCustomTheme(custom){
+  lastCustomTheme = custom;
+  const cardStyle = appliedBackground && BG_CARD_STYLES[appliedBackground.cardStyle];
+  if(cardStyle) custom = Object.assign({}, custom, cardStyle.look); // Light = Poké Ball card colors, Dark = Beast Ball card colors
   const html = document.documentElement;
   const btn = document.getElementById('themeToggleBtn');
   html.setAttribute('data-theme', 'custom');
@@ -470,8 +479,8 @@ function applyCustomTheme(custom){
 
   if(custom.style === 'neumorphic'){
     // Derive shadow tones from the chosen background color rather than fixed white/black,
-    // so a dark custom background still gets a perceptible neumorphic effect.
-    const highlightMix = isLightBg ? 0.92 : 0.35;
+    // so the highlight takes on the background's hue and a dark background still gets a visible effect.
+    const highlightMix = isLightBg ? 0.55 : 0.35;
     const shadowMix = isLightBg ? 0.10 : 0.55;
     const highlightRgb = mixRgb(bgRgb, [255,255,255], highlightMix);
     const shadowRgb = mixRgb(bgRgb, [0,0,0], shadowMix);
@@ -558,6 +567,88 @@ function applyFontSlot(slot, font){
   }
 }
 
+// Where each color sits, in percent. Explicit `stops` win; otherwise they come from Smoothness
+// (100 blends neighbours evenly, 0 makes hard bands). `wrap` is for conic gradients that close on the first color.
+function bgStopPositions(bg, wrap){
+  const n = bg.colors.length;
+  if(bg.stops && bg.stops.length === n) return bg.stops.slice();
+  if(n === 1) return [0];
+  const s = bg.smoothness / 100;
+  return bg.colors.map((c, i) => {
+    const smooth = (wrap ? i / n : i / (n - 1)) * 100, hard = (i + 0.5) / n * 100;
+    return hard + (smooth - hard) * s;
+  });
+}
+const bgPct = v => `${+Number(v).toFixed(2)}%`;
+function bgStops(bg, alpha, wrap){
+  const n = bg.colors.length;
+  // Fully opaque colors are written as plain hex; anything else as rgba.
+  const col = c => alpha >= 1 ? c.toLowerCase() : rgbaStr(hexToRgbArr(c), alpha);
+  if(n === 1) return [`${col(bg.colors[0])} 0%`, `${col(bg.colors[0])} 100%`];
+  const out = [];
+  if(bg.stops && bg.stops.length === n){
+    bg.colors.forEach((c, i) => out.push(`${col(c)} ${bgPct(bg.stops[i])}`));
+  } else {
+    const s = bg.smoothness / 100, band = 100 / n;
+    bgStopPositions(bg, wrap).forEach((center, i) => {
+      const half = (1 - s) * band / 2;
+      const from = Math.max(0, center - half), to = Math.min(100, center + half);
+      out.push(`${col(bg.colors[i])} ${bgPct(from)}`);
+      if(to - from > 0.01) out.push(`${col(bg.colors[i])} ${bgPct(to)}`);
+    });
+  }
+  if(wrap) out.push(`${col(bg.colors[0])} 100%`);
+  return out;
+}
+// One gradient from a background object. `type`/`direction` can be overridden (the editor's preview bar is always linear).
+function bgGradient(bg, alpha, over){
+  const o = Object.assign({ type: bg.type, direction: bg.direction }, over || {});
+  const at = (bg.posX === 50 && bg.posY === 50) ? 'center' : `${bg.posX}% ${bg.posY}%`;
+  if(o.type === 'radial') return `radial-gradient(${bg.shape || 'ellipse'} at ${at}, ${bgStops(bg, alpha).join(', ')})`;
+  if(o.type === 'conic') return `conic-gradient(from ${o.direction}deg at ${bg.posX}% ${bg.posY}%, ${bgStops(bg, alpha, true).join(', ')})`;
+  return `linear-gradient(${o.direction}deg, ${bgStops(bg, alpha).join(', ')})`;
+}
+function bgGrainImage(amount){
+  const op = (amount / 100 * 0.6).toFixed(3);
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(#n)' opacity='${op}'/></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+// Animation speed 0 (slow) to 100 (fast) -> seconds per drift cycle, 120s down to 8s.
+const bgAnimSeconds = speed => 120 * Math.pow(8 / 120, Math.max(0, Math.min(100, speed)) / 100);
+// The background currently on screen. The Master Ball theme reads it to borrow the Card Style look.
+let appliedBackground = null;
+// Kept as its own value because the editor passes its live draft in, so comparing against appliedBackground would see the edit already made.
+let appliedCardStyle = null;
+// Paints the page behind everything. `bg` is a background object, or null/disabled to clear it.
+// It only ever shows on the Master Ball theme (CSS gates it on data-theme="custom").
+function applyBackground(bg){
+  const html = document.documentElement;
+  const props = ['--user-bg-image', '--user-bg-size', '--user-bg-blend', '--user-bg-anim-duration'];
+  const on = !!(bg && bg.enabled && bg.colors && bg.colors.length);
+  const hadLook = appliedCardStyle;
+  appliedBackground = on ? bg : null;
+  if(!on){
+    html.removeAttribute('data-bg');
+    html.removeAttribute('data-bg-anim');
+    props.forEach(p => html.style.removeProperty(p));
+  } else {
+    const alpha = Math.max(0, Math.min(100, bg.intensity)) / 100;
+    // Layers, top to bottom: grain, vignette, the gradient itself (always three, so animation positions line up).
+    const grain = bg.grain > 0 ? bgGrainImage(bg.grain) : 'none';
+    const vig = bg.vignette > 0 ? `radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(0,0,0,${(bg.vignette / 100 * 0.7).toFixed(3)}) 100%)` : 'none';
+    html.style.setProperty('--user-bg-image', `${grain}, ${vig}, ${bgGradient(bg, alpha)}`);
+    html.style.setProperty('--user-bg-size', `180px 180px, 100% 100%, ${bg.animate ? '200% 200%' : '100% 100%'}`);
+    html.style.setProperty('--user-bg-blend', 'overlay, normal, normal');
+    html.style.setProperty('--user-bg-anim-duration', `${bgAnimSeconds(bg.animSpeed).toFixed(1)}s`);
+    html.setAttribute('data-bg', 'custom');
+    if(bg.animate) html.setAttribute('data-bg-anim', 'on'); else html.removeAttribute('data-bg-anim');
+  }
+  // The Card Style also decides how the cards look, so refresh the Master Ball theme if it's showing.
+  const hasLook = appliedBackground ? appliedBackground.cardStyle : null;
+  appliedCardStyle = hasLook;
+  if(hadLook !== hasLook && lastCustomTheme && html.getAttribute('data-theme') === 'custom') applyCustomTheme(lastCustomTheme);
+}
+
 function applySettings(){
   const s = state.settings || { defaultSort:'oldest', defaultTheme:'light', custom: defaultCustomTheme(), bodyFont: defaultFontSetting(), nicknameFont: defaultFontSetting(), monoFont: defaultFontSetting() };
   if(s.defaultTheme === 'custom'){
@@ -565,6 +656,7 @@ function applySettings(){
   } else {
     setTheme(s.defaultTheme === 'dark' ? 'dark' : 'light');
   }
+  applyBackground(s.background ? normalizeBackground(s.background) : null);
   applySortValue(s.defaultSort || 'oldest');
   updateSortTrigger();
   applyFontSlot('body', s.bodyFont || defaultFontSetting());
@@ -919,7 +1011,7 @@ function renderStatsDashboard(){
     const a = stripHTML(g.ability).trim().toLowerCase(); if(a) uniqueAbilityNames.add(a);
   }));
   const withSprite = list.filter(p=>p.sprite).length;
-  const withMetLocation = list.filter(p=>stripHTML(p.metLocation).trim().length>0).length;
+  const withMetLocation = list.filter(hasMetLocation).length;
   const withGameLogged = list.filter(p=>p.games.length>0).length;
 
   // Most awarded ribbon: which single Ribbons-category achievement has the most Pokémon
@@ -1033,7 +1125,7 @@ function renderStatsDashboard(){
         <div class="dash-cell">
           <div class="stats-section-title" style="margin-top:0;">Record Completeness</div>
           <div class="dash-list">
-            <div class="dash-list-row"><span>Has Met Location</span><b>${withMetLocation}/${total}</b></div>
+            <div class="dash-list-row"><span>Has Met Location</span><button type="button" class="stat-filter-count" onclick="showMissingMetLocations()" title="Show Pokémon without a met location" aria-label="Show ${total - withMetLocation} Pokémon without a met location">${withMetLocation}/${total}</button></div>
             <div class="dash-list-row"><span>Has Sprite</span><b>${withSprite}/${total}</b></div>
             <div class="dash-list-row"><span>Has ≥1 Game Logged</span><b>${withGameLogged}/${total}</b></div>
           </div>
@@ -1052,9 +1144,19 @@ function stripHTML(s){
   return d.textContent || '';
 }
 
+const MISSING_MET_LOCATION_QUERY = 'missing:met-location';
+function hasMetLocation(p){ return stripHTML(p.metLocation).trim().length > 0; }
+
+function showMissingMetLocations(){
+  document.getElementById('statsToggleBtn').click();
+  clearAllFilters(MISSING_MET_LOCATION_QUERY);
+  searchInput.focus();
+}
+
 function matchesSearch(p, q){
   if(!q) return true;
   q = q.toLowerCase();
+  if(q === MISSING_MET_LOCATION_QUERY) return !hasMetLocation(p);
   const hay = [
     p.nickname, p.species, stripHTML(p.notes), stripHTML(p.metLocation), p.originGame, p.lastGame,
     p.nature, p.gender, p.ball,
@@ -1075,6 +1177,7 @@ let gridFilterSignature = '';
 let gridLoadMoreObserver = null;
 
 function renderGrid(){
+  if(gridWrap.querySelector('.card-share-button[aria-expanded="true"]')) hideShareFloat();
   const q = searchInput.value.trim();
   const tFilter = typeFilterValue;
   const gFilter = gameFilterValue;
@@ -1122,6 +1225,7 @@ function renderGrid(){
     ${hasMore ? `<div class="grid-load-more" id="gridLoadMore"><button type="button" class="btn ghost" id="gridLoadMoreBtn">Load more</button></div>` : ''}
   `;
   if(sortMode === 'oldest') wireGridDragReorder(gridWrap);
+  setupCardMarquees(gridWrap);
 
   if(hasMore){
     document.getElementById('gridLoadMoreBtn').addEventListener('click', () => {
@@ -1135,6 +1239,53 @@ function renderGrid(){
 
   scheduleAutosave();
 }
+
+// A card's detail chips (met location, ball, games) stay on one line so every card is the same
+// height. When they don't fit, the row becomes a marquee: its children go into one group, the
+// group is cloned, and the track slides by exactly one group's width (see .marquee-track).
+const CARD_MARQUEE_SPEED = 32; // px per second
+function resetCardMarquee(meta){
+  const track = meta.querySelector(':scope > .marquee-track');
+  if(track){
+    const group = track.querySelector('.marquee-group');
+    meta.replaceChildren(...group.children);
+    meta.classList.remove('marquee');
+    meta.style.removeProperty('--marquee-duration');
+    meta.removeAttribute('title');
+  }
+}
+function buildCardMarquee(meta){
+  const group = document.createElement('div');
+  group.className = 'marquee-group';
+  group.append(...meta.children);
+  const copy = group.cloneNode(true);
+  copy.setAttribute('aria-hidden', 'true');
+  const trackEl = document.createElement('div');
+  trackEl.className = 'marquee-track';
+  trackEl.append(group, copy);
+  meta.replaceChildren(trackEl);
+  meta.classList.add('marquee');
+  meta.title = group.textContent.replace(/\s+/g, ' ').trim();
+  return group;
+}
+function setupCardMarquees(root){
+  // Finish each set of DOM writes before measuring the whole grid.
+  const rows = Array.from((root || document).querySelectorAll('.card-meta'));
+  rows.forEach(resetCardMarquee);
+  const overflow = rows.filter(meta => meta.scrollWidth > meta.clientWidth + 1);
+  const groups = overflow.map(buildCardMarquee);
+  const widths = groups.map(group => group.offsetWidth);
+  overflow.forEach((meta, i) => {
+    meta.style.setProperty('--marquee-duration', (widths[i] / CARD_MARQUEE_SPEED).toFixed(2) + 's');
+  });
+}
+let cardMarqueeTimer = null;
+function refreshCardMarquees(){
+  clearTimeout(cardMarqueeTimer);
+  cardMarqueeTimer = setTimeout(() => { if(typeof gridWrap !== 'undefined' && gridWrap) setupCardMarquees(gridWrap); }, 120);
+}
+window.addEventListener('resize', refreshCardMarquees);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(refreshCardMarquees);
 
 // Auto-advances gridVisibleCount when the "Load more" sentinel scrolls into view, so
 // long rosters keep loading as the user scrolls instead of requiring a manual click.
@@ -1153,7 +1304,7 @@ function observeGridLoadMore(){
 }
 
 // Native HTML5 drag-and-drop reordering for individual cards, same pattern as the
-// Moveset by Game rows (js/pokemon.js) and the Control Panel's list reordering, but keyed
+// Moveset by Game rows (js/pokemon.js), but keyed
 // by Pokémon id rather than array index so it stays correct even though the grid might
 // only be showing a filtered/searched subset of state.pokemon. Only wired up when sorted
 // Added/oldest-first (see cardHTML's dragEnabled), since that's the only view where a
@@ -1223,8 +1374,9 @@ function emptyStateHTML(title, body, showClearFilters){
 
 // Resets every search/filter control back to its default so "No matches" always has a
 // one-click way out, instead of making the user hunt down and undo each filter by hand.
-function clearAllFilters(){
-  searchInput.value = '';
+function clearAllFilters(query = ''){
+  searchInput.value = query;
+  syncSearchMirror();
   typeFilterValue = '';
   gameFilterValue = '';
   shinyOnly = false;
@@ -1548,7 +1700,7 @@ function cardHTML(p){
     ${formBadgeRowHTML(p)}
     <div class="card-top">
       <div class="card-sprite${displaySprite && usingPlaceholderSprite(p) ? ' is-placeholder-sprite' : ''}${p.preferredForm === 'mega' ? ' is-mega-sprite' : p.preferredForm === 'gigantamax' ? ' is-gmax-sprite' : ''}">${displaySprite ? `<img src="${escapeAttr(displaySprite)}">` : '<div class="brand-mark mini"></div>'}</div>
-      <div>
+      <div class="card-titles">
         <div class="card-id">${dexPrefixHTML(p)}${formPrefix}${p.species.toUpperCase()}${formSuffix}</div>
         <div class="card-name">${titledNicknameHTML(p)}</div>
         <div class="card-species">${escapeHTML(p.nature||'')}${p.nature && p.gender ? ' · ' : ''}${genderSymbolHTML(p.gender)}</div>
@@ -1565,9 +1717,9 @@ function cardHTML(p){
     <div class="card-foot ${footerInfo ? '' : 'centered'}">
       ${footerInfo}
       <div class="card-actions">
-        <div class="icon-btn" role="button" tabindex="0" aria-label="Share as image" title="Share as image" onclick="event.stopPropagation(); shareCardAsImage('${p.id}')">
+        <button type="button" class="icon-btn card-share-button" data-share-id="${escapeAttr(p.id)}" aria-haspopup="menu" aria-expanded="false" aria-label="Share as image" title="Share as image" onclick="event.stopPropagation(); toggleCardShare(this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
-        </div>
+        </button>
         <div class="icon-btn" role="button" tabindex="0" aria-label="Edit" title="Edit" onclick="event.stopPropagation(); openForm('${p.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </div>
@@ -1767,14 +1919,14 @@ function orderedBallData(){
 }
 
 // Whether a given (real, caught) ball name is one the administrator has marked as
-// eligible to be shown as a Strange Ball, in Control Panel → Poké Balls.
+// eligible to be shown as a Strange Ball in BALL_DATA.
 function ballIsStrangeEligible(ballName){
   const b = BALL_DATA.find(x => x.name === ballName);
   return !!(b && b.strangeEligible);
 }
 
 // The Poké Ball name to actually show for a Pokémon. Only a ball marked eligible in
-// Control Panel → Poké Balls can ever show as Strange Ball. p.strangeOverride, once a
+// BALL_DATA can ever show as Strange Ball. p.strangeOverride, once a
 // Pokémon has one, pins the display that way regardless of what the global setting is
 // doing or later changes to -- true always shows Strange Ball, false always shows the
 // real ball. With no override set, it just follows the global setting.
@@ -1856,13 +2008,19 @@ function trainerAvatarIconHTML(key, size){
   return `<img src="${entry.data}" alt="" style="width:${size}px;height:${size}px;flex:none;border-radius:50%;object-fit:cover;vertical-align:middle;">`;
 }
 
-// The picker's browsable list: hidden alt-art entries excluded, everything else
-// alphabetical by display name for easy scanning across dozens of entries.
+// The picker's browsable list: hidden entries stay out until the Easter Egg is unlocked
+// (and its Hidden Trainer Avatars toggle is on), everything else alphabetical by display name.
+// A hidden entry sorts right after the regular one it shares a name with.
+const trainerAvatarsUnlocked = () => !!(state.settings && state.settings.easterEggUnlocked && state.settings.hiddenAvatarsEnabled !== false);
 function orderedTrainerAvatars(){
-  return TRAINER_AVATARS.filter(a => !a.hidden).sort((a, b) => a.name.localeCompare(b.name));
+  const unlocked = trainerAvatarsUnlocked();
+  return TRAINER_AVATARS.filter(a => unlocked || !a.hidden)
+    .sort((a, b) => a.name.localeCompare(b.name) || (a.hidden ? 1 : 0) - (b.hidden ? 1 : 0));
 }
+// Hidden entries share a display name with their regular entry, so label them to tell them apart.
+function trainerAvatarLabel(a){ return a.hidden ? `${a.name} (Hidden)` : a.name; }
 
-// Groups the browsable (non-hidden) avatars by category, in Control Panel's saved category
+// Groups the browsable (non-hidden) avatars by category, in saved category
 // order, each group's own avatars alphabetical. A category with nothing visible in it --
 // either it has no avatars at all, or every avatar it has is a hidden alt-art entry -- is
 // left out entirely rather than shown as an empty heading. Uncategorized avatars (shouldn't
@@ -1876,7 +2034,7 @@ function trainerAvatarGroups(query){
 
   const groups = new Map();
   orderedTrainerAvatars().forEach(a => {
-    if(q && !a.name.toLowerCase().includes(q)) return;
+    if(q && !trainerAvatarLabel(a).toLowerCase().includes(q)) return;
     const catKey = a.category || '__other';
     if(!groups.has(catKey)){
       const cat = categories.find(c => c.key === catKey);
@@ -1902,7 +2060,7 @@ function trainerAvatarOptionsHTML(id, selectedKey, query){
     ${g.avatars.map(a => `
       <div class="ball-option ${selectedKey===a.key?'active':''}" onclick="selectTrainerAvatar('${id}','${a.key}')">
         <img src="${a.data}" alt="" style="border-radius:50%;object-fit:cover;">
-        <span>${escapeHTML(a.name)}</span>
+        <span>${escapeHTML(trainerAvatarLabel(a))}</span>
       </div>
     `).join('')}
   `).join('');
@@ -1929,7 +2087,7 @@ function trainerAvatarSelectHTML(id, selectedKey){
       <input type="hidden" id="${id}" value="${escapeAttr(selectedKey||'')}">
       <button type="button" class="ball-dropdown-trigger" onclick="toggleTrainerAvatarDropdown('${id}')">
         <span class="ball-dropdown-current">
-          ${current ? `${trainerAvatarIconHTML(current.key,26)}<span>${escapeHTML(current.name)}</span>` : `<span class="placeholder">Select a Trainer Avatar…</span>`}
+          ${current ? `${trainerAvatarIconHTML(current.key,26)}<span>${escapeHTML(trainerAvatarLabel(current))}</span>` : `<span class="placeholder">Select a Trainer Avatar…</span>`}
         </span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex:none;"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
@@ -2016,41 +2174,12 @@ function selectTrainerAvatar(id, key){
   document.getElementById(id).value = key;
   const entry = trainerAvatarData(key);
   const current = document.querySelector(`#${id}_wrap .ball-dropdown-current`);
-  current.innerHTML = entry ? `${trainerAvatarIconHTML(entry.key,26)}<span>${escapeHTML(entry.name)}</span>` : `<span class="placeholder">Select a Trainer Avatar…</span>`;
+  current.innerHTML = entry ? `${trainerAvatarIconHTML(entry.key,26)}<span>${escapeHTML(trainerAvatarLabel(entry))}</span>` : `<span class="placeholder">Select a Trainer Avatar…</span>`;
   closeTrainerAvatarDropdown();
 }
 
-document.addEventListener('click', (e) => {
-  if(!e.target.closest('.ball-dropdown')){
-    document.querySelectorAll('.ball-dropdown-panel.open').forEach(p => p.classList.remove('open'));
-  }
-  if(!e.target.closest('.trainer-avatar-dropdown') && !e.target.closest('.avatar-dropdown-portal')){
-    closeTrainerAvatarDropdown();
-  }
-  if(!e.target.closest('.title-dropdown')){
-    document.querySelectorAll('.title-dropdown-panel.open').forEach(p => p.classList.remove('open'));
-  }
-  if(!e.target.closest('.game-preset-dropdown')){
-    document.querySelectorAll('.game-preset-panel.open').forEach(p => p.classList.remove('open'));
-  }
-  if(!e.target.closest('.game-filter-dropdown')){
-    document.querySelectorAll('.game-filter-panel.open').forEach(p => p.classList.remove('open'));
-  }
-  if(!e.target.closest('.type-filter-dropdown')){
-    document.querySelectorAll('.type-filter-panel.open').forEach(p => p.classList.remove('open'));
-  }
-  if(!e.target.closest('.species-field') && !e.target.closest('.move-slot-field')){
-    document.querySelectorAll('.species-picker-panel.open').forEach(p => p.classList.remove('open'));
-  }
-  if(!e.target.closest('.text-picker-field')){
-    document.querySelectorAll('.text-picker-panel.open').forEach(p => p.classList.remove('open'));
-  }
-  // Date panels are now appended to body (not inside .date-field) so check both the
-  // field wrapper and any open date-panel directly
-  if(!e.target.closest('.date-field') && !e.target.closest('.date-panel')){
-    closeAllDatePanels();
-  }
-});
+// One shared table of dropdowns (see DROPDOWNS in ui-state.js) decides which panels a click closes.
+document.addEventListener('click', (e) => closeDropdownsOutside(e.target));
 
 /* ---------- Custom Date Picker ---------- */
 const DATE_MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];

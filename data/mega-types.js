@@ -25,967 +25,969 @@
  */
 
 const MEGA_TYPES = {
-  venusaur: [
+  "venusaur": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Grass",
         "Poison"
       ],
-      ability: "Thick Fat"
+      "ability": "Thick Fat"
     }
   ],
-  charizard: [
+  "charizard": [
     {
-      label: "X",
-      types: [
+      "label": "X",
+      "types": [
         "Fire",
         "Dragon"
       ],
-      ability: "Tough Claws"
+      "ability": "Tough Claws"
     },
     {
-      label: "Y",
-      types: [
+      "label": "Y",
+      "types": [
         "Fire",
         "Flying"
       ],
-      ability: "Drought"
+      "ability": "Drought"
     }
   ],
-  blastoise: [
+  "blastoise": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water"
       ],
-      ability: "Mega Launcher"
+      "ability": "Mega Launcher"
     }
   ],
-  beedrill: [
+  "beedrill": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Bug",
         "Poison"
       ],
-      ability: "Adaptability"
+      "ability": "Adaptability"
     }
   ],
-  pidgeot: [
+  "pidgeot": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Normal",
         "Flying"
       ],
-      ability: "No Guard"
+      "ability": "No Guard"
     }
   ],
-  alakazam: [
+  "alakazam": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Psychic"
       ],
-      ability: "Trace"
+      "ability": "Trace"
     }
   ],
   "slowbro-kantonian": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water",
         "Psychic"
       ],
-      ability: "Shell Armor"
+      "ability": "Shell Armor"
     }
   ],
-  gengar: [
+  "gengar": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ghost",
         "Poison"
       ],
-      ability: "Shadow Tag"
+      "ability": "Shadow Tag"
     }
   ],
-  kangaskhan: [
+  "kangaskhan": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Normal"
       ],
-      ability: "Parental Bond"
+      "ability": "Parental Bond"
     }
   ],
-  pinsir: [
+  "pinsir": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Bug",
         "Flying"
       ],
-      ability: "Aerilate"
+      "ability": "Aerilate"
     }
   ],
-  gyarados: [
+  "gyarados": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water",
         "Dark"
       ],
-      ability: "Mold Breaker"
+      "ability": "Mold Breaker"
     }
   ],
-  aerodactyl: [
+  "aerodactyl": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Rock",
         "Flying"
       ],
-      ability: "Tough Claws"
+      "ability": "Tough Claws"
     }
   ],
-  mewtwo: [
+  "mewtwo": [
     {
-      label: "X",
-      types: [
+      "label": "X",
+      "types": [
         "Psychic",
         "Fighting"
       ],
-      ability: "Steadfast"
+      "ability": "Steadfast"
     },
     {
-      label: "Y",
-      types: [
+      "label": "Y",
+      "types": [
         "Psychic"
       ],
-      ability: "Insomnia"
+      "ability": "Insomnia"
     }
   ],
-  dragonite: [
+  "dragonite": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Flying"
       ],
-      ability: "Multiscale"
+      "ability": "Multiscale"
     }
   ],
-  ampharos: [
+  "ampharos": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Electric",
         "Dragon"
       ],
-      ability: "Mold Breaker"
+      "ability": "Mold Breaker"
     }
   ],
-  clefable: [
+  "clefable": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fairy",
         "Flying"
       ],
-      ability: "Magic Bounce"
+      "ability": "Magic Bounce"
     }
   ],
-  victreebel: [
+  "victreebel": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Grass",
         "Poison"
       ],
-      ability: "Innards Out"
+      "ability": "Innards Out"
     }
   ],
-  starmie: [
+  "starmie": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water",
         "Psychic"
       ],
-      ability: "Huge Power"
+      "ability": "Huge Power"
     }
   ],
-  scizor: [
+  "scizor": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Bug",
         "Steel"
       ],
-      ability: "Technician"
+      "ability": "Technician"
     }
   ],
-  heracross: [
+  "heracross": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Bug",
         "Fighting"
       ],
-      ability: "Skill Link"
+      "ability": "Skill Link"
     }
   ],
-  houndoom: [
+  "houndoom": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dark",
         "Fire"
       ],
-      ability: "Solar Power"
+      "ability": "Solar Power"
     }
   ],
-  tyranitar: [
+  "tyranitar": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Rock",
         "Dark"
       ],
-      ability: "Sand Stream"
+      "ability": "Sand Stream"
     }
   ],
-  sceptile: [
+  "sceptile": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Grass",
         "Dragon"
       ],
-      ability: "Lightning Rod"
+      "ability": "Lightning Rod"
     }
   ],
-  blaziken: [
+  "blaziken": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fire",
         "Fighting"
       ],
-      ability: "Speed Boost"
+      "ability": "Speed Boost"
     }
   ],
-  swampert: [
+  "swampert": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water",
         "Ground"
       ],
-      ability: "Swift Swim"
+      "ability": "Swift Swim"
     }
   ],
-  gardevoir: [
+  "gardevoir": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Psychic",
         "Fairy"
       ],
-      ability: "Pixilate"
+      "ability": "Pixilate"
     }
   ],
-  sableye: [
+  "sableye": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dark",
         "Ghost"
       ],
-      ability: "Magic Bounce"
+      "ability": "Magic Bounce"
     }
   ],
-  mawile: [
+  "mawile": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Steel",
         "Fairy"
       ],
-      ability: "Huge Power"
+      "ability": "Huge Power"
     }
   ],
-  aggron: [
+  "aggron": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Steel"
       ],
-      ability: "Filter"
+      "ability": "Filter"
     }
   ],
-  medicham: [
+  "medicham": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fighting",
         "Psychic"
       ],
-      ability: "Pure Power"
+      "ability": "Pure Power"
     }
   ],
-  manectric: [
+  "manectric": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Electric"
       ],
-      ability: "Intimidate"
+      "ability": "Intimidate"
     }
   ],
-  camerupt: [
+  "camerupt": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fire",
         "Ground"
       ],
-      ability: "Sheer Force"
+      "ability": "Sheer Force"
     }
   ],
-  altaria: [
+  "altaria": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Fairy"
       ],
-      ability: "Pixilate"
+      "ability": "Pixilate"
     }
   ],
-  banette: [
+  "banette": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ghost"
       ],
-      ability: "Prankster"
+      "ability": "Prankster"
     }
   ],
-  absol: [
+  "absol": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dark"
       ],
-      ability: "Magic Bounce"
+      "ability": "Magic Bounce"
     },
     {
-      label: "Z",
-      types: [
+      "label": "Z",
+      "types": [
         "Dark",
         "Ghost"
       ],
-      ability: "Sharpness"
+      "ability": "Sharpness"
     }
   ],
-  glalie: [
+  "glalie": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ice"
       ],
-      ability: "Refrigerate"
+      "ability": "Refrigerate"
     }
   ],
-  salamence: [
+  "salamence": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Flying"
       ],
-      ability: "Aerilate"
+      "ability": "Aerilate"
     }
   ],
-  metagross: [
+  "metagross": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Steel",
         "Psychic"
       ],
-      ability: "Tough Claws"
+      "ability": "Tough Claws"
     }
   ],
-  latias: [
+  "latias": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Psychic"
       ],
-      ability: "Levitate"
+      "ability": "Levitate"
     }
   ],
-  latios: [
+  "latios": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Psychic"
       ],
-      ability: "Levitate"
+      "ability": "Levitate"
     }
   ],
-  rayquaza: [
+  "rayquaza": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Flying"
       ],
-      ability: "Delta Stream"
+      "ability": "Delta Stream"
     }
   ],
-  garchomp: [
+  "garchomp": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Ground"
       ],
-      ability: "Sand Force"
+      "ability": "Sand Force"
     },
     {
-      label: "Z",
-      types: [
+      "label": "Z",
+      "types": [
         "Dragon"
       ],
-      ability: "Levitate"
+      "ability": "Levitate"
     }
   ],
-  lucario: [
+  "lucario": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fighting",
         "Steel"
       ],
-      ability: "Adaptability"
+      "ability": "Adaptability"
     },
     {
-      label: "Z",
-      types: [
+      "label": "Z",
+      "types": [
         "Fighting",
         "Steel"
       ],
-      ability: "Aura Guard"
+      "ability": "Aura Guard"
     }
   ],
-  lopunny: [
+  "lopunny": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Normal",
         "Fighting"
       ],
-      ability: "Scrappy"
+      "ability": "Scrappy"
     }
   ],
-  gallade: [
+  "gallade": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Psychic",
         "Fighting"
       ],
-      ability: "Inner Focus"
+      "ability": "Inner Focus"
     }
   ],
-  audino: [
+  "audino": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Normal",
         "Fairy"
       ],
-      ability: "Healer"
+      "ability": "Healer"
     }
   ],
-  diancie: [
+  "diancie": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Rock",
         "Fairy"
       ],
-      ability: "Magic Bounce"
+      "ability": "Magic Bounce"
     }
   ],
-  froslass: [
+  "froslass": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ice",
         "Ghost"
       ],
-      ability: "Snow Warning"
+      "ability": "Snow Warning"
     }
   ],
-  emboar: [
+  "emboar": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fire",
         "Fighting"
       ],
-      ability: "Mold Breaker"
+      "ability": "Mold Breaker"
     }
   ],
-  excadrill: [
+  "excadrill": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ground",
         "Steel"
       ],
-      ability: "Piercing Drill"
+      "ability": "Piercing Drill"
     }
   ],
-  scolipede: [
+  "scolipede": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Bug",
         "Poison"
       ],
-      ability: "Shell Armor"
+      "ability": "Shell Armor"
     }
   ],
-  scrafty: [
+  "scrafty": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dark",
         "Fighting"
       ],
-      ability: "Intimidate"
+      "ability": "Intimidate"
     }
   ],
-  eelektross: [
+  "eelektross": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Electric"
       ],
-      ability: "Eelevate"
+      "ability": "Eelevate"
     }
   ],
-  chandelure: [
+  "chandelure": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ghost",
         "Fire"
       ],
-      ability: "Infiltrator"
+      "ability": "Infiltrator"
     }
   ],
-  chesnaught: [
+  "chesnaught": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Grass",
         "Fighting"
       ],
-      ability: "Bulletproof"
+      "ability": "Bulletproof"
     }
   ],
-  delphox: [
+  "delphox": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fire",
         "Psychic"
       ],
-      ability: "Levitate"
+      "ability": "Levitate"
     }
   ],
-  greninja: [
+  "greninja": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water",
         "Dark"
       ],
-      ability: "Protean"
+      "ability": "Protean"
     }
   ],
-  pyroar: [
+  "pyroar": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fire",
         "Normal"
       ],
-      ability: "Fire Mane"
+      "ability": "Fire Mane"
     }
   ],
-  malamar: [
+  "malamar": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dark",
         "Psychic"
       ],
-      ability: "Contrary"
+      "ability": "Contrary"
     }
   ],
-  barbaracle: [
+  "barbaracle": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Rock",
         "Fighting"
       ],
-      ability: "Tough Claws"
+      "ability": "Tough Claws"
     }
   ],
-  dragalge: [
+  "dragalge": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Poison",
         "Dragon"
       ],
-      ability: "Regenerator"
+      "ability": "Regenerator"
     }
   ],
-  hawlucha: [
+  "hawlucha": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fighting",
         "Flying"
       ],
-      ability: "No Guard"
+      "ability": "No Guard"
     }
   ],
   "zygarde-complete": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Ground"
       ]
     }
   ],
-  drampa: [
+  "drampa": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Normal",
         "Dragon"
       ],
-      ability: "Berserk"
+      "ability": "Berserk"
     }
   ],
-  falinks: [
+  "falinks": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fighting"
       ],
-      ability: "Defiant"
+      "ability": "Defiant"
     }
   ],
   "raichu-kantonian": [
     {
-      label: "X",
-      types: [
+      "label": "X",
+      "types": [
         "Electric"
       ],
-      ability: "Electric Surge"
+      "ability": "Electric Surge"
     },
     {
-      label: "Y",
-      types: [
+      "label": "Y",
+      "types": [
         "Electric"
       ],
-      ability: "No Guard"
+      "ability": "No Guard"
     }
   ],
-  chimecho: [
+  "chimecho": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Psychic",
         "Steel"
       ],
-      ability: "Levitate"
+      "ability": "Levitate"
     }
   ],
-  staraptor: [
+  "staraptor": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fighting",
         "Flying"
       ],
-      ability: "Contrary"
+      "ability": "Contrary"
     }
   ],
-  heatran: [
+  "heatran": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fire",
         "Steel"
-      ]
+      ],
+      "ability": "Water Compaction"
     }
   ],
-  darkrai: [
+  "darkrai": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dark"
       ]
     }
   ],
-  golurk: [
+  "golurk": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ground",
         "Ghost"
       ],
-      ability: "Unseen Fist"
+      "ability": "Unseen Fist"
     }
   ],
-  crabominable: [
+  "crabominable": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fighting",
         "Ice"
       ],
-      ability: "Iron Fist"
+      "ability": "Iron Fist"
     }
   ],
-  golisopod: [
+  "golisopod": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Bug",
         "Steel"
       ],
-      ability: "Tough Claws"
+      "ability": "Tough Claws"
     }
   ],
-  magearna: [
+  "magearna": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Steel",
         "Fairy"
       ]
     }
   ],
-  zeraora: [
+  "zeraora": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Electric"
       ]
     }
   ],
-  scovillain: [
+  "scovillain": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Grass",
         "Fire"
       ],
-      ability: "Spicy Spray"
+      "ability": "Spicy Spray"
     }
   ],
-  glimmora: [
+  "glimmora": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Rock",
         "Poison"
       ],
-      ability: "Adaptability"
+      "ability": "Adaptability"
     }
   ],
   "tatsugiri-curly": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Water"
-      ]
+      ],
+      "ability": "Premium Grade"
     }
   ],
-  baxcalibur: [
+  "baxcalibur": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Ice"
       ],
-      ability: "Thermal Exchange"
+      "ability": "Thermal Exchange"
     }
   ],
-  abomasnow: [
+  "abomasnow": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ice",
         "Grass"
       ],
-      ability: "Snow Warning"
+      "ability": "Snow Warning"
     }
   ],
-  feraligatr: [
+  "feraligatr": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water",
         "Dragon"
       ],
-      ability: "Dragonize"
+      "ability": "Dragonize"
     }
   ],
-  sharpedo: [
+  "sharpedo": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water",
         "Dark"
       ],
-      ability: "Strong Jaw"
+      "ability": "Strong Jaw"
     }
   ],
-  steelix: [
+  "steelix": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Steel",
         "Ground"
       ],
-      ability: "Sand Force"
+      "ability": "Sand Force"
     }
   ],
-  meganium: [
+  "meganium": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Grass",
         "Fairy"
       ],
-      ability: "Mega Sol"
+      "ability": "Mega Sol"
     }
   ],
-  skarmory: [
+  "skarmory": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Steel",
         "Flying"
       ],
-      ability: "Stalwart"
+      "ability": "Stalwart"
     }
   ],
-  groudon: [
+  "groudon": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Ground",
         "Fire"
       ],
-      ability: "Desolate Land"
+      "ability": "Desolate Land"
     }
   ],
-  kyogre: [
+  "kyogre": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Water"
       ],
-      ability: "Primordial Sea"
+      "ability": "Primordial Sea"
     }
   ],
   "necrozma-dawn-wings": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Psychic",
         "Dragon"
       ],
-      ability: "Neuroforce"
+      "ability": "Neuroforce"
     }
   ],
   "necrozma-dusk-mane": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Psychic",
         "Dragon"
       ],
-      ability: "Neuroforce"
+      "ability": "Neuroforce"
     }
   ],
   "tatsugiri-droopy": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Water"
       ],
-      ability: ""
+      "ability": "Premium Grade"
     }
   ],
   "tatsugiri-stretchy": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Dragon",
         "Water"
       ],
-      ability: ""
+      "ability": "Premium Grade"
     }
   ],
   "magearna-original-color": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Steel",
         "Fairy"
       ],
-      ability: ""
+      "ability": ""
     }
   ],
   "floette-eternal-flower": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Fairy"
       ],
-      ability: "Fairy Aura"
+      "ability": "Fairy Aura"
     }
   ],
-  meowstic: [
+  "meowstic": [
     {
-      label: "",
-      types: [
+      "label": "",
+      "types": [
         "Psychic"
       ],
-      ability: "Trace"
+      "ability": "Trace"
     }
   ]
 };

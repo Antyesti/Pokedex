@@ -2,8 +2,7 @@
  * Characteristics
  * ---------------
  * Options for the Characteristic field's dropdown (one per Pokémon, shown the same way
- * as Trainer Notes). Just a flat list of names, editable in the Control Panel's
- * Characteristics tab.
+ * as Trainer Notes). The data is a flat list of names.
  */
 
 const CHARACTERISTICS = [

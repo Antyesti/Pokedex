@@ -1,6 +1,6 @@
 @keyframes ambientDrift{
-  0%   { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
-  100% { background-position: 10% 8%, 88% 12%, 45% 92%, 0 0; }
+  0%   { transform:translate3d(2%, 2%, 0); }
+  100% { transform:translate3d(-2%, -2%, 0); }
 }
 
 @keyframes markGlow{

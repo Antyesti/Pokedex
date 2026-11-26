@@ -6,6 +6,48 @@ let state = {
   pokemon: []
 };
 
+/* ---- Custom page background (Master Ball theme only) ----
+ * colors + optional explicit stops (percent positions) + shape/position + effects.
+ * Older saved configs without shape, stops, cardStyle or animSpeed get the defaults below. */
+const BG_MAX_COLORS = 5;
+const BG_TYPES = ['linear', 'radial', 'conic'];
+const BG_SHAPES = ['ellipse', 'circle'];
+// Card Style: light or dark card colors (the Poké Ball or Beast Ball base and text colors) for the page background.
+// Surface Style (glass or neumorphic) and the user's accent colors are left alone.
+const BG_CARD_STYLES = {
+  dark: { label: 'Dark', look: { bg: '#0B0F14', text: '#E8EDF2' } },
+  light: { label: 'Light', look: { bg: '#F0F0F0', text: '#222224' } }
+};
+function defaultBackground(){
+  return { enabled: false, cardStyle: 'dark', type: 'linear', shape: 'ellipse', colors: ['#EFB4AA', '#5B2FD1'], stops: null, direction: 135, intensity: 100,
+    smoothness: 100, grain: 0, vignette: 0, animate: false, animSpeed: 50, posX: 50, posY: 50 };
+}
+function normalizeBackground(b){
+  const def = defaultBackground();
+  if(!b || typeof b !== 'object') return def;
+  const hex = /^#[0-9a-f]{6}$/i;
+  let colors = Array.isArray(b.colors) ? b.colors.filter(c => typeof c === 'string' && hex.test(c)).map(c => c.toUpperCase()) : [];
+  colors = colors.slice(0, BG_MAX_COLORS);
+  if(!colors.length) colors = def.colors;
+  const num = (v, lo, hi, d) => (typeof v === 'number' && isFinite(v)) ? Math.min(hi, Math.max(lo, Math.round(v))) : d;
+  const pos = (v, d) => [0, 50, 100].includes(v) ? v : d;
+  // Explicit stops must match the colors one for one; they're clamped to 0-100 and kept in ascending order.
+  let stops = null;
+  if(Array.isArray(b.stops) && b.stops.length === colors.length && b.stops.every(v => typeof v === 'number' && isFinite(v))){
+    let prev = 0;
+    stops = b.stops.map(v => (prev = Math.max(prev, Math.min(100, Math.max(0, Math.round(v * 100) / 100)))));
+  }
+  return {
+    enabled: !!b.enabled, cardStyle: BG_CARD_STYLES[b.cardStyle] ? b.cardStyle : (BG_CARD_STYLES[b.preset] ? b.preset : def.cardStyle), // `preset` is the name older saves used
+    type: BG_TYPES.includes(b.type) ? b.type : def.type, shape: BG_SHAPES.includes(b.shape) ? b.shape : def.shape,
+    colors, stops,
+    direction: num(b.direction, 0, 360, def.direction), intensity: num(b.intensity, 0, 100, def.intensity),
+    smoothness: num(b.smoothness, 0, 100, def.smoothness), grain: num(b.grain, 0, 100, def.grain),
+    vignette: num(b.vignette, 0, 100, def.vignette), animate: !!b.animate, animSpeed: num(b.animSpeed, 0, 100, def.animSpeed),
+    posX: pos(b.posX, 50), posY: pos(b.posY, 50)
+  };
+}
+
 function cryptoId(){ return 'p_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
 
 function findPokemonById(id){ return state.pokemon.find(x=>x.id===id); }
@@ -65,7 +107,7 @@ function normalizePokemon(p){
 
   // Achievements: ribbons/marks/misc selections, Memory Ribbon sub-collections, custom
   // achievements, partner trainer name (for the dynamic Partner Ribbon title), custom
-  // dynamic title field values (for any other achievement with a control-panel-defined
+  // dynamic title field values (for any other achievement with a catalog-defined
   // dynamic title), and the single active title shown beside the nickname.
   if(!Array.isArray(p.achievementKeys)) p.achievementKeys = [];
   if(!Array.isArray(p.contestMemorySubKeys)) p.contestMemorySubKeys = [];

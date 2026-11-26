@@ -17,8 +17,9 @@ function findMoveEntry(moveId){
   return MOVE_INDEX[moveId] || null;
 }
 
+// Save files and keyboards often use a curly apostrophe where the Move List has a straight one.
 function normalizeMoveNameForMatch(name){
-  return String(name || '').trim().toLowerCase();
+  return String(name || '').trim().toLowerCase().replace(/[\u2018\u2019\u02BC\u00B4`]/g, "'");
 }
 
 // Lets a freely-typed move name link itself to the database the same way a typed game
@@ -56,13 +57,12 @@ function normalizeMaxMoveModes(g){
 }
 
 // Matches a Pokémon against a Special Z-Move or G-Max Move's Pokémon allowlist. Each
-// list entry is either a species entry id -- picked from the Species Database in the
-// Control Panel, the same way MEGA_TYPES and Mega Ability overrides are keyed, so forms
+// list entry is either a species entry id -- from the Species Database, the same way MEGA_TYPES and Mega Ability overrides are keyed, so forms
 // that only some variants of a species have (e.g. G-Max Gold Rush is Galarian Meowth
 // only) are told apart correctly -- or a plain species name, for Pokémon typed in by hand
 // that don't have their own Species Database entry. A Mega Evolution/Ultra Burst Pokémon
 // also matches its alternate display name (e.g. "Ultra Necrozma", "Mega Charizard X"),
-// since that's the only way to target one from the Control Panel -- there's no separate
+// since there is no separate
 // Species Database entry for a Mega/Ultra form the way there is for Dawn Wings or Dusk
 // Mane Necrozma. `p` only needs speciesEntryId/species plus whatever
 // megaOrGigantamaxDisplayName needs.

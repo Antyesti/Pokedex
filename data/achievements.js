@@ -6,9 +6,9 @@
  * lists are inlined directly rather than looked up from icons/*.js.
  *
  * Structure is category -> subcategories -> groups -> items, all the way down, and at
- * every one of those levels array/object order IS the display and Control Panel order --
+ * every one of those levels array/object order IS the display order --
  * there is no separate numeric "order" field anywhere in this file. Reordering or moving
- * something (Control Panel > Ribbons/Marks/Misc, drag-and-drop) just rewrites the relevant
+ * something just rewrites the relevant
  * object with its keys in the new order, or splices the relevant items array.
  *
  * A group is real and independently addressable -- editable, reorderable, and a valid
