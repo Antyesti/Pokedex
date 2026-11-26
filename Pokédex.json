@@ -5,7 +5,7 @@
     "defaultSort": "oldest",
     "defaultTheme": "custom",
     "custom": {
-      "style": "glass",
+      "style": "neumorphic",
       "bg": "#0b0f14",
       "text": "#e8edf2",
       "accent": "#9b5de5",
@@ -37,7 +37,29 @@
     "showRestrictedRibbons": false,
     "showRibbonHelperByDefault": true,
     "easterEggUnlocked": false,
-    "easterEggPreferred": "pikachu"
+    "easterEggPreferred": "pikachu",
+    "background": {
+      "enabled": true,
+      "cardStyle": "light",
+      "type": "linear",
+      "shape": "ellipse",
+      "colors": [
+        "#F2C14E",
+        "#D9D9D9",
+        "#FFFFFF"
+      ],
+      "stops": null,
+      "direction": 360,
+      "intensity": 100,
+      "smoothness": 100,
+      "grain": 100,
+      "vignette": 0,
+      "animate": false,
+      "animSpeed": 50,
+      "posX": 50,
+      "posY": 50
+    },
+    "hiddenAvatarsEnabled": true
   },
   "pokemon": [
     {

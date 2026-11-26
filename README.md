@@ -78,6 +78,7 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
   Added, A-Z/Z-A for Species and Nickname), so switching keys doesn't reset
   the direction picked for the others.
 - Switch between a cozy 3-per-row grid and a denser 6-per-row grid with the toggle next to Sort.
+- Every card is the same size. A card's detail chips stay on one line and scroll like a ticker when they don't fit.
 - Card view shows type badges, ball/shiny/form/Pokérus icons, origin to last
   game label, and animated sparkle particles for shiny Pokémon.
 - The grid loads 24 cards at a time and automatically loads more as
@@ -104,6 +105,11 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
   logged, each as an "X of Y" count).
 
 ### 🧭Data & file handling
+- **Import Game Saves:** hover Import and choose Import Game Saves to read a real save file (Gen 3 to Gen 9: including Let's Go, BDSP, Legends: Arceus and Legends: Z-A, plus Colosseum and XD from raw saves, .gci files or GameCube memory cards; Gen 1/2 and Pokémon Box are not supported yet). A picker lets you choose which Pokémon to add, with select all/none, new only, party only, shiny only, per-box checkboxes, shift-click ranges and a filter. Each Pokémon brings its ribbons and marks, Characteristic (Gen 4 and later) and a nickname in any language. A Pokémon already imported from another save (FireRed, then Emerald, say) updates the existing one: its Moveset by Game, Characteristic, ribbons and Last Game. Other likely duplicates are flagged and unchecked. Also accepts DeSmuME .dsv saves and individual Pokémon files (.pk3-.pk9, .pa8/.pa9, .pb7/.pb8, .ck3/.xk3, encrypted .ek*), several at a time. Layouts follow PKHeX.
+- **Settings page:** Settings lives at `index.html#/settings` (the header Settings button morphs into Home while open). It includes a **Custom Background** editor (Master Ball theme only): 1 to 5 colors with explicit stop positions, linear/radial/conic gradients, ellipse or circle shape, center, intensity, smoothness, grain, vignette, adjustable-speed animation, and a Light/Dark Card Style that gives cards the Poké Ball or Beast Ball colors (Surface Style still applies).
+- **Share formats:** on desktop, hover Share (cards or roster) to choose GIF (lower quality, smaller file) or Animated PNG (high quality, larger file). The saved Animated Sprite Format preference only appears in Settings on touch devices.
+- Unlocking the footer Easter Egg also unlocks the Hidden Trainer Avatars in the avatar picker, labelled (Hidden). A toggle in Settings > Easter Egg turns them on or off.
+- Importing a Pokédex JSON replaces the roster, so you're warned first when it isn't empty.
 - Import and export the roster as JSON. On Chromium-based browsers this uses the File
   System Access API to save/reopen the same file directly (with a "Load last
   file" chip to reopen it next session), falling back to standard
@@ -122,7 +128,8 @@ https://github.com/user-attachments/assets/99e7a7d6-f54e-4556-bac1-09dd27ea0f24
   the header.
 - Master Ball custom theme: choose your own background, text, and two accent
   colors (glassmorphic or neumorphic surface style), applied live as you
-  edit them in Settings.
+  edit them in Settings. Each color uses a full picker with a hex field,
+  suggested and recent colors, an eyedropper, and a contrast check.
 - Settings lets you choose the default theme for future visits.
 
 ### ⚙️Other UI conveniences
@@ -156,6 +163,8 @@ js/
   state.js               Roster state, Pokémon record normalization, seed data
   app.js                 Type/stat color tables, changelog/credits modals, deletion/undo/History, keyboard shortcuts
   settings.js            Settings modal: theme, custom colors, fonts, share format
+  color-picker.js        Color picker popover used by the Master Ball theme colors
+  ui-state.js            Named UI state tables, shared dropdown/modal registries, Pokedex.snapshot()
   achievements.js        Achievement catalog logic, title resolution, Memory Ribbon UI
   detail-view.js         Pokémon detail modal
   renderer.js            Card/grid rendering, stats dashboard (with digit-reel counters), sort/filter state, date picker, ball/type UI
@@ -164,6 +173,9 @@ js/
   card-effects.js             3D hover tilt + border glow, rAF-batched pointer tracking
   filters.js             Filtering, search, and search-clear transition
   utils.js               Autosave (localStorage), File System Access API helpers, toast/modal-focus/scroll-to-top
+  settings.js            Settings page (#/settings route) and the Custom Background editor
+  save-import.js         Game save reader (Gen 3-9 layouts, ciphers, species/move/ability/location mapping)
+  save-import-ui.js      Import Game Saves menu, Pokémon picker modal, duplicate detection, Import replace warning
   share.js               Share-as-image: single-card and full-roster PNG/APNG export
   vendor/
     pako.min.js           Deflate/inflate (UPNG.js dependency)
@@ -171,6 +183,7 @@ js/
     gifuct.js             GIF decoder, used to read animated GIF sprites for export
     gifenc.js             GIF encoder, lazy-loaded only when GIF export format is selected
 data/
+  save-lookup.js         Generated PKHeX-derived tables (moves, abilities, locations, text tables) used by the save reader
   achievements.js        ACHIEVEMENT_CATALOG (ribbons, marks, misc)
   changelog.js           CHANGELOG (in-app version history)
   pokemon.js             ROSTER_DATA seed (empty by default)
