@@ -69,6 +69,16 @@ html[data-style="neumorphic"] .btn:active{
 html[data-theme="light"] .btn.ghost,
 html[data-style="neumorphic"] .btn.ghost{ background: var(--bg); }
 
+html[data-theme="light"] .import-caret,
+html[data-style="neumorphic"] .import-caret{
+  background:var(--bg); border:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+  box-shadow: var(--nm-shadow-out-sm);
+}
+html[data-theme="light"] .import-caret:hover,
+html[data-style="neumorphic"] .import-caret:hover{ background-color:var(--bg); box-shadow: var(--nm-shadow-hover); }
+html[data-theme="light"] .import-caret:active,
+html[data-style="neumorphic"] .import-caret:active{ box-shadow: var(--nm-shadow-in); transform:none; }
+
 html[data-theme="light"] .btn.primary,
 html[data-style="neumorphic"] .btn.primary{
   background: linear-gradient(155deg, var(--accent-grad-1), var(--accent-grad-2));
